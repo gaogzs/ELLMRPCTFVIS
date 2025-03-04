@@ -31,30 +31,36 @@ def get_response(messages, temperature=1.3):
     return response.choices[0].message
 
 def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat"):
-    temperature=0.1
     if eval_type == "single-scoring":
-        eval_prompt = prompts[eval_type]
+        temperature=0.1
+        eval_prompt = prompts[eval_type].copy()
         
         user_input = {"role": "user", "content": str(messages)}
-        
         eval_prompt.append(user_input)
-        
+    
         response = client.chat.completions.create(
             model=model,
             messages=eval_prompt,
             temperature=temperature,
             stream=False
         )
-        print(eval_prompt)
-        print(response.choices[0].message.content)
-        return response.choices[0].message
+        
+        response_content = str(response.choices[0].message.content)
+        eval_score = int(response_content.split(" ")[0])
+        
+        print(eval_score)
+        
+        eval_reason = None
+        if model == "deepseek-reasoner":
+            eval_reason = response.choices[0].message.reasoning_content
+            # print(eval_reason)
+            
+        return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
         return None
 
-def test_slicing(sample_messages, eval_type):
-    
-    sample_messages
+def test_slicing(sample_messages, eval_type, model):
     
     histories = []
     
@@ -65,19 +71,29 @@ def test_slicing(sample_messages, eval_type):
         new_entry["messages"] = sliced_messages
         new_entry["type"] = eval_type
         
-        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type)
-        new_entry["evaluation"] = evaluation
+        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat")[0]
+        new_entry["chat_evaluation"] = evaluation
+        
+        evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner")
+        new_entry["reasoner_evaluation"] = evaluation
+        new_entry["reason_reasoning"] = reason
         
         histories.append(new_entry)
         
     return histories
 
 if __name__ == "__main__":
-    test_sample = samples[0]
     eval_type = "single-scoring"
+    eval_model = "deepseek-chat"
+    test_histories = []
+    i = 0
     
-    test_history = test_slicing(test_sample, eval_type=eval_type)
-    
-    with open(output_dir, "w") as f:
-        json.dump(test_history, f)
+    for test_sample in samples:
+        for preset_prompts in test_sample["system_prompt"]:
+            sample_messages = [preset_prompts] + test_sample["messages"]
+            test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model)
+            test_histories.append(test_history)
+            
+            with open(output_dir, "w") as f:
+                json.dump(test_histories, f, indent=2, ensure_ascii=False)
     
