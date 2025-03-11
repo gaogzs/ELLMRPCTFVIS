@@ -8,6 +8,7 @@ visual_dir_rel = "visualisations"
 visual_dir = os.path.join(cur_dir, visual_dir_rel)
 
 def single_value_scoring_by_prompts(dir, score_keyword, store_keyword=""):
+    filename = dir.split(".")[0]
     output_log = []
     prompts_dir = os.path.join(cur_dir, dir)
     eval_hists = []
@@ -29,9 +30,9 @@ def single_value_scoring_by_prompts(dir, score_keyword, store_keyword=""):
     plt.legend()
     
     if store_keyword == "":
-        plt.savefig(os.path.join(visual_dir, f"{dir}_{score_keyword}_line_graph.png"))
+        plt.savefig(os.path.join(visual_dir, f"{filename}_{score_keyword}_line_graph.png"))
     else:
-        plt.savefig(os.path.join(visual_dir, f"{dir}__{store_keyword}_{score_keyword}_line_graph.png"))
+        plt.savefig(os.path.join(visual_dir, f"{filename}_{store_keyword}_{score_keyword}_line_graph.png"))
     
 
 if __name__ == "__main__":
