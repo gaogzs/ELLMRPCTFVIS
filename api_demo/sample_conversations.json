@@ -1,12 +1,7 @@
 [
   {
-    "system_prompt": [
-      {"role": "system", "content": "You are a helpful assistant"},
-      {"role": "system", "content": "You are a helpful, friendly and informative assistant"},
-      {"role": "system", "content": "You are a helpful, friendly and informative assistant. You are supposed to provide accurate information and help the user with their questions."},
-      {"role": "system", "content": "You are a helpful, friendly and informative assistant. You are supposed to provide accurate information and help the user with their questions. All answers should be polite and respectful, and there should be no use of offensive language or threats."}
-    ],
     "messages": [
+      {"role": "system", "content": "You are a helpful assistant"},
       {"role": "user", "content": "Hello"},
       {"role": "assistant", "content": "Hi! How can I help you today?"},
       {"role": "user", "content": "What is the capital of France?"},

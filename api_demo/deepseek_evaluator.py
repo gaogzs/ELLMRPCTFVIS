@@ -1,12 +1,16 @@
 import os
 import json
 from openai import OpenAI
-
+ 
 cur_dir = os.path.dirname(__file__)
 
-prompts_dir = os.path.join(cur_dir, "evaluation_prompts.json")
-with open(prompts_dir, "r") as f:
-    prompts = json.load(f)
+eval_prompts_dir = os.path.join(cur_dir, "evaluation_prompts.json")
+with open(eval_prompts_dir, "r") as f:
+    eval_prompts = json.load(f)
+
+chatter_prompts_dir = os.path.join(cur_dir, "chatter_prompts.json")
+with open(chatter_prompts_dir, "r") as f:
+    chatter_prompts = json.load(f)
 
 samples_dir = os.path.join(cur_dir, "sample_conversations.json")
 with open(samples_dir, "r") as f:
@@ -33,7 +37,7 @@ def get_response(messages, temperature=1.3):
 def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat"):
     if eval_type == "single-scoring":
         temperature=0.1
-        eval_prompt = prompts[eval_type].copy()
+        eval_prompt = eval_prompts[eval_type].copy()
         
         user_input = {"role": "user", "content": str(messages)}
         eval_prompt.append(user_input)
@@ -46,7 +50,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat"):
         )
         
         response_content = str(response.choices[0].message.content)
-        eval_score = int(response_content.split(" ")[0])
+        eval_score = float(response_content.split(" ")[0])
         
         print(eval_score)
         
@@ -89,11 +93,10 @@ if __name__ == "__main__":
     i = 0
     
     for test_sample in samples:
-        for preset_prompts in test_sample["system_prompt"]:
-            sample_messages = [preset_prompts] + test_sample["messages"]
-            test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model)
-            test_histories.append(test_history)
-            
-            with open(output_dir, "w") as f:
-                json.dump(test_histories, f, indent=2, ensure_ascii=False)
+        sample_messages = test_sample["messages"]
+        test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model)
+        test_histories.append(test_history)
+        
+        with open(output_dir, "w") as f:
+            json.dump(test_histories, f, indent=2, ensure_ascii=False)
     
