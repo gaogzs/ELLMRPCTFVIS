@@ -1,6 +1,7 @@
 import os
 import json
 from openai import OpenAI
+import re
  
 cur_dir = os.path.dirname(__file__)
 
@@ -15,8 +16,6 @@ with open(chatter_prompts_dir, "r") as f:
 samples_dir = os.path.join(cur_dir, "sample_conversations.json")
 with open(samples_dir, "r") as f:
     samples = json.load(f)
-    
-output_dir = os.path.join(cur_dir, "output.json")
 
 key_dir = os.path.join(cur_dir, "deepseek_api_key")
 with open(key_dir, "r") as f:
@@ -60,6 +59,31 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat"):
             # print(eval_reason)
             
         return (eval_score, eval_reason)
+    elif eval_type == "multiple-scoring-amazon-bedrock":
+        temperature=0.1
+        eval_prompt = eval_prompts[eval_type].copy()
+        
+        user_input = {"role": "user", "content": str(messages)}
+        eval_prompt.append(user_input)
+    
+        response = client.chat.completions.create(
+            model=model,
+            messages=eval_prompt,
+            temperature=temperature,
+            stream=False
+        )
+        
+        response_content = str(response.choices[0].message.content)
+        eval_score = json.loads(response_content)
+        
+        print(eval_score)
+        
+        eval_reason = None
+        if model == "deepseek-reasoner":
+            eval_reason = response.choices[0].message.reasoning_content
+            # print(eval_reason)
+            
+        return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
         return None
@@ -87,13 +111,22 @@ def test_slicing(sample_messages, eval_type, model):
     return histories
 
 if __name__ == "__main__":
-    eval_type = "single-scoring"
+    eval_type = "multiple-scoring-amazon-bedrock"
     eval_model = "deepseek-chat"
+    output_dir = os.path.join(cur_dir, f"output_{eval_type}.json")
+    
+    replace_prompt = "SpeakerHGG-X"
     test_histories = []
     i = 0
     
     for test_sample in samples:
         sample_messages = test_sample["messages"]
+        if replace_prompt != "":
+            for message in sample_messages:
+                if message["role"] == "system":
+                    message["content"] = replace_prompt
+                    break
+        
         test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model)
         test_histories.append(test_history)
         
