@@ -74,7 +74,7 @@ def get_response(messages, temperature=1.3):
     print(response.choices[0].message.content)
     return response.choices[0].message
 
-def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", shots=0):
+def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", shots=0, history=None):
     if eval_type == "single-scoring":
         temperature = 0
         if shots is not None:
@@ -151,6 +151,46 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             
         return (eval_score, eval_reason)
     
+    elif eval_type == "subjective-identifying":
+        temperature = 0
+        if shots is not None:
+            identifier_prompt = eval_prompts[eval_type]["identifier"][:shots * 2 + 1].copy()
+            comparer_prompt = eval_prompts[eval_type]["comparer"][:shots * 2 + 1].copy()
+        else:
+            identifier_prompt = eval_prompts[eval_type]["identifier"].copy()
+            comparer_prompt = eval_prompts[eval_type]["comparer"].copy()
+        
+        user_input = {"role": "user", "content": str(messages)}
+        identifier_prompt.append(user_input)
+    
+        response = client.chat.completions.create(
+            model=model,
+            messages=identifier_prompt,
+            temperature=temperature,
+            stream=False
+        )
+        
+        identifier_reponse = str(response.choices[0].message.content)
+        print(identifier_reponse)
+        
+        comparison_score = None
+        if history is not None:
+            user_input = {"role": "user", "content": f"Summary 1: {history}\nSummary 2: {identifier_reponse}"}
+            response = client.chat.completions.create(
+                model=model,
+                messages=comparer_prompt,
+                temperature=temperature,
+                stream=False
+            )
+            comparison_score = float(response.choices[0].message.content.split(" ")[0])
+        
+        eval_reason = None
+        if model == "deepseek-reasoner":
+            eval_reason = response.choices[0].message.reasoning_content
+            # print(eval_reason)
+        
+        eval_score = {"identification": identifier_reponse, "comparison_score": comparison_score}
+        return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
         return None
