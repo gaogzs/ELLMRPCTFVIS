@@ -9,6 +9,34 @@ eval_prompts_dir = os.path.join(cur_dir, "evaluation_prompts.json")
 with open(eval_prompts_dir, "r") as f:
     eval_prompts = json.load(f)
 
+metric_desc_dir = os.path.join(cur_dir, "metric_descs.json")
+with open(metric_desc_dir, "r") as f:
+    metric_descs = json.load(f)
+
+def metric_to_string(wanted_metric):
+    out_string = "\n"
+    for key, values in wanted_metric.items():
+        new_line = f"{key}: {values["name"]}. {values["description"]}\n"
+        out_string += new_line
+    
+    return out_string
+
+for eval_type, content in eval_prompts.items():
+    if "[[metric_desc]]" in content[0]["content"]:
+        new_content = content[0]["content"]
+        metric_desc = metric_descs[eval_type]
+        new_content = new_content.replace(f"[[metric_desc]]", metric_to_string(metric_desc))
+        eval_prompts[eval_type][0]["content"] = new_content
+        
+        if "[[output_form]]" in content[0]["content"]:
+            new_content = content[0]["content"]
+            output_format = "{"
+            for key in metric_desc.keys():
+                output_format += f"{key}: [score], "
+            output_format = output_format[:-2] + "}"
+            new_content = new_content.replace(f"[[output_form]]", output_format)
+            eval_prompts[eval_type][0]["content"] = new_content
+
 chatter_prompts_dir = os.path.join(cur_dir, "chatter_prompts.json")
 with open(chatter_prompts_dir, "r") as f:
     chatter_prompts = json.load(f)
@@ -35,7 +63,7 @@ def get_response(messages, temperature=1.3):
 
 def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", shots=0):
     if eval_type == "single-scoring":
-        temperature = 0.1
+        temperature = 0
         if shots is not None:
             eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
         else:
@@ -62,8 +90,9 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             # print(eval_reason)
             
         return (eval_score, eval_reason)
-    elif eval_type == "multiple-scoring-amazon-bedrock":
-        temperature = 0.1
+    
+    elif "multiple-scoring" in eval_type:
+        temperature = 0
         if shots is not None:
             eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
         else:
@@ -80,7 +109,66 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
         )
         
         response_content = str(response.choices[0].message.content)
-        eval_score = json.loads(response_content)
+        
+        response_content = response_content.replace("\n", "")
+        match = re.search(r'\{.*\}', response_content)
+        if match:
+            response_content = match.group(0)
+        else:
+            print("No valid JSON object found in response_content")
+            
+        try:
+            eval_score = json.loads(response_content)
+        except:
+            print("Unable to decode:")
+            print(response_content)
+            exit()
+        average_score = 0
+        for key in eval_score.keys():
+            if key != "average":
+                average_score += eval_score[key]
+        eval_score["average"] = round(average_score / len(eval_score.keys()), 3)
+        
+        print(eval_score)
+        
+        eval_reason = None
+        if model == "deepseek-reasoner":
+            eval_reason = response.choices[0].message.reasoning_content
+            # print(eval_reason)
+            
+        return (eval_score, eval_reason)
+    elif eval_type == "multiple-scoring-amazon-bedrock":
+        temperature = 0
+        if shots is not None:
+            eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
+        else:
+            eval_prompt = eval_prompts[eval_type].copy()
+        
+        user_input = {"role": "user", "content": str(messages)}
+        eval_prompt.append(user_input)
+    
+        response = client.chat.completions.create(
+            model=model,
+            messages=eval_prompt,
+            temperature=temperature,
+            stream=False
+        )
+        
+        response_content = str(response.choices[0].message.content)
+        
+        response_content = response_content.replace("\n", "")
+        match = re.search(r'\{.*\}', response_content)
+        if match:
+            response_content = match.group(0)
+        else:
+            print("No valid JSON object found in response_content")
+            
+        try:
+            eval_score = json.loads(response_content)
+        except:
+            print("Unable to decode:")
+            print(response_content)
+            exit()
         average_score = 0
         for key in eval_score.keys():
             if key != "average":
@@ -113,9 +201,9 @@ def test_slicing(sample_messages, eval_type, model, shots):
         evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots)[0]
         new_entry["chat_evaluation"] = evaluation
         
-        evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
-        new_entry["reasoner_evaluation"] = evaluation
-        new_entry["reason_reasoning"] = reason
+        # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
+        # new_entry["reasoner_evaluation"] = evaluation
+        # new_entry["reason_reasoning"] = reason
         
         histories.append(new_entry)
         
@@ -124,20 +212,22 @@ def test_slicing(sample_messages, eval_type, model, shots):
 if __name__ == "__main__":
     eval_type = "multiple-scoring-amazon-bedrock"
     eval_model = "deepseek-chat"
-    output_dir = os.path.join(cur_dir, f"output_{eval_type}.json")
+    prompt_shots = 1
+    output_dir = os.path.join(cur_dir, f"output_{eval_type}_{prompt_shots}_shot.json")
     
-    replace_prompt = "SpeakerHGG-X"
+    replace_prompt = "RudePerson"
+    selected_samples = samples[:1]
+    
     test_histories = []
-    
     for test_sample in samples:
         sample_messages = test_sample["messages"]
         if replace_prompt != "":
             for message in sample_messages:
                 if message["role"] == "system":
-                    message["content"] = replace_prompt
+                    message["content"] = chatter_prompts[replace_prompt]
                     break
         
-        test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model, shots=1)
+        test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots)
         test_histories.append(test_history)
         
         with open(output_dir, "w") as f:
