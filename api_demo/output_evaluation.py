@@ -48,7 +48,7 @@ def multi_value_scoring(dir, score_keyword, metrics_used=["average"], store_keyw
     for eval_hist in eval_hists:
         plt.figure()
         if metrics_used is None:
-            metrics_used = list(eval_hist[0][score_keyword].keys())
+            metrics_used = [metric for metric in eval_hist[0][score_keyword].keys() if isinstance(eval_hist[0][score_keyword][metric], (int, float))]
         # Iterate through the evaluation history
         score_hists = {}
         for metric in metrics_used:
@@ -62,7 +62,7 @@ def multi_value_scoring(dir, score_keyword, metrics_used=["average"], store_keyw
                 plt.plot(score_hists[metric], label=metric, linewidth=3)
             else:
                 plt.plot(score_hists[metric], label=metric, linewidth=1)
-        plt.legend(fontsize='small')
+        plt.legend(fontsize='small', framealpha=0.5)
         
         if len(eval_hists) > 1:
             store_filename = f"{filename}_{i}"
@@ -76,4 +76,4 @@ def multi_value_scoring(dir, score_keyword, metrics_used=["average"], store_keyw
     
 
 if __name__ == "__main__":
-    multi_value_scoring(dir="output_multiple-scoring-speaker-v1_1_shot.json", score_keyword="chat_evaluation", metrics_used=None)
+    multi_value_scoring(dir="output_subjective-identifying_1_shot.json", score_keyword="chat_evaluation", metrics_used=None)

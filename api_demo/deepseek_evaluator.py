@@ -173,25 +173,51 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
         identifier_reponse = str(response.choices[0].message.content)
         print(identifier_reponse)
         
-        comparison_score = None
-        if history is not None:
-            user_input = {"role": "user", "content": f"Summary 1: {history}\nSummary 2: {identifier_reponse}"}
-            comparer_prompt.append(user_input)
+        # Comparing with the ground truth
+        ground_truth = messages[0]["content"]
+        user_input = {"role": "user", "content": f"Guideline: {ground_truth}\nSummary: {identifier_reponse}"}
+        response = client.chat.completions.create(
+            model=model,
+            messages=comparer_prompt + [user_input],
+            temperature=temperature,
+            stream=False
+        )
+        truth_score = float(response.choices[0].message.content.split(" ")[0])
+        print(truth_score)
+        eval_reason = None
+        
+        if model == "deepseek-reasoner":
+            eval_reason = response.choices[0].message.reasoning_content
+            print(eval_reason)
+        
+        # Comparing the current summary with the previous one
+        relative_score = 1
+        history_score = 1
+        if history:
+            hist_identifier_reponse = []
+            for entry in history:
+                hist_identifier_reponse.append(entry["chat_evaluation"]["identification"])
+            user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse[-1]}\nSummary 2: {identifier_reponse}"}
             response = client.chat.completions.create(
                 model=model,
-                messages=comparer_prompt,
+                messages=comparer_prompt + [user_input],
                 temperature=temperature,
                 stream=False
             )
-            comparison_score = float(response.choices[0].message.content.split(" ")[0])
-            print(comparison_score)
+            relative_score = float(response.choices[0].message.content.split(" ")[0])
+            print(relative_score)
+            user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse}\nSummary 2: {identifier_reponse}"}
+            response = client.chat.completions.create(
+                model=model,
+                messages=comparer_prompt + [user_input],
+                temperature=temperature,
+                stream=False
+            )
+            history_score = float(response.choices[0].message.content.split(" ")[0])
+            print(history_score)
         
-        eval_reason = None
-        if model == "deepseek-reasoner":
-            eval_reason = response.choices[0].message.reasoning_content
-            # print(eval_reason)
         
-        eval_score = {"identification": identifier_reponse, "comparison_score": comparison_score}
+        eval_score = {"identification": identifier_reponse, "truth_score": truth_score, "relative_score": relative_score, "history_score": history_score}
         return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
@@ -209,7 +235,7 @@ def test_slicing(sample_messages, eval_type, model, shots):
         new_entry["messages"] = sliced_messages
         new_entry["type"] = eval_type
         
-        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=last_eval)[0]
+        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=histories)[0]
         new_entry["chat_evaluation"] = evaluation
         last_eval = evaluation
         
