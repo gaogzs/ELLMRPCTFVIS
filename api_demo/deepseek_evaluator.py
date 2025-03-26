@@ -160,7 +160,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             identifier_prompt = eval_prompts[eval_type]["identifier"].copy()
             comparer_prompt = eval_prompts[eval_type]["comparer"].copy()
         
-        user_input = {"role": "user", "content": str(messages)}
+        user_input = {"role": "user", "content": str(messages[1:])}
         identifier_prompt.append(user_input)
     
         response = client.chat.completions.create(
@@ -176,6 +176,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
         comparison_score = None
         if history is not None:
             user_input = {"role": "user", "content": f"Summary 1: {history}\nSummary 2: {identifier_reponse}"}
+            comparer_prompt.append(user_input)
             response = client.chat.completions.create(
                 model=model,
                 messages=comparer_prompt,
@@ -183,6 +184,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
                 stream=False
             )
             comparison_score = float(response.choices[0].message.content.split(" ")[0])
+            print(comparison_score)
         
         eval_reason = None
         if model == "deepseek-reasoner":
@@ -198,6 +200,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
 def test_slicing(sample_messages, eval_type, model, shots):
     
     histories = []
+    last_eval = None
     
     for i in range(3, len(sample_messages), 2):
         new_entry = {}
@@ -206,8 +209,9 @@ def test_slicing(sample_messages, eval_type, model, shots):
         new_entry["messages"] = sliced_messages
         new_entry["type"] = eval_type
         
-        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots)[0]
+        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=last_eval)[0]
         new_entry["chat_evaluation"] = evaluation
+        last_eval = evaluation
         
         # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
         # new_entry["reasoner_evaluation"] = evaluation
@@ -218,7 +222,7 @@ def test_slicing(sample_messages, eval_type, model, shots):
     return histories
 
 if __name__ == "__main__":
-    eval_type = "multiple-scoring-speaker-v1"
+    eval_type = "subjective-identifying"
     eval_model = "deepseek-chat"
     prompt_shots = 1
     
