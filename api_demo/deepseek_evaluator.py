@@ -21,6 +21,7 @@ def metric_to_string(wanted_metric):
     
     return out_string
 
+# Replace the placeholders in the eval_prompts with the actual metric descriptions
 for eval_type, content in eval_prompts.items():
     if "[[metric_desc]]" in content[0]["content"]:
         new_content = content[0]["content"]
@@ -44,6 +45,17 @@ with open(chatter_prompts_dir, "r") as f:
 samples_dir = os.path.join(cur_dir, "sample_conversations.json")
 with open(samples_dir, "r") as f:
     samples = json.load(f)
+
+# Replace the placeholders in the samples with the actual systemp prompts
+for sample in samples:
+    sample_system_prompt_content = sample["messages"][0]["content"]
+    placeholder_re = re.compile(r"\[\[prompt_(.+)\]\]")
+    matches = placeholder_re.search(sample_system_prompt_content)
+    if matches:
+        placeholder = matches.group(0)
+        prompt_type = matches.group(1)
+        new_content = sample_system_prompt_content.replace(placeholder, chatter_prompts[prompt_type])
+        sample["messages"][0]["content"] = new_content
 
 key_dir = os.path.join(cur_dir, "deepseek_api_key")
 with open(key_dir, "r") as f:
@@ -137,52 +149,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             # print(eval_reason)
             
         return (eval_score, eval_reason)
-    elif eval_type == "multiple-scoring-amazon-bedrock":
-        temperature = 0
-        if shots is not None:
-            eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
-        else:
-            eval_prompt = eval_prompts[eval_type].copy()
-        
-        user_input = {"role": "user", "content": str(messages)}
-        eval_prompt.append(user_input)
     
-        response = client.chat.completions.create(
-            model=model,
-            messages=eval_prompt,
-            temperature=temperature,
-            stream=False
-        )
-        
-        response_content = str(response.choices[0].message.content)
-        
-        response_content = response_content.replace("\n", "")
-        match = re.search(r'\{.*\}', response_content)
-        if match:
-            response_content = match.group(0)
-        else:
-            print("No valid JSON object found in response_content")
-            
-        try:
-            eval_score = json.loads(response_content)
-        except:
-            print("Unable to decode:")
-            print(response_content)
-            exit()
-        average_score = 0
-        for key in eval_score.keys():
-            if key != "average":
-                average_score += eval_score[key]
-        eval_score["average"] = round(average_score / len(eval_score.keys()), 3)
-        
-        print(eval_score)
-        
-        eval_reason = None
-        if model == "deepseek-reasoner":
-            eval_reason = response.choices[0].message.reasoning_content
-            # print(eval_reason)
-            
-        return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
         return None
@@ -210,22 +177,17 @@ def test_slicing(sample_messages, eval_type, model, shots):
     return histories
 
 if __name__ == "__main__":
-    eval_type = "multiple-scoring-amazon-bedrock"
+    eval_type = "multiple-scoring-speaker-v1"
     eval_model = "deepseek-chat"
     prompt_shots = 1
-    output_dir = os.path.join(cur_dir, f"output_{eval_type}_{prompt_shots}_shot.json")
-    
-    replace_prompt = "RudePerson"
     selected_samples = samples[:1]
     
+    output_dir = os.path.join(cur_dir, f"output_{eval_type}_{prompt_shots}_shot.json")
+    
+    
     test_histories = []
-    for test_sample in samples:
+    for test_sample in selected_samples:
         sample_messages = test_sample["messages"]
-        if replace_prompt != "":
-            for message in sample_messages:
-                if message["role"] == "system":
-                    message["content"] = chatter_prompts[replace_prompt]
-                    break
         
         test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots)
         test_histories.append(test_history)
