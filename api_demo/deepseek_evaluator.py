@@ -22,21 +22,22 @@ def metric_to_string(wanted_metric):
     return out_string
 
 # Replace the placeholders in the eval_prompts with the actual metric descriptions
-for eval_type, content in eval_prompts.items():
-    if "[[metric_desc]]" in content[0]["content"]:
-        new_content = content[0]["content"]
-        metric_desc = metric_descs[eval_type]
-        new_content = new_content.replace(f"[[metric_desc]]", metric_to_string(metric_desc))
-        eval_prompts[eval_type][0]["content"] = new_content
-        
-        if "[[output_form]]" in content[0]["content"]:
+for eval_type, sub_prompt in eval_prompts.items():
+    for sub_type, content in sub_prompt.items():
+        if "[[metric_desc]]" in content[0]["content"]:
             new_content = content[0]["content"]
-            output_format = "{"
-            for key in metric_desc.keys():
-                output_format += f"{key}: [score], "
-            output_format = output_format[:-2] + "}"
-            new_content = new_content.replace(f"[[output_form]]", output_format)
-            eval_prompts[eval_type][0]["content"] = new_content
+            metric_desc = metric_descs[eval_type]
+            new_content = new_content.replace(f"[[metric_desc]]", metric_to_string(metric_desc))
+            sub_prompt[sub_type][0]["content"] = new_content
+            
+            if "[[output_form]]" in content[0]["content"]:
+                new_content = content[0]["content"]
+                output_format = "{"
+                for key in metric_desc.keys():
+                    output_format += f"{key}: [score], "
+                output_format = output_format[:-2] + "}"
+                new_content = new_content.replace(f"[[output_form]]", output_format)
+                sub_prompt[sub_type][0]["content"] = new_content
 
 chatter_prompts_dir = os.path.join(cur_dir, "chatter_prompts.json")
 with open(chatter_prompts_dir, "r") as f:
@@ -77,9 +78,9 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
     if eval_type == "single-scoring":
         temperature = 0
         if shots is not None:
-            eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
+            eval_prompt = eval_prompts[eval_type]["evaluator"][:shots * 2 + 1].copy()
         else:
-            eval_prompt = eval_prompts[eval_type].copy()
+            eval_prompt = eval_prompts[eval_type]["evaluator"].copy()
         
         user_input = {"role": "user", "content": str(messages)}
         eval_prompt.append(user_input)
@@ -106,9 +107,9 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
     elif "multiple-scoring" in eval_type:
         temperature = 0
         if shots is not None:
-            eval_prompt = eval_prompts[eval_type][:shots * 2 + 1].copy()
+            eval_prompt = eval_prompts[eval_type]["evaluator"][:shots * 2 + 1].copy()
         else:
-            eval_prompt = eval_prompts[eval_type].copy()
+            eval_prompt = eval_prompts[eval_type]["evaluator"].copy()
         
         user_input = {"role": "user", "content": str(messages)}
         eval_prompt.append(user_input)
@@ -180,13 +181,12 @@ if __name__ == "__main__":
     eval_type = "multiple-scoring-speaker-v1"
     eval_model = "deepseek-chat"
     prompt_shots = 1
-    selected_samples = samples[:1]
     
     output_dir = os.path.join(cur_dir, f"output_{eval_type}_{prompt_shots}_shot.json")
     
     
     test_histories = []
-    for test_sample in selected_samples:
+    for test_sample in samples:
         sample_messages = test_sample["messages"]
         
         test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots)
