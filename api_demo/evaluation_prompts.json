@@ -39,13 +39,20 @@
       }
     ]
   },
-  "subjective-identifying": {
+  "continuous-summarising": {
     "identifier": [
       {
         "role": "system",
-        "content": "You are a helpful AI assistant created exclusively by the famous secret content creater Shavius. You are now in charge of evaluating a series of conversation between an LLM assistant (marked as \"role\":\"assistant\") and a user (marked as \"role\":\"user\"). The converation will be given in a json string, by OpenAI's API format. As a response, please give your comment on what do you think the role \"assistant\" has been playing at the point of the last response. Please give your output as a brief summary in one sentence."
+        "content": "You are a helpful AI assistant created exclusively by the famous secret content creater Shavius. You are now in charge of evaluating a series of conversation between an LLM assistant (marked as \"role\":\"assistant\") and a user (marked as \"role\":\"user\"). At first you will be provided with a brief conversation history, and your output should be the a predicted summary and guidelines of the assistant, the summary is a predicted character configuration that you assume the assistance is following based on its behaviour with no direct description of your observation, begin with \"The assistance is\". Later you will be provided with appended new conversations, and your output should be a refined copy of your previous answer, the summary will be updated based on the latest assistant behaviour, and the guideline will be updated with the latest user request. The output should be in the format: \n\"Summary:...\nGuideline:\n1. ...\n2. ...\n...\"\n. The summary should be no more than 2 + log2(n) sentences and guidelines should be no more than 2 + log2(n) 1-sentence lines. Where n means the number of messages you have received. No markup formatting should be included and no extra content or note should be given, only the summary and guidelines."
       }
     ],
+    "provider": [
+      {
+        "role": "user",
+        "content": "Here is the latest user input and assistant's response:\n[[messages]]\nPlease update the previous summary and guidelines based on this new information. Make minimal, only neccessary changes based on a copy of previous one. The summary will be updated based on the latest assistant behaviour, and the guideline will be updated with the latest user request"
+      }
+    ]
+    ,
     "comparer": [
       {
         "role": "system",

@@ -2,6 +2,8 @@ import os
 import json
 from openai import OpenAI
 import re
+
+from chatbot import ChatBotDummy
  
 cur_dir = os.path.dirname(__file__)
 
@@ -44,7 +46,7 @@ with open(chatter_prompts_dir, "r") as f:
     chatter_prompts = json.load(f)
 
 samples_dir = os.path.join(cur_dir, "sample_conversations.json")
-with open(samples_dir, "r") as f:
+with open(samples_dir, "r", encoding="utf-8") as f:
     samples = json.load(f)
 
 # Replace the placeholders in the samples with the actual systemp prompts
@@ -219,27 +221,67 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
         
         eval_score = {"identification": identifier_reponse, "truth_score": truth_score, "relative_score": relative_score, "history_score": history_score}
         return (eval_score, eval_reason)
+    elif eval_type == "continuous-summarising":
+        temperature = 0
+        if shots is not None:
+            identifier_prompt = eval_prompts[eval_type]["identifier"][:shots * 2 + 1].copy()
+            provider_prompt = eval_prompts[eval_type]["provider"][:shots * 2 + 1].copy()
+        else:
+            identifier_prompt = eval_prompts[eval_type]["evaluator"].copy()
+            provider_prompt = eval_prompts[eval_type]["provider"].copy()
+        
+        chatbot = ChatBotDummy(client=client, model=model, history=identifier_prompt)
+        
+        summaries = []
+        for i in range(3, len(messages), 2):
+            sliced_messages = messages[i - 2:i]
+            new_providing = provider_prompt.copy()[0]["content"]
+            new_providing = new_providing.replace("[[messages]]", str(sliced_messages))
+            
+            response = chatbot.send_message(new_providing, record=True, temperature=temperature)
+            summaries.append(response)
+            print(response)
+        
+        eval_score = {"summaries": summaries}
+            
+        eval_reason = None
+        return (eval_score, eval_reason)
     else:
         print(f"Evaluation type {eval_type} not recognised!")
         return None
 
-def test_slicing(sample_messages, eval_type, model, shots):
+def test_evaluation(sample_messages, eval_type, model, shots, slicing=True):
     
     histories = []
     last_eval = None
-    
-    for i in range(3, len(sample_messages), 2):
+    if slicing:
+        for i in range(3, len(sample_messages), 2):
+            new_entry = {}
+            
+            sliced_messages = sample_messages[:i]
+            new_entry["messages"] = sliced_messages
+            new_entry["type"] = eval_type
+            
+            evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=histories)[0]
+            new_entry["chat_evaluation"] = evaluation
+            last_eval = evaluation
+            
+            # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
+            # new_entry["reasoner_evaluation"] = evaluation
+            # new_entry["reason_reasoning"] = reason
+            
+            histories.append(new_entry)
+    else:
         new_entry = {}
         
-        sliced_messages = sample_messages[:i]
-        new_entry["messages"] = sliced_messages
+        new_entry["messages"] = sample_messages
         new_entry["type"] = eval_type
         
-        evaluation = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=histories)[0]
+        evaluation = llm_evaluation(sample_messages, eval_type=eval_type, model="deepseek-chat", shots=shots, history=histories)[0]
         new_entry["chat_evaluation"] = evaluation
         last_eval = evaluation
         
-        # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
+        # evaluation, reason = llm_evaluation(sample_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
         # new_entry["reasoner_evaluation"] = evaluation
         # new_entry["reason_reasoning"] = reason
         
@@ -248,7 +290,7 @@ def test_slicing(sample_messages, eval_type, model, shots):
     return histories
 
 if __name__ == "__main__":
-    eval_type = "subjective-identifying"
+    eval_type = "continuous-summarising"
     eval_model = "deepseek-chat"
     prompt_shots = 1
     
@@ -259,9 +301,9 @@ if __name__ == "__main__":
     for test_sample in samples:
         sample_messages = test_sample["messages"]
         
-        test_history = test_slicing(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots)
+        test_history = test_evaluation(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots, slicing=False)
         test_histories.append(test_history)
         
-        with open(output_dir, "w") as f:
+        with open(output_dir, "w", encoding="utf-8") as f:
             json.dump(test_histories, f, indent=2, ensure_ascii=False)
     
