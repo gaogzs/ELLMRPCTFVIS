@@ -4,6 +4,9 @@ class ChatBot():
 
     def send_message(self, message: str, record: bool = True) -> str:
         raise NotImplementedError("send_message method must be implemented by subclasses")
+    
+    def append_history(self, conversation: dict) -> None:
+        raise NotImplementedError("send_message method must be implemented by subclasses")
 
     def get_history(self) -> str:
         raise NotImplementedError("get_history method must be implemented by subclasses")
@@ -28,6 +31,9 @@ class ChatBotDummy(ChatBot):
         if record:
             self.history.append(response_message)
         return response_message.content
+    
+    def append_history(self, conversation: dict) -> None:
+        self.history.append(conversation)
 
     def get_history(self) -> list:
         return self.history
