@@ -2,3 +2,4 @@ openai
 json
 matplotlib
 numpy
+networkx
