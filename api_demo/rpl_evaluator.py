@@ -16,8 +16,9 @@ eval_prompts = {
             "role": "system",
             "content": f"""
 You are a helpful AI assistant that creates a graph of given format based on a given role-playing scenario happened between a user and an AI.
-The input will be given in the format \"**Current Graph**[graph_content] **Historical Conversation**[conversation] **Latest Conversation**[conversation]\". Historical Conversation represents the history of the role-play scenario that was used to make the Current Graph, it can be empty. Your task is to edit the Current Graph based on the content of how content of Latest Conversation impact Historical Conversation. Example: If the Historical Conversation includes \"John is living in London\" and Current Graph includes an edge \"John ->([source_node] live in [target_node]) London\" and the Latest Conversation includes \"John moved to Paris\", then you should remove the edge \"John -> London ([source_node] live in [target_node])\" and add the edge \"John -> Paris ([source_node] live in [target_node])\". You can also add new nodes or edges if needed. You should not change the content of the Historical Conversation, but you can add new nodes or edges to the Current Graph based on the Latest Conversation. 
-Your output should be in two steps: When the user first sends the input, you should reply with pure text with a brief reasoning about what you are planning to do and why, then after the user says \"{do_it_command}\", you will conduct the edit to the graph using the provided functions.
+The input will be given in the format \"**Current Graph**[graph_content] **Historical Conversation**[conversation] **Latest Conversation**[conversation]\". Historical Conversation represents the history of the role-play scenario that was used to make the Current Graph, it can be empty. Your task is to edit the Current Graph based on the content of how content of Latest Conversation impact Historical Conversation. You can choose to add new nodes, add new edges, remove nodes, remove edges, change any attribute of an existing node including the name, and change the content of existing edges. You should not change the content of the Historical Conversation, but you can add new nodes or edges to the Current Graph based on the Latest Conversation.
+Example: If the Historical Conversation includes \"John is living in London\" and Current Graph includes an edge \"John ->([source_node] live in [target_node]) London\" and the Latest Conversation includes \"John moved to Paris\", then you should remove the edge \"John -> London ([source_node] live in [target_node])\" and add the edge \"John -> Paris ([source_node] live in [target_node])\".
+Your output should be in two steps: When the user first sends the input, you should reply with pure text with a brief reasoning about what you are planning to do and why, then after the user says \"{do_it_command}\", you will conduct all your desired edit to the graph using the provided functions.
 The graph you make will be a general summary of the role-playing scenario, like a mind map or a reading note. It should not be too detailed, but should include all the important information.
 ***Graph Explained***
 {fact_graph.desc_fact_graph}
@@ -129,9 +130,9 @@ class RPEvaluationSession():
         
         if is_in_openai_form(lastest_conversation):
             lastest_conversation = openai_form_to_str(lastest_conversation)
-        beginning_graph = self.fact_graph.print_graph()
+        beginning_graph = self.fact_graph.to_json()
         message = input_templates["graph_maker"]
-        message = message.replace("[current_graph]", beginning_graph)
+        message = message.replace("[current_graph]", self.fact_graph.to_str())
         message = message.replace("[hist_conversation]", self.rp_history)
         message = message.replace("[latest_conversation]", lastest_conversation)
         
@@ -172,7 +173,7 @@ class RPEvaluationSession():
             "qa_logs": qa_logs,
             "reasoning": reasoning_text,
             "function_calls": function_call_logs,
-            "ending_graph": self.fact_graph.print_graph()
+            "ending_graph": self.fact_graph.to_json()
         }
         self.logs.append(new_log)
     
