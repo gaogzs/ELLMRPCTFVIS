@@ -9,7 +9,7 @@ This is a directed graph that represents a CONCISE summary of the current status
 desc_fact_node = """
 **Node**
 This is a node in the graph. A node represents an object in the role-playing scenario. It can be a character, a location, an item, an event, or a concept. Each node has the following attributes:
--\"node_name\": The name of the object represented by the node. It is a string and should be unique in the graph. Example: \"John\", \"Paris\", \"apple\". If you have met multiple objects with the same name, you can include an attributive phrase in the name to distinguish them, both in the new one and the old one. Example: \"John (the knight)\", \"Paris (the city)\", \"apple (over there)\".
+-\"node_name\": The name of the object represented by the node. It is a string and should be unique in the graph. Example: \"John\", \"Paris\", \"apple\". If you have met multiple objects with the same name, you can include an attributive phrase in the name to distinguish them, both in the new one and the old one. Example: \"John (the knight)\", \"apple (the brand)\", \"apple (the fruit just picked up)\", remember the bracketed phrase should only be used to avoid repetition, use only the name if there is no repetition.
 -\"node_type\": The type of the node. It can be one of the following: \"character\", \"location\", \"item\", \"event\", or \"concept\".
 -\"info_type\": The type of information contained in the node. It can be one of the following: \"ExistingReal\", \"ExistingFictional\", \"Original\", \"ExistingUnknown\", \"Random\", or \"Abstract\".
 -\"description\": Any additional description of the node. This should be within one sentence or empty most of the time. Example: \"the main character\", \"the first-person narrator\"
@@ -221,7 +221,7 @@ tool_api = [
         "type": "function",
         "function": {
             "name": "append_edge",
-            "description": "Append a new edge to the graph.",
+            "description": "Add a new edge connecting two nodes to the graph.",
             "parameters": {
                 "type": "object",
                 "properties": {
