@@ -137,6 +137,11 @@ def close_brackets(smtlib_str):
     if difference > 0:
         return smtlib_str + (')' * (difference))
     return smtlib_str
+
+def add_definition(smtlib_str, new_def):
+    if new_def not in smtlib_str:
+        smtlib_str = new_def + "\n" + smtlib_str
+    return smtlib_str
     
 class RPEvaluationSession():
     def __init__(self, client: OpenAI, model: str, history: list = None) -> None:
@@ -170,8 +175,7 @@ class RPEvaluationSession():
         
         cleaned_formula_text = "\n".join(map(fix_by_lines, formula_text.split("\n")))
         closed_formula_text = "\n".join(map(close_brackets, cleaned_formula_text.split("\n")))
-        if "(declare-sort Object 0)" not in closed_formula_text:
-            closed_formula_text = "(declare-sort Object 0)\n" + closed_formula_text
+        closed_formula_text = add_definition(closed_formula_text, "(declare-sort Object 0)")
         
         print(closed_formula_text)
         current_formula = parse_smt2_string(closed_formula_text)
