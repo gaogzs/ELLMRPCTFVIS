@@ -64,6 +64,8 @@ Nested logical operators must obey parentheses strictly:
 
 (assert (and (P x) (Q x)))
 (assert (implies A B))
+
+All assert command has to be written in a single line.
 5. Quantifiers:
 
 forall and exists define variable lists once in this form:
@@ -132,8 +134,9 @@ def close_brackets(smtlib_str):
     open_count = smtlib_str.count('(')
     close_count = smtlib_str.count(')')
     difference = open_count - close_count
-    if difference > -1:
+    if difference > 0:
         return smtlib_str + (')' * (difference))
+    return smtlib_str
     
 class RPEvaluationSession():
     def __init__(self, client: OpenAI, model: str, history: list = None) -> None:
@@ -166,7 +169,7 @@ class RPEvaluationSession():
         self.rp_history += lastest_conversation + "\n"
         
         cleaned_formula_text = "\n".join(map(fix_by_lines, formula_text.split("\n")))
-        closed_formula_text = "(assert".join(map(fix_by_lines, cleaned_formula_text.split("(assert")))
+        closed_formula_text = "\n".join(map(close_brackets, cleaned_formula_text.split("\n")))
         if "(declare-sort Object 0)" not in closed_formula_text:
             closed_formula_text = "(declare-sort Object 0)\n" + closed_formula_text
         
