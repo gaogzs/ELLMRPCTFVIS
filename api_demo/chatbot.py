@@ -25,12 +25,12 @@ class ChatBotDummy(ChatBot):
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         new_message = {"role": "user", "content": message}
         response = self.client.chat.completions.create(messages=self.history + [new_message], model=self.model, temperature=temperature)
+        response_message = response.choices[0].message.content
         if record:
             self.history.append(new_message)
-        response_message = response.choices[0].message
-        if record:
-            self.history.append(response_message)
-        return response_message.content
+            new_response_message = {"role": "assistant", "content": response_message}
+            self.history.append(new_response_message)
+        return response_message
     
     def append_history(self, conversation: dict) -> None:
         self.history.append(conversation)
