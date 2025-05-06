@@ -9,13 +9,77 @@ from chatbot import ChatBotDummy
 
 do_it_command = "move on to function calls"
 
+unused = """
+- inheritance implication: When certain objects in a relation can directly imply another combination of objects in a relation, for example if you are provided with relation \"is_animal(a, b)\" and \"is_type_of(b, c)\", you should write them as \"forall(a b c) (is_type_of(b, c) and is_animal(a, b)) => is_animal(a, c)\". To make it like something
+"""
+
 eval_prompts = {
-    "formula_maker": [
-        {
-            "role": "system",
-            "content": f"""
+    "declaration_maker": f"""
+You are a helpful AI assistant who will be in charge of extracting some key elements from a given role-playing scenario happened between a user and an AI。
+Your input will be given in the format \**Story**[story]"**Reference**[reference]\" and [story] will be given in the format \"AI:[content] User:[content] AI:[content] ...\". In your output you should extract 3 elements in 3 stages, give in the format:
+\"
+**Objects**
+[objects]
+**Relations**
+[relations]
+**Replenishment**
+[replenishment]
+\"
+Where [objects] is a list of objects that appeared in the story, including characters, locations, items, events, mentioned concept. You should list out one object perline, each line consists of a non-repetitive variable name in python case together with a brief translation (not a complete description) of what the variable name represents, separated by \":\". For example, if the story mentions \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You may give output like:
+\"
+aleph: Aleph, a name of a character
+dog: dog, a type of animal
+mount_everest: Mount Everest, a name of a location
+leopard_cat: leopard cat, a type of animal
+...
+\"
+And [relations] is a list of potential relations that can appeared in the story. Relation may represents any type of relation between two and more objects, or may be used to additionally describe the properties and facts of an object. You should list out one relation perline, each line consists of a non-repetitive relation declaration whose name in python case, a brief explanation of the nature of the relation, and the cases you want to apply it to, all separated by \":\". For example, in the same story \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You may give output like:
+\"
+is_animal(a, b): a is an animal of type b: is_animal(aleph, dog)
+is_colour(a, b): a shows a colour of b: is_colour(aleph, brown)
+live_in_location(a, b): a lives in location b: live_in_location(aleph, mount_everest)
+...
+\"
+Every element should be decomposed in such a fundamental level. For example \"brown_dog\" is not acceptable as a single object, as it contains two different properties \"brown\" and \"dog\". \"is_dog\" is not acceptable as a single relation, as additional properties can only be applied in a general and flexible relation like \"is_animal\", and there should be no relation that takes in only one argument.
+In the second stage, if any object that was not declared in the [objects] part appeared in any of the relations, you should replenish it in the following [replenishment] part. The format will be just the same as the [objects] part, where each line consists of a non-repetitive variable name in python case together with a brief translation of what the variable name represents, separated by \":\". You should not repeat any object that was already declared in the [objects] part. For example, in the examples given above, \"is_colour(aleph, brown)\" contains a new object \"brown\" that was not declared in the [objects] part, so you should add it in the [replenishment] part:
+\"
+brown: brown
+...
+\"
+The [reference] part of the input may contain a list of objects and relation declarations that have existed elseware for your to maintain consistencty in syntax, and if the story contains any object or relation that means exactly the same as one in the [reference] list, you should declare it the same way. For example, if the [reference] part contains \"is_animal(a, b): a is a creature of type b: is_animal(aleph, dog)\" and the story contains \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You should declare it as \"is_animal(aleph, dog)\" in the [relations] part. But if the [reference] part contains \"is_colour(a, b): a shows a colour of b\", you should no longer declare something like \"is_color(a, b)\" or \"is_of_colour(a, b)\" which is just different in name but exactly in meaning. However, if you onnly find a similar match, like \"live_in_location(a, b)\" and \"stay_in_location(a, b)\", they should not be merged, and you should declare them separately. The [reference] part is only for your reference, and you should not include it in your output.
+""",
+    "semantic_definer": f"""
+You are a helpful AI assistant who will be in charge of analysing the definition of some logical symbols for logical analysis. The input will consist of a list of declaration, where each line contains a single declaration. The declarations will come in two types, objects and relations. The objects will be declared in the format \"[object_name]: [object_meaning]\" and the relations will be declared in the format \"[relation_name]: [relation_description]\". Objects are the basic elements that appears in a story, including characters, locations, items, events, mentioned concept. Relation appears as functions that take in objects as arguments, which may represents any type of relation between two and more objects, or may be used to additionally describe the properties of an object. You should analyse the logical nature of those concepts, and give your output with one spotted nature per line. Here are some types of nature you may find:
+- equity: You find that two objects means exactly the same thing whereever they are used, for example if both \"earphone\" and \"headphone\" are declared as \"an audio device\", you should write them as \"earphone = headphone\".
+- exclusive relation: When a relation of objects declared in some way that will make other usage of the same relation impossible, for example for \"is_animal(a, b): a is an animal of type b\" clearly a cannot be a dog and a cat at the same time, so you should write \"forall(a b c) is_animal(a, b) exclusive_with is_animal(a, c)\". Beware that exclusive relation should not be used too often, it should only be used at very specific relation that are stricly exclusive.
+- time contrained exclusive relation: When a relation of objects declared in some way that will make other usage of the same relation impossible only at the same time, for example for \"locates_in(a, b): a is in location b\" clearly a cannot be in two different locations at the same time, so you should write two definitions \"locates_in(a, b) time_exclusive locates_in(a, b, t)\" where you change its definition by adding a new time argument t at the end of it, and \"forall(a b c t) locates_in(a, b, t) exclusive_with locates_in(a, c, t)\" to indicate that a cannot be in two different locations b and c at the same time t. From this on, if appears in later part of your definitions, this relation will always appear as \"locates_in(a, b, t)\" instead of \"locates_in(a, b)\".
+- relation implication: When an object having a relation can directly imply another specific relation, for example if both \"live_in_location(a, b)\" and \"stay_in_location(a, b)\" are declared, you should write them as \"forall(a b) live_in_location(a, b) => stay_in_location(a, b)\". But you may not have "forall(a b) live_in_location(a, b) => locates_in(a, b)\" since someone lives in a location does not necessarily mean that they are in that location at the same time. Some implication can be bidirectional, so you should also check again in another way.
+- relation contradiction: When an object having a relation is directly the opposite of another specific relation, for example if both \"is_animal(a, b)\" and \"is_plant(a, c)\" are declared, you should write them as \"forall(a b c) is_animal(a, b) => not(is_plant(a, c))\", since a cannot be both an animal and a plant at the same time, doesn't matter what type of animal or plant it is.
+- relation contradiction limited: Similar to relation contradiction, but only contradicts for the same combination of input. For definitions like \"stay_in_location(a, b)\" and \"leave_location(a, b)\" you should write \"forall(a b) stay_in_location(a, b) => not(leave_location(a, b))\", since the contradiction happens for a to stay and leave the same location.
+
+Your output should be in the format:
+\"
+**Reasoning**
+[reasoning]
+**Definitions**
+[definitions]
+\"
+Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [definitions] is, based on the previous reasonning, the main body of your definition output.
+""",
+    "formula_maker": f"""
 You are a helpful AI assistant that creates a first-order logical formula based on a given role-playing scenario happened between a user and an AI, which can then be used to check the logical consistency of the story.
-The input will be given in the format \"AI:[content] User:[content] AI:[content] ...\"
+The input will be given in the format:
+\"
+**Story**
+[story]
+**Objects**
+[objects]
+**Relations**
+[relations]
+**Pre-defined properties**
+[predefined_properties]
+\"
+Where [story] is the content of the story you will be analysing, given in the format \"AI:[content] User:[content] AI:[content] ...\".
 Your output will be in the format:
 \"
 **Reasoning**
@@ -27,14 +91,11 @@ Your output will be in the format:
 \"
 Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [plan] you should state, based on the previous reasonning, the list of objects and relations you are going to add each line should be composed by the object/function name to be declared, followed by a one sentence description. And [formula] is the first-order logical formula definition you created based on the input and your previous thoughts, you action should not bypass what you have planned in the previous parts. The definition should be given in plain text of SMT-LIB format that can be parsed directly to a Z3 solver. So there should not be any beginning and ending \"```\" and \"smtlib\" notion. All comments should follow a prefix \";;\"
 **Guidelines of Creating Formula**
-Most of objects that appeared in the story should be defined as contants that has type of \"Object\". The type of \"Object\" is defined as a set of all objects that appeared in the story, including characters, locations, items, events, mentioned concept, and anything else that you think matters in the story. Objects should be declared as EnumSort, for example \"(declare-datatypes () ((Object obj1, obj2, obj3 ...)))\"
+Most of objects that appeared in the story should be defined as contants that has type of \"Object\". The type of \"Object\" is defined as a set of all objects that appeared in the story, all available objects are supplied in the [objects] part of the input. Objects should be declared as EnumSort, for example \"(declare-datatypes () ((Object obj1, obj2, obj3 ...)))\"
 All sorts should be considered as declared already and there should not be any new sort delcarations.
-And in order to state further facts about story, you can define functions as the relation between declared objects, they should be specific relation, and should not be general terms like \"relate_with()\" or \"interact_with()\". Be note tha relation function can only exist between already-declared constants! All constant names are upper/lowercase sensitive.
-Functions can come in serveral basic categories:
-- Simple relation: \"foo (Object, Object) Bool\", which simply states the existence of a relation, the input field can be more than 2. Example: \"is_friend (Alice, Bob)\" means Alice and Bob are friends.
-- Exclusive relation: \"foo (Object, Object) Bool\", which states that the unidirectional relation from the first object A to the second object B is exclusive, and cannot happen between A and C or any other object. Example: \"is_animal (Alice, Human)\" means Alice is a human, and Alice cannot be any other type of object, in this case \"is_animal (Alice, Human) and is_animal (Alice, Dog)\" should be false, since Alice cannot be human and dog at the same time. In this case the definition should also include something like \"(assert (forall ((a Object) (b Object) (c Object)) (=> (and (is_animal a b) (is_animal a c)) (= b c))))\" as a part of CNF.
-- Time contrained exclusive relation: \"foo (Object, Object, Int) Bool\", which states that the unidirectional relation from the first object A to the second object B is exclusive in a certain time period. Example: \"locates_in (Alice, London, T)\" means Alice is in London at time T (integer type) and Alice cannot be in any other place at the same time, but can be in other places if the time is different. so \"locates_in (Alice, London, T) and \"locates_in (Alice, Paris, T)\" is false since Alice cannot be in two different cities at the same time, but \"locates_in (Alice, London, T) and \"locates_in (Alice, Paris, T+1)\" is acceptable, since it means that Alice has moved from London to Paris at since time T. And extra formula should be added to the root CNF to make such logic valid, like \"(assert (forall ((a Object) (b Object) (c Object) (t Int)) (=> (and (locates_in a b t) (locates_in a c t)) (= b c))))\". Time expression should be just an abstruct relative representation like T0, T1, T2.
-- Beware that exclusive relation should not be used too often, it should only be used at very specific relation that are stricly exclusive.
+And in order to state further facts about story, you have been supplied with a list of available relations in the [relations] part of the input. You should declare them as functions, for example \"(declare-fun foo (Object Object) Bool)\". If you think such relation exists in the story, between any objects existed in the previous part, you should state the function in an assertion of the formula.
+In [predefined_properties] part, there are some existing logical properties written in pseudo code, you should convert them into SMT-LIB format and add them to the formula. There are some special types of properties you should be aware of:
+- Exclusive relation: \"forall(...) foo(...) exclusive_with foo(...)\", which states that the unidirectional relation defined as foo is exclusive, and cannot happen in another usage of foo. Example: \"forall(a b c) is_animal(a, b) exclusive_with is_animal(a, c)\" means that a can only be one animal and a cannot be multiple animals at the same time. In this case if the same a is defined in is_animal more than once for different second argument, the formula shoudl return false. In this case the definition should also include something like \"(assert (forall ((a Object) (b Object) (c Object)) (=> (and (is_animal a b) (is_animal a c)) (= b c))))\" as a part of CNF. Watch the for which argument is the exclusive one in two sides of the exclusiveness definition, as it can be in any position.
 
 **SMT-LIB Syntax Regularisation Guide**
 
@@ -114,8 +175,6 @@ Start with ;; for single-line comments.
 **Hint**
 While making up the code, be sure to check for regular syntax errors, like undeclared constants and unclosed parentheses. Your code will be passed to a Z3 parser so no error should be allowed.
 """
-        }
-    ]
 }
 
 instruction_templates = {
@@ -191,8 +250,8 @@ class RPEvaluationSession():
 
     def append_conversation(self, lastest_conversation: str) -> None:
         
-        complete_messages = eval_prompts["formula_maker"].copy()
-        bot = ChatBotDummy(self.client, self.model, complete_messages)
+        sys_prompt = {"role": "system", "content": eval_prompts["formula_maker"].copy()}
+        bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
         if is_in_openai_form(lastest_conversation):
             lastest_conversation = openai_form_to_str(lastest_conversation)
