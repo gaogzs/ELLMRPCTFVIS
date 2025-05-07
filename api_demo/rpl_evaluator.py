@@ -516,8 +516,9 @@ if __name__ == "__main__":
     
     sample_conversation = []
     with open(os.path.join(cur_dir, "sample_rp_false.json"), "r") as f:
-        sample_conversation = json.load(f)
-    
+        sample_conversations = json.load(f)
+        sample_conversation = sample_conversations[0]
+        
     for section in sample_conversation:
         session.append_conversation(section)
         session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
