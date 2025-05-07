@@ -56,7 +56,6 @@ You are a helpful AI assistant who will be in charge of analysing the natural la
 - relation implication: When an object having a relation can directly imply another specific relation, for example if both \"live_in_location(a, b)\" and \"stay_in_location(a, b)\" are declared, you should write them as \"forall(a b) live_in_location(a, b) => stay_in_location(a, b)\". But you may not have "forall(a b) live_in_location(a, b) => locates_in(a, b)\" since someone lives in a location does not necessarily mean that they are in that location at the same time. Some implication can be bidirectional, so you should also check again in another way.
 - relation contradiction: When an object having a relation is directly the opposite of another specific relation, for example if both \"is_animal(a, b)\" and \"is_plant(a, c)\" are declared, you should write them as \"forall(a b c) is_animal(a, b) => not(is_plant(a, c))\", since a cannot be both an animal and a plant at the same time, doesn't matter what type of animal or plant it is.
 - relation contradiction limited: Similar to relation contradiction, but only contradicts for the same combination of input. For definitions like \"stay_in_location(a, b)\" and \"leave_location(a, b)\" you should write \"forall(a b) stay_in_location(a, b) => not(leave_location(a, b))\", since the contradiction happens for a to stay and leave the same location.
-- other logical properties you find necessary.
 
 Your output should be in the format:
 
@@ -211,7 +210,7 @@ instruction_templates = {
 Your provided SMT-LIB has returned some error while being passed to Z3 parser. Please check the syntax and fix it. The error message is:
 [error_message]
 
-Please respond with the fixed SMT-LIB code only (The part after **SAT definition**), in the same format as before. There should not be any other resoning or explanation unless they are entered as comments in the code.
+Please respond with the fixed SMT-LIB code only (The part after **SAT definition**), in the same format as before. There should no natural language explanation, comments, or informal syntax.
 """
 }
 
@@ -243,7 +242,7 @@ def openai_form_to_str(message: str) -> str:
 
 def divide_response_parts(response_txt: str) -> list:
     sections = re.split(r"-- \*\*.+\n", response_txt)
-    print([section.strip() for section in sections if section.strip()])
+    # print([section.strip() for section in sections if section.strip()])
     return [section.strip() for section in sections if section.strip()]
 
 
@@ -428,9 +427,10 @@ class RPEvaluationSession():
                 current_formula = parse_smt2_string(formula_text)
                 parsed_success = True
             except Z3Exception  as e:
-                print(f"Error parsing SMT-LIB: {e}")
-                formula_text = bot.send_message(instruction_templates["error_correction"].replace("[error_message]", str(e)), record=True, temperature=0)
-                print(f"Retrying with corrected formula: {formula_text}\n")
+                print(f"\"formula_text\"\n Returns error when parsed as SMT-LIB: {e}")
+                formula_text = bot.send_message(instruction_templates["error_correction"].replace("[error_message]", str(e)), record=True, temperature=0.1)
+                print("Retrying with corrected SMT-LIB:")
+                print(formula_text)
         
         return current_formula
         
@@ -457,7 +457,11 @@ class RPEvaluationSession():
             self.solver.reset()
             satisfiable = And(list(last_formula) + list(current_formula))
             self.solver.add(satisfiable)
-            result = str(self.solver.check())
+            try:
+                result = str(self.solver.check())
+            except OSError as e:
+                print(satisfiable)
+                result = str(self.solver.check())
             print(self.solver.assertions())
             print(result)
             
@@ -516,5 +520,7 @@ if __name__ == "__main__":
     
     for section in sample_conversation:
         session.append_conversation(section)
-        session.finalise_log()
         session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+        
+    session.finalise_log()
+    session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
