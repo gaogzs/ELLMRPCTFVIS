@@ -11,25 +11,25 @@ from prompts_definition import *
 instruction_templates = {
     "declaration_maker": """
 **Story**
-[story]
+{story}
 **Reference**
-[Reference]
+{reference}
 """,
     "semantic_definer": """
 **Declarerations**
-[declarations]
+{declarations}
 """,
     "formula_maker": """
 **Story**
-[story]
+{story}
 **Objects**
-[objects]
+{objects}
 **Relations**
-[relations]
+{relations}
 **Pre-defined properties**
-[predefined_properties]
+{predefined_properties}
 **Existing Timeline**
-[existing_timelines]
+{existing_timelines}
 """,
     "error_correction": """
 Your provided SMT-LIB has returned some error while being passed to Z3 parser. Please check the syntax and fix it. The error message is:
@@ -39,31 +39,6 @@ Please respond with the fixed SMT-LIB code only (The part after **SAT definition
 """
 }
 
-def is_in_openai_form(message: str) -> bool:
-    
-    if message.startswith("{") and message.endswith("}"):
-        try:
-            message_json = json.loads(message)
-            if type(message_json) == list and "role" in message_json[0] and "content" in message_json[0]:
-                return True
-        except json.JSONDecodeError:
-            return False
-    return False
-
-def openai_form_to_str(message: str) -> str:
-    role_convert_table = {
-        "user": "User",
-        "assistant": "AI",
-        "system": "System"
-    }
-    message_json = json.loads(message)
-    message_str = ""
-    for message in message_json:
-        role = message["role"]
-        if role in role_convert_table:
-            role = role_convert_table[role]
-            message_str += f"{role}: {message['content']}\n"
-    return message_str
 
 def divide_response_parts(response_txt: str) -> list:
     sections = re.split(r"-- \*\*.+\n", response_txt)
@@ -118,9 +93,8 @@ class RPEvaluationSession():
         sys_prompt = [{"role": "system", "content": sys_prompts["declaration_maker"]}]
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
-        message = instruction_templates["declaration_maker"].replace("[story]", lastest_conversation)
         declarations_str = self.get_declarations_str()
-        message = message.replace("[Reference]", declarations_str)
+        message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
         
         complete_response = bot.send_message(message, record=False, temperature=0.2)
         print("Declaration Maker Response:")
@@ -161,14 +135,13 @@ class RPEvaluationSession():
         sys_prompt = [{"role": "system", "content": sys_prompts["semantic_definer"]}]
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
-        message = instruction_templates["semantic_definer"]
         current_declarations = ""
         for key in obj_keys + rel_keys:
             if key in self.declarations:
                 current_declarations += f"{key}: {self.declarations[key]}\n"
             else:
                 print(f"Warning: {key} not found in declarations.")
-        message = message.replace("[declarations]", current_declarations)
+        message = instruction_templates["semantic_definer"].format(declarations=current_declarations)
         
         complete_response = bot.send_message(message, record=False, temperature=0.1)
         print("Semantic Definer Response:")
@@ -206,7 +179,6 @@ class RPEvaluationSession():
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
         # Make up the prompt from data
-        message = instruction_templates["formula_maker"].replace("[story]", lastest_conversation)
         objects_str = ""
         for key in obj_keys:
             if key in self.declarations:
@@ -223,10 +195,7 @@ class RPEvaluationSession():
         
         timeline_str = self.get_timeline_str()
         
-        message = message.replace("[objects]", objects_str)
-        message = message.replace("[relations]", relations_str)
-        message = message.replace("[predefined_properties]", predefined_text)
-        message = message.replace("[existing_timelines]", timeline_str)
+        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=objects_str, relations=relations_str, predefined_properties=predefined_text, existing_timelines=timeline_str)
         
         
         complete_response = bot.send_message(message, record=True, temperature=0)
@@ -253,7 +222,7 @@ class RPEvaluationSession():
                 parsed_success = True
             except Z3Exception  as e:
                 print(f"\"formula_text\"\n Returns error when parsed as SMT-LIB: {e}")
-                formula_text = bot.send_message(instruction_templates["error_correction"].replace("[error_message]", str(e)), record=True, temperature=0.1)
+                formula_text = bot.send_message(instruction_templates["error_correction"].format(error_message=str(e)), record=False, temperature=0)
                 print("Retrying with corrected SMT-LIB:")
                 print(formula_text)
         
@@ -261,14 +230,6 @@ class RPEvaluationSession():
         
 
     def append_conversation(self, lastest_conversation: str) -> None:
-        
-        if is_in_openai_form(lastest_conversation):
-            lastest_conversation = openai_form_to_str(lastest_conversation)
-        message = instruction_templates["formula_maker"].replace("[story]", lastest_conversation)
-        
-        if is_in_openai_form(lastest_conversation):
-            lastest_conversation = openai_form_to_str(lastest_conversation)
-        message = instruction_templates["formula_maker"].replace("[story]", lastest_conversation)
         
         self.rp_history += lastest_conversation + "\n"
         obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
