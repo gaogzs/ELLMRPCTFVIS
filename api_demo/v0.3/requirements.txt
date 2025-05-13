@@ -1,0 +1,6 @@
+openai
+json
+matplotlib
+numpy
+networkx
+z3-solver
