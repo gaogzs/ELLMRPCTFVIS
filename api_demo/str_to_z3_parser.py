@@ -7,23 +7,24 @@ cur_dir = os.path.dirname(os.path.realpath(__file__))
 grammar_path = os.path.join(cur_dir, "fol.lark")
 with open(grammar_path, 'r') as f:
     grammar = f.read()
-parser = Lark(grammar, start='formula', parser='lalr')
+parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
 
 class IdCollector(Transformer):
     def __init__(self):
         self.variables = set()
         self.functions = set()
+        
     def formula(self, args):
         return None
     def var_list(self, args):
         return [str(tok) for tok in args]
     def forall(self, args):
-        _, vars, body = args
+        vars, body = args
         for v in vars:
             self.variables.add(v)
         
     def exists(self, args):
-        _, vars, body = args
+        vars, body = args
         for v in vars:
             self.variables.add(v)
             
@@ -50,31 +51,29 @@ class IdCollector(Transformer):
     def lnot(self, args):
         return None
 
-def stage1_collect(formula_str):
+def collect_iden(formula_str):
     tree = parser.parse(formula_str)
     collector = IdCollector()
     collector.transform(tree)
     return list(collector.variables), list(collector.functions)
 
 class Z3Builder(Transformer):
-    def __init__(self, func_table):
-        self.func_table = func_table
+    def __init__(self, get_fun):
+        self.get_fun = get_fun
         
     def formula(self, args):
         return args[0]
     
     def var_list(self, args):
-        return [str(tok) for tok in args]
+        return [self.var(tok) for tok in args]
     
     def forall(self, args):
-        _, vars, body = args
-        zvs = [self.get_var(v) for v in vars]
-        return ForAll(zvs, body)
+        vars, body = args
+        return ForAll(vars, body)
         
     def exists(self, args):
-        _, vars, body = args
-        zvs = [self.get_var(v) for v in vars]
-        return Exists(zvs, body)
+        vars, body = args
+        return Exists(vars, body)
         
     def land(self, args):
         return And(*args)
@@ -92,7 +91,8 @@ class Z3Builder(Transformer):
         return Not(args[0])
     
     def relation(self, args):
-        a, op, b = args; return op(a, b)
+        a, op, b = args
+        return op(a, b)
     
     def le(self, _): return lambda a,b: a<=b
     def ge(self, _): return lambda a,b: a>=b
@@ -107,12 +107,11 @@ class Z3Builder(Transformer):
     @v_args(inline=True)
     def const(self, tok):
         return IntVal(int(tok))
-    def func(self, args):
-        name = str(args[0])
-        terms = args[1:]
-        return self.get_fun(name)(*terms)
+    @v_args(inline=True)
+    def func(self, name, terms):
+        terms_children = terms.children
+        return self.get_fun(name)(*terms_children)
 
-def parse_z3(formula_str, get_var, get_fun):
+def parse_z3(builder, formula_str):
     tree = parser.parse(formula_str)
-    builder = Z3Builder(get_var, get_fun)
     return builder.transform(tree)

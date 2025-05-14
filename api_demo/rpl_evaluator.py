@@ -8,6 +8,7 @@ import z3.z3util
 
 from chatbot import ChatBotDummy
 from prompts_definition import *
+from str_to_z3_parser import Z3Builder, parse_z3
 
 instruction_templates = {
     "timeline_maker": """
@@ -88,8 +89,8 @@ class RPEvaluationSession():
         self.relations = {}
         self.timeline = {}
         self.logs = []
+        self.z3_builder = Z3Builder(self.get_z3_function)
         
-        self.solver = Solver()
     
     def get_declarations_str(self) -> str:
         out_str = ""
@@ -104,6 +105,12 @@ class RPEvaluationSession():
         for name, meaning in self.timeline.items():
             out_str += f"{name}: {meaning}\n"
         return out_str
+    
+    def get_z3_function(self, name: str) -> Function:
+        if name in self.relations:
+            return self.relations[name]["function"]
+        else:
+            raise ValueError(f"Relation {name} not found in declarations.")
     
     def handle_timeline_maker(self, lastest_conversation: str) -> str:
         
@@ -122,7 +129,7 @@ class RPEvaluationSession():
         reasoning_text, timeline_text = divide_response_parts(complete_response)
         
         # Parse the timeline
-        for declare_line in timeline_text.split("\n"):
+        for declare_line in timeline_text.splitlines():
             if ":" in declare_line:
                 time_point_name, time_point_meaning = declare_line.split(":", 1)
                 time_point_name = time_point_name.strip()
@@ -151,7 +158,7 @@ class RPEvaluationSession():
         
         # Parse the object declarations
         obj_keys = []
-        for declare_line in objects_text.split("\n"):
+        for declare_line in objects_text.splitlines():
             if ":" in declare_line:
                 obj_name, obj_meaning = declare_line.split(":", 1)
                 obj_name = obj_name.strip()
@@ -163,7 +170,7 @@ class RPEvaluationSession():
         
         # Parse the relation declarations
         rel_keys = []
-        for declare_line in relations_text.split("\n"):
+        for declare_line in relations_text.splitlines():
             if ":" in declare_line:
                 rel_name, rel_meaning = declare_line.split(":")[:2]
                 rel_name = rel_name.strip()
@@ -207,7 +214,7 @@ class RPEvaluationSession():
         
         # Incase there are some re-defined time-sensitive relations, we need to add them to the declarations
         explicit_formulas = []
-        for declare_line in definitions_text.split("\n"):
+        for declare_line in definitions_text.splitlines():
             if "[exclusive_arg]" in declare_line:
                 rel_just_name = declare_line.split("(")[0]
                 edited_params = get_relation_params(declare_line)
@@ -240,7 +247,7 @@ class RPEvaluationSession():
             else:
                 new_definition_text += declare_line + "\n"
         
-        return obj_keys, rel_keys, definitions_text, explicit_formulas
+        return obj_keys, rel_keys, new_definition_text, explicit_formulas
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list, predefined_text: str) -> AstVector:
         
@@ -273,17 +280,10 @@ class RPEvaluationSession():
         
         reasoning_text, plan_text, formula_text = divide_response_parts(complete_response)
 
-        current_formula = None
-        parsed_success = False
-        while not parsed_success:
-            try:
-                current_formula = parse_smt2_string(formula_text)
-                parsed_success = True
-            except Z3Exception  as e:
-                print(f"Returns error when parsed as SMT-LIB: {e}")
-                formula_text = bot.send_message(instruction_templates["error_correction"].format(error_message=str(e)), record=True, temperature=0.1)
-                print("Retrying with corrected SMT-LIB:")
-                print(formula_text)
+        current_formula = []
+        for formula in formula_text.splitlines():
+            parsed_formula = parse_z3(self.z3_builder, formula)
+            current_formula.append(parsed_formula)
         
         return current_formula
         
@@ -296,73 +296,60 @@ class RPEvaluationSession():
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys, definition_text)
         self.rp_history.append(lastest_conversation)
         
-        result = None
-        if self.formulas:
-            all_formulas = []
-            for formula in self.formulas:
-                all_formulas += list(formula)
-            all_formulas += list(current_formula)
-            
-            self.solver = Solver()
-            for i, formula in enumerate(all_formulas):
-                self.solver.assert_and_track(formula, formula.sexpr() + str(i))
-            solved_success = False
-            countdown = 10
-            while not solved_success:
-                try:
-                    result = str(self.solver.check())
-                    solved_success = True
-                except OSError as e:
-                    print(f"Returns error when solving: {e}")
-                    with open("smt2_error.smt2", "w") as f:
-                        f.write(self.solver.to_smt2())
-                    self.solver = Solver()
-                    for i, formula in enumerate(all_formulas):
-                        self.solver.assert_and_track(formula, formula.sexpr() + str(i))
-                    countdown -= 1
-                    if countdown <= 0:
-                        print("Error: Timeout when solving.")
-                        exit(1)
-            if result == "unsat":
-                result += str(self.solver.unsat_core())
-            print(self.solver.assertions())
-            print(result)
-            
-        self.formulas.append(current_formula)
+        complete_current_formula = semantic_defined_formulas + current_formula
+        combined_past_formula = sum(self.formulas, [])
+        combined_past_formula += semantic_defined_formulas
         
-        pretty_formula = current_formula.sexpr()
+        result = self.solve_combined_formulas(combined_past_formula)
+            
+        self.formulas.append(complete_current_formula)
         
-        current_declarations = ""
-        for key in obj_keys + rel_keys:
-            if key in self.declarations:
-                current_declarations += f"{key}: {self.declarations[key]}\n"
-            else:
-                print(f"Warning: {key} not found in declarations.")
+        pretty_formula = "\n".join([str(formula) for formula in complete_current_formula])
+        
+        for name, meaning in self.objects.items():
+            current_declarations += f"{name}: {meaning}\n"
+        for name, info in self.relations.items():
+            current_declarations += f"{name}({", ".join(info["params"])}): {info["meaning"]}\n"
         
         new_log = {
             "conversation": lastest_conversation,
             "new_declarations": current_declarations,
-            "pseudo_predefinitions": new_definition_text,
+            "pseudo_predefinitions": definition_text,
             "formula": pretty_formula,
             "result": result,
         }
         self.logs.append(new_log)
+    
+    def solve_combined_formulas(self, formulas: list) -> None:
+        # Add the formulas to the solver
+        var_list = set()
+        solver = Solver()
+        for i, formula in enumerate(formulas):
+            solver.assert_and_track(formula, str(formula) + str(i))
+            var_list.update(z3util.get_vars(formula))
         
-    def finalise_log(self) -> None:
+        solver.add(Distinct(*var_list))
+        
+        # Check if the formulas are satisfiable
+        result = solver.check()
+        
+        if result == sat:
+            return 0
+        elif result == unsat:
+            return len(solver.unsat_core())
+        else:
+            return -1
+    
+    def export_logs(self, file_path: str) -> None:
         # Add the global data to the log
-        
         new_log = {
-            "full_conversation": self.rp_history,
+            "full_conversation": "\n".join(self.rp_history),
+            "full_formulas": "\n".join([str(formula) for formula in self.formulas]),
             "full_declarations": self.get_declarations_str(),
             "full_timeline": self.get_timeline_str(),
         }
-        
-        self.logs.append(new_log)
-        
-    
-    def export_logs(self, file_path: str) -> None:
         with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(self.logs, f, indent=2)
+            json.dump(self.logs + [new_log], f, indent=2)
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -386,5 +373,4 @@ if __name__ == "__main__":
         session.append_conversation(section)
         session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
         
-    session.finalise_log()
     session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
