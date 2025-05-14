@@ -4,6 +4,7 @@ from openai import OpenAI
 import re
 import random
 from z3 import *
+import z3.z3util
 
 from chatbot import ChatBotDummy
 from prompts_definition import *
@@ -55,6 +56,15 @@ def add_definition(smtlib_str, new_def):
         smtlib_str = new_def + "\n" + smtlib_str
     return smtlib_str
 
+def get_relation_params(relation_str: str) -> list:
+    match = re.search(r'\(([^()]*)\)', relation_str)
+    if match:
+        params = match.group(1).split(",")
+        params = [param.strip() for param in params]
+        return params
+    else:
+        return []
+
 # def fix_by_lines(smtlib_str):
 #     if smtlib_str.startswith("; "):
 #         return ""
@@ -74,7 +84,8 @@ class RPEvaluationSession():
         self.client = client
         self.model = model
         self.formulas = []
-        self.declarations = {}
+        self.objects = {}
+        self.relations = {}
         self.timeline = {}
         self.logs = []
         
@@ -82,8 +93,10 @@ class RPEvaluationSession():
     
     def get_declarations_str(self) -> str:
         out_str = ""
-        for name, meaning in self.declarations.items():
+        for name, meaning in self.objects.items():
             out_str += f"{name}: {meaning}\n"
+        for name, info in self.relations.items():
+            out_str += f"{name}({", ".join(info["params"])}): {info["meaning"]}\n"
         return out_str
     
     def get_timeline_str(self) -> str:
@@ -143,9 +156,9 @@ class RPEvaluationSession():
                 obj_name, obj_meaning = declare_line.split(":", 1)
                 obj_name = obj_name.strip()
                 obj_meaning = obj_meaning.strip()
-                if obj_name in self.declarations:
+                if obj_name in self.objects:
                     print(f"Warning: {obj_name} already exists in declarations.")
-                self.declarations[obj_name] = obj_meaning
+                self.objects[obj_name] = obj_meaning
                 obj_keys.append(obj_name)
         
         # Parse the relation declarations
@@ -155,9 +168,14 @@ class RPEvaluationSession():
                 rel_name, rel_meaning = declare_line.split(":")[:2]
                 rel_name = rel_name.strip()
                 rel_meaning = rel_meaning.strip()
-                if rel_name in self.declarations:
-                    print(f"Warning: {rel_name} already exists in declarations.")
-                self.declarations[rel_name] = rel_meaning
+                rel_just_name = rel_name.split("(")[0]
+                rel_params = get_relation_params(rel_meaning)
+                rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
+                if rel_just_name in self.relations:
+                    print(f"Warning: {rel_just_name} already exists in declarations.")
+                self.relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
+                
+                
                 rel_keys.append(rel_name)
         
         return obj_keys, rel_keys
@@ -168,11 +186,17 @@ class RPEvaluationSession():
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
         current_declarations = ""
-        for key in obj_keys + rel_keys:
-            if key in self.declarations:
-                current_declarations += f"{key}: {self.declarations[key]}\n"
+        for key in obj_keys:
+            if key in self.objects:
+                current_declarations += f"{key}: {self.objects[key]}\n"
             else:
                 print(f"Warning: {key} not found in declarations.")
+        for key in rel_keys:
+            if key in self.relations:
+                current_declarations += f"{key}: {self.relations[key]}\n"
+            else:
+                print(f"Warning: {key} not found in declarations.")
+                
         message = instruction_templates["semantic_definer"].format(declarations=current_declarations)
         
         complete_response = bot.send_message(message, record=False, temperature=0.1)
@@ -182,28 +206,41 @@ class RPEvaluationSession():
         reasoning_text, definitions_text = divide_response_parts(complete_response)
         
         # Incase there are some re-defined time-sensitive relations, we need to add them to the declarations
-        # new_definition_text = ""
-        # for declare_line in definitions_text.split("\n"):
-        #     if "time_exclusive" in declare_line:
-        #         key, new_definition = declare_line.split("time_exclusive", 1)
-        #         new_name, new_meaning = new_definition.split(":", 1)
-        #         key = key.strip()
-        #         new_name = new_name.strip()
-        #         new_meaning = new_meaning.strip()
-        #         if key in self.declarations:
-        #             self.declarations.pop(key)
-        #         else:
-        #             print(f"Warning: {key} not found in declarations.")
-        #         if key in rel_keys:
-        #             replace_index = rel_keys.index(key)
-        #             rel_keys[replace_index] = new_name
-        #         else:
-        #             print(f"Warning: {key} not found in rel_keys.")
-        #         self.declarations[new_name] = new_meaning
-        #     else:
-        #         new_definition_text += declare_line + "\n"
+        explicit_formulas = []
+        for declare_line in definitions_text.split("\n"):
+            if "[exclusive_arg]" in declare_line:
+                rel_just_name = declare_line.split("(")[0]
+                edited_params = get_relation_params(declare_line)
+                original_params = self.relations[rel_just_name]["params"]
+                rel_z3_func = self.relations[rel_just_name]["function"]
+                
+                scope_params = []
+                ref_l = []
+                ref_r = []
+                constrain_pairs = []
+                for param_l, param_r in zip(original_params, edited_params):
+                    if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
+                        replace1 = param_l + "1"
+                        replace2 = param_l + "2"
+                        scope_params.append(replace1)
+                        ref_l.append(replace1)
+                        scope_params.append(replace2)
+                        ref_r.append(replace2)
+                        if param_r == "[exclusive_arg]":
+                            constrain_pairs.append(Int(replace1) == Int(replace2))
+                    else:
+                        scope_params.append(param_l)
+                        ref_l.append(param_l)
+                        ref_r.append(param_l)
+                lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
+                rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
+                constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
+                explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
+                explicit_formulas.append(explicit_formula)
+            else:
+                new_definition_text += declare_line + "\n"
         
-        return obj_keys, rel_keys, definitions_text.strip()
+        return obj_keys, rel_keys, definitions_text, explicit_formulas
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list, predefined_text: str) -> AstVector:
         
@@ -255,8 +292,8 @@ class RPEvaluationSession():
         
         self.handle_timeline_maker(lastest_conversation)
         obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
-        obj_keys, rel_keys, new_definition_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
-        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys, new_definition_text)
+        obj_keys, rel_keys, definition_text, semantic_defined_formulas = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
+        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys, definition_text)
         self.rp_history.append(lastest_conversation)
         
         result = None

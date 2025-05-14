@@ -4,3 +4,4 @@ matplotlib
 numpy
 networkx
 z3-solver
+lark

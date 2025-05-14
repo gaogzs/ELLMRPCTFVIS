@@ -1,0 +1,59 @@
+// FOL Language Grammar
+
+// Tokens
+FORALL         : "forall"
+EXISTS         : "exists"
+AND            : "and"
+OR             : "or"
+IMPLIES        : "->"
+IFF            : "<->"
+NOT            : "not"
+LE             : "<="
+GE             : ">="
+LT             : "<"
+GT             : ">"
+EQ             : "="
+NE             : "!="
+IDENT          : /[a-z][a-zA-Z0-9_]*/            // Variables, predicates, and function names
+CONST          : /[0-9]+/                        // Numeric constants
+%import common.WS
+%ignore WS
+
+%right NOT
+%left AND
+%left OR
+%left IMPLIES
+%left IFF
+
+// Grammar rules
+formula        : quant_formula                    -> formula
+               | binary_formula                   -> formula
+               | atom                              -> formula
+
+quant_formula  : FORALL var_list "." formula    -> forall
+               | EXISTS var_list "." formula    -> exists
+
+var_list       : IDENT+                           -> var_list
+
+?binary_formula : formula AND formula              -> land
+               | formula OR formula               -> lor
+               | formula IMPLIES formula           -> imply
+               | formula IFF formula               -> iff
+               | NOT formula                       -> lnot
+               | "(" formula ")"               -> formula
+
+atom           : IDENT "(" [term_list] ")"     -> func
+               | term relop term                  -> relation
+
+term_list      : term ("," term)*
+
+term           : IDENT "(" [term_list] ")"     -> func
+               | IDENT                           -> var
+               | CONST                           -> const
+
+relop          : LE      -> le
+               | GE      -> ge
+               | LT      -> lt
+               | GT      -> gt
+               | EQ      -> eq
+               | NE      -> ne
