@@ -1,0 +1,43 @@
+You will be in charge of extracting some key elements from a given role-playing scenario happened between a user and an AI。
+Your input will be given in the format \"**Story**[story]"**Reference**[reference]\" and [story] will be given in the format \"AI:[content] User:[content] AI:[content] ...\". In your output you should extract 3 elements in 3 stages, give in the format:
+
+-- **Objects**
+[objects]
+-- **Relations**
+[relations]
+-- **Replenishment**
+[replenishment]
+
+Where [objects] is a list of objects that appeared in the story, they can be characters, locations, items, events, mentioned concept. More detailed description of these types are:
+-\"Character\": A character in the role-playing that can actively interact with the others. Example: \"The brave knight\", \"Napoleon Bonaparte\", \"The narrator\".
+-\"Location\": A physical or conceptual location in the role-playing that can be used as a background in the role-playing scenario. Example: \"The dark forest\", \"Paris\", \"Your bedroom\".
+-\"Item\": An inanimate item that exists in the role-playing. It can be a weapon, a tool, or any other items. Example: \"A sword\", \"'The Art of War' the book\", \"A rock blocking the road\".
+-\"Event\": An event that has/can/may happen in past/present/future in the role-playing scenario. Example: \"A dragon attack\", \"A birthday party\", \"The D-day\".
+-\"Concept\": A notable concept that is important in the role-playing scenario. Or a general name for a collecton of objects. It can be a theory, a philosophy, or any other general idea. Example: \"Humankind\", \"The theory of relativity\", \"The idea of freedom\".
+You should list out one object perline, each line consists of a non-repetitive variable name in lower case python case and a brief translation (not a complete description) of what the variable name represents separated by \":\". For example, if the story mentions \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You may give output like:
+\"
+aleph: Aleph, a named character
+dog: dog, a type of animal
+mount_everest: Mount Everest, a named location
+leopard_cat: leopard cat, a type of animal
+...
+\"
+And [relations] is a list of potential relations that can appeared in the story. Relation may represents any type of relation between two and more objects, or may be used to additionally describe the properties and facts of an object. You should list out one relation perline, each line consists of a non-repetitive relation declaration, a brief explanation of the nature of the relation, and the cases you want to apply it to, all separated by \":\". For example, in the same story \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You may give output like:
+\"
+is_animal(a, b, t): [a] is an animal of type [b] for time [t]: is_animal(aleph, dog, T0)
+is_colour(a, b, t): [a] shows a colour of [b] for time [t]: is_colour(aleph, brown, T0)
+live_in_location(a, b, t): [a] lives in location [b] for time [t]: live_in_location(aleph, mount_everest, T0)
+...
+\"
+Be note that all relation is mandatory to take a time field t at the end, even if it does not seem to be subject to time. This is because the time field t is used to indicate the time point of the relation, and it is important to keep track of the time in the role-playing scenario. The time field t will be supplied as an abstract representation in the form of \"T[integeter]\" (For example, T0, T1, T2 etc).
+The variable quoted in the explanation part should be the same as the variable name in the declaration part, there should not appear any variable that goes out of the scope of the declaration.
+All relations should only have one source, but can have multiple targets. For example, \"is_animal(a, b, t)\" is acceptable, but \"is_animal(a, b, c, t): [a] and [b] are animals of type [c] for time [t]\" is not acceptable. The first two parameters should be the source and target of the relation, and the third parameter should be the time point of the relation. The time point should be a variable name in lower case python case.
+General terms like \"is_a()\" or \"has_a()\" are not acceptable as a relation, as they are too general and do not provide any specific information about the relation, they should reflect at least the aspect of the relation.
+Every element should be decomposed in such a fundamental level. For example \"brown_dog\" is not acceptable as a single object, as it contains two different properties \"brown\" and \"dog\". \"is_dog\" is not acceptable as a single relation, as additional properties can only be applied in a general and flexible relation like \"is_animal\".
+In the second stage, if any object that was not declared in the [objects] part appeared in any of the relations, you should replenish it in the following [replenishment] part. The format will be just the same as the [objects] part, where each line consists of a non-repetitive variable name in lower case python case together with a brief translation of what the variable name represents, separated by \":\". You should not repeat any object that was already declared in the [objects] part. For example, in the examples given above, there is a \"is_colour(aleph, brown)\" if the parameter it contains \"brown\" was not declared in the [objects] part, you should add it in the [replenishment] part here, and the output in this case should contain:
+\"
+brown: brown, a colour
+...
+\"
+The [reference] part of the input may contain a list of objects and relation declarations that have existed elseware for your to maintain consistencty in syntax, and if the story contains any object or relation that means exactly the same as one in the [reference] list, you should declare it the same way. For example, if the [reference] part contains \"is_animal(a, b): a is a creature of type b: is_animal(aleph, dog)\" and the story contains \"Aleph is a brown dog living in Mount Everest with a leopard cat.\" You should declare it as \"is_animal(aleph, dog)\" in the [relations] part. But if the [reference] part contains \"is_colour(a, b): a shows a colour of b\", you should no longer declare something like \"is_color(a, b)\" or \"is_of_colour(a, b)\" which is just different in name but exactly in meaning. However, if you onnly find a similar match, like \"live_in_location(a, b)\" and \"stay_in_location(a, b)\", they should not be merged, and you should declare them separately. The [reference] part is only for your reference, and you should not include it in your output. However, if two objects or relations that should be different but might be named the same way, you should evade repetitions and name them differently. Consider add extra postfix if applicable.
+For any section of your answer, if you find that there is no object or relation that can be declared, you should just write \"None\" in the section.

@@ -1,0 +1,1 @@
+- inheritance implication: When certain objects in a relation can directly imply another combination of objects in a relation, for example if you are provided with relation \"is_animal(a, b)\" and \"is_type_of(b, c)\", you should write them as \"forall(a b c) (is_type_of(b, c) and is_animal(a, b)) => is_animal(a, c)\". To make it like something
