@@ -300,12 +300,10 @@ class RPEvaluationSession():
         self.rp_history.append(lastest_conversation)
         
         complete_current_formula = semantic_defined_formulas + current_formula
-        result = None
-        if self.formulas:
-            combined_past_formula = sum(self.formulas, [])
-            combined_past_formula += semantic_defined_formulas
-            
-            result = self.solve_combined_formulas(combined_past_formula)
+        combined_past_formula = sum(self.formulas, [])
+        combined_past_formula += semantic_defined_formulas
+        
+        result = self.solve_combined_formulas(combined_past_formula)
             
         self.formulas.append(complete_current_formula)
         
