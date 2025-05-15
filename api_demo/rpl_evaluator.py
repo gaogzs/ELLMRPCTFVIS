@@ -22,6 +22,8 @@ instruction_templates = {
 {reference}
 """,
     "semantic_definer": """
+**Past Declarations**
+{past_declarations}
 **Declarerations**
 {declarations}
 """,
@@ -240,9 +242,9 @@ class RPEvaluationSession():
                 
                 rel_keys.append(rel_just_name)
         
-        return obj_keys, rel_keys
+        return obj_keys, rel_keys, declarations_str
 
-    def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, str, str]:
+    def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list, old_declarations: str) -> tuple[list, list, str, str]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("semantic_definer")}]
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
@@ -250,7 +252,7 @@ class RPEvaluationSession():
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
                 
-        message = instruction_templates["semantic_definer"].format(declarations=current_declarations)
+        message = instruction_templates["semantic_definer"].format(declarations=current_declarations, past_declarations=old_declarations)
         
         complete_response = bot.send_message(message, record=False, temperature=0.1)
         print("Semantic Definer Response:")
@@ -294,8 +296,8 @@ class RPEvaluationSession():
     def append_conversation(self, lastest_conversation: str) -> None:
         
         self.handle_timeline_maker(lastest_conversation)
-        obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
-        obj_keys, rel_keys, definition_text, semantic_defined_formulas = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
+        obj_keys, rel_keys, old_declarations = self.handle_declaration_maker(lastest_conversation)
+        obj_keys, rel_keys, definition_text, semantic_defined_formulas = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys, old_declarations)
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys, definition_text)
         self.rp_history.append(lastest_conversation)
         
