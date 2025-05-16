@@ -22,16 +22,16 @@ mount_everest: Mount Everest, a named location
 leopard_cat: leopard cat, a type of animal
 ...
 "
-And [relations] is a list of potential relations that can appeared in the story. Relation may represents any type of relation between two and more objects. It could be relationship between two characters, or used to adding information to a character. You should list out one relation perline, each line consists of a relation declaration with non-repetitive relation name and abstract parameter names, a brief explanation of the nature of the relation, and the cases you want to apply it to, all separated by ":". For example, in the same story "Aleph is a brown dog living in Mount Everest with a sick leopard cat." You may give output like:
+And [relations] is a list of potential relations that can appeared in the story. Relation may represents any type of relation between two and more objects. It could be relationship between two characters, or used to adding information to a character. You should list out one relation perline, each line consists of a relation declaration with non-repetitive relation name and abstract parameters like (a, b, c), a brief explanation of the nature of the relation after a ":". And the cases you want to apply this declared relation to should be followed by a "|". For example, in the same story "Aleph is a brown dog living in Mount Everest with a sick leopard cat." You may give output like:
 "
-is_animal(a, b, t): character [a] is an animal of type [b] for time [t]: is_animal(aleph, dog, T0)
-is_colour(a, b, t): object [a] shows a colour of [b] for time [t]: is_colour(aleph, brown, T0)
-live_in_location(a, b, t): character [a] lives in location [b] for time [t]: live_in_location(aleph, mount_everest, T0)
-live_together_with(a, b, t): character [a] lives together with character [b] for time [t]: live_with(aleph, leopard_cat, T0)
-is_sick(a, t): character [a] is sick for time [t]: is_sick(leopard_cat, T0)
+is_animal(a, b, t): character [a] is an animal of type [b] for time [t]| is_animal(aleph, dog, T0)
+is_colour(a, b, t): object [a] shows a colour of [b] for time [t]| is_colour(aleph, brown, T0)
+live_in_location(a, b, t): character [a] lives in location [b] for time [t]| live_in_location(aleph, mount_everest, T0)
+live_together_with(a, b, t): character [a] lives together with character [b] for time [t]| live_with(aleph, leopard_cat, T0)
+is_sick(a, t): character [a] is sick for time [t]| is_sick(leopard_cat, T0)
 ...
 "
-Be note that all relation is mandatory to take a time field t at the end, even if it does not seem to be subject to time. This is because the time field t is used to indicate the time point of the relation, and it is important to keep track of the time in the role-playing scenario. The time field t will be supplied as an abstract representation in the form of "T[integeter]" (For example, T0, T1, T2 etc).
+Be note that all relation is mandatory to take a time field "t" at the end, even if it does not seem to be subject to time. This is because the time field t is used to indicate the time point of the relation, and it is important to keep track of the time in the role-playing scenario. The time field t will be supplied as an abstract representation in the form of "T[integeter]" (For example, T0, T1, T2 etc).
 The variable quoted in the explanation part should be the same as the variable name in the declaration part, there should not appear any variable that goes out of the scope of the declaration.
 All relations should only have one source, but can have multiple targets. For example, "is_animal(a, b, t)" is acceptable, but "is_animal(a, b, c, t): [a] and [b] are animals of type [c] for time [t]" is not acceptable. The first two parameters should be the source and target of the relation, and the third parameter should be the time point of the relation. The time point should be a variable name in lower case python case.
 General terms like "is_a()" or "has_a()" are not acceptable as a relation, as they are too general and do not provide any specific information about the relation, they should reflect at least the aspect of the relation.

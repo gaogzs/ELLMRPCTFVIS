@@ -6,10 +6,17 @@ import random
 from z3 import *
 import z3.z3util
 import lark
+from collections import defaultdict
 
-from chatbot import ChatBotDummy
+from chatbot import ChatBotSimple
 from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from prompt_loader import PromptLoader
+
+print_warning = False
+def print_warning_message(message):
+    global print_warning
+    if print_warning:
+        print(message)
 
 instruction_templates = {
     "timeline_maker": """
@@ -37,15 +44,16 @@ instruction_templates = {
 {relations}
 **Existing Timeline**
 {existing_timelines}
+**Existing Scopes**
+{existing_scopes}
 """,
-    "error_correction": """
-Your provided formulas has returned some error while being passed to Z3 solver. Please check the syntax and fix it. The error message is:
+    "formula_error_correction": """
+Your provided formulas has returned some error while being parsed as FOL formula. Please check the syntax and fix it. The error message is:
 {error_message}
 
-Please respond with the corrected complete formulas (The content after **SAT definition**), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared.
+Please respond with the corrected complete formulas only (No header, no reasoning and anything other than the formula definitions), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared.
 """
 }
-
 
 def divide_response_parts(response_txt: str) -> list:
     sections = re.split(r"-- \*\*.+\n", response_txt)
@@ -81,6 +89,7 @@ class RPEvaluationSession():
         self.objects = {}
         self.relations = {}
         self.timeline = {}
+        self.scopes = {}
         self.logs = []
         self.z3_builder = Z3Builder(self.get_z3_function)
         
@@ -104,20 +113,34 @@ class RPEvaluationSession():
             if key in self.objects:
                 obj_str += f"{key}: {self.objects[key]}\n"
             else:
-                print(f"Warning: {key} not found in declarations.")
+                print_warning_message(f"Warning: {key} not found in declarations.")
         rel_str = ""
         for key in rel_keys:
             if key in self.relations:
                 info = self.relations[key]
                 rel_str += self.relation_to_str(key, info) + "\n"
             else:
-                print(f"Warning: {key} not found in declarations.")
+                print_warning_message(f"Warning: {key} not found in declarations.")
         return obj_str, rel_str
     
     def get_timeline_str(self) -> str:
         out_str = ""
         for name, meaning in self.timeline.items():
             out_str += f"{name}: {meaning}\n"
+        return out_str
+    
+    def get_scopes_str(self) -> str:
+        out_str = ""
+        for name, meaning in self.scopes.items():
+            out_str += f"{name}: {meaning}\n"
+        return out_str
+    
+    def scoped_formula_to_str(self, formula: dict) -> str:
+        out_str = ""
+        for scope, formulas in formula.items():
+            out_str += f"Scope:\n"
+            for f in formulas:
+                out_str += str(f) + "\n"
         return out_str
     
     def get_z3_function(self, name: str) -> Function:
@@ -132,79 +155,119 @@ class RPEvaluationSession():
         if self.rp_history:
             sys_prompt.append({"role": "user", "content": "\n".join(self.rp_history)})
             sys_prompt.append({"role": "assistant", "content": "-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str()})
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
         
-        complete_response = bot.send_message(message, record=False, temperature=0.2)
+        complete_response = bot.send_message(message, record=True, temperature=0.2)
         print("Timeline Maker Response:")
         print(complete_response)
         
-        reasoning_text, timeline_text = divide_response_parts(complete_response)
+        timeline_backup = self.timeline.copy()
+        processed_success = False
+        tries_count = 4
+        while not processed_success:
+            try:
+                tries_count -= 1
+                if tries_count <= 0:
+                    print("Error: Too many failing responses.")
+                    exit(1)
+                reasoning_text, timeline_text = divide_response_parts(complete_response)
+                processed_success = True
+                # Parse the timeline
+                for definition_line in timeline_text.splitlines():
+                    if ":" in definition_line:
+                        time_point_name, time_point_meaning = definition_line.split(":", 1)
+                        time_point_name = time_point_name.strip()
+                        time_point_meaning = time_point_meaning.strip()
+                        if time_point_name in self.timeline:
+                            print_warning_message(f"Warning: {time_point_name} already exists in timeline.")
+                        self.timeline[time_point_name] = time_point_meaning
+            except Exception as e:
+                self.timeline = timeline_backup.copy()
+                print("Error in response division:", e)
+                bot.reset_history()
+                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                print("Retry with:\n")
+                print(complete_response)
         
-        # Parse the timeline
-        for definition_line in timeline_text.splitlines():
-            if ":" in definition_line:
-                time_point_name, time_point_meaning = definition_line.split(":", 1)
-                time_point_name = time_point_name.strip()
-                time_point_meaning = time_point_meaning.strip()
-                if time_point_name in self.timeline:
-                    print(f"Warning: {time_point_name} already exists in timeline.")
-                self.timeline[time_point_name] = time_point_meaning
         
         return timeline_text
     
     def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("declaration_maker")}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
         message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
         
-        complete_response = bot.send_message(message, record=False, temperature=0.2)
+        complete_response = bot.send_message(message, record=True, temperature=0.2)
         print("Declaration Maker Response:")
         print(complete_response)
         
-        objects_text, relations_text, replenishment_text = divide_response_parts(complete_response)
+        objects_backup = self.objects.copy()
+        relations_backup = self.relations.copy()
+        processed_success = False
+        tries_count = 4
+        while not processed_success:
+            try:
+                tries_count -= 1
+                if tries_count <= 0:
+                    print("Error: Too many failing responses.")
+                    exit(1)
+                objects_text, relations_text, replenishment_text = divide_response_parts(complete_response)
+                
+                # Parse the object declarations
+                obj_keys = []
+                for definition_line in objects_text.splitlines():
+                    if ":" in definition_line:
+                        obj_name, obj_meaning = definition_line.split(":", 1)
+                        obj_name = obj_name.strip()
+                        obj_meaning = obj_meaning.strip()
+                        if obj_name in self.objects:
+                            print_warning_message(f"Warning: {obj_name} already exists in declarations.")
+                        self.objects[obj_name] = obj_meaning
+                        obj_keys.append(obj_name)
+                
+                # Parse the relation declarations
+                rel_keys = []
+                for definition_line in relations_text.splitlines():
+                    if ":" in definition_line:
+                        rel_name, rel_def = definition_line.split(":", 1)
+                        rel_meaning, rel_cases = rel_def.split("|", 1)
+                        rel_name = rel_name.strip()
+                        rel_meaning = rel_meaning.strip()
+                        rel_just_name = rel_name.split("(")[0]
+                        rel_params = get_relation_params(rel_name)
+                        rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
+                        if rel_just_name in self.relations:
+                            print_warning_message(f"Warning: {rel_just_name} already exists in declarations.")
+                        self.relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
+                        
+                        
+                        rel_keys.append(rel_just_name)
+                        
+                processed_success = True
+                        
+            except Exception as e:
+                self.objects = objects_backup.copy()
+                self.relations = relations_backup.copy()
+                
+                print("Error in response division:", e)
+                bot.reset_history()
+                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                print("Retry with:\n")
+                print(complete_response)
         
         objects_text += "\n" + replenishment_text
-        
-        # Parse the object declarations
-        obj_keys = []
-        for definition_line in objects_text.splitlines():
-            if ":" in definition_line:
-                obj_name, obj_meaning = definition_line.split(":", 1)
-                obj_name = obj_name.strip()
-                obj_meaning = obj_meaning.strip()
-                if obj_name in self.objects:
-                    print(f"Warning: {obj_name} already exists in declarations.")
-                self.objects[obj_name] = obj_meaning
-                obj_keys.append(obj_name)
-        
-        # Parse the relation declarations
-        rel_keys = []
-        for definition_line in relations_text.splitlines():
-            if ":" in definition_line:
-                rel_name, rel_meaning = definition_line.split(":")[:2]
-                rel_name = rel_name.strip()
-                rel_meaning = rel_meaning.strip()
-                rel_just_name = rel_name.split("(")[0]
-                rel_params = get_relation_params(rel_name)
-                rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
-                if rel_just_name in self.relations:
-                    print(f"Warning: {rel_just_name} already exists in declarations.")
-                self.relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
-                
-                
-                rel_keys.append(rel_just_name)
         
         return obj_keys, rel_keys
 
     def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("semantic_definer")}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
@@ -223,18 +286,38 @@ class RPEvaluationSession():
         print("Semantic Definer Response:")
         print(complete_response)
         
-        reasoning_text, definitions_text = divide_response_parts(complete_response)
+        processed_success = False
+        tries_count = 4
+        while not processed_success:
+            try:
+                tries_count -= 1
+                if tries_count <= 0:
+                    print("Error: Too many failing responses.")
+                    exit(1)
+                reasoning_text, definitions_text = divide_response_parts(complete_response)
+                processed_success = True
+            except Exception as e:
+                print("Error in response division:", e)
+                bot.reset_history()
+                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                print("Retry with:\n")
+                print(complete_response)
         
         explicit_formulas = []
         if definitions_text != "None":
             parsed_success = False
+            tries_count = 4
             while not parsed_success:
                 try:
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
                     explicit_formulas = self.parse_internal_definitions(definitions_text)
                     parsed_success = True
                 except FOLParsingError as e:
-                    error_message = instruction_templates["error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", definitions_text)
+                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                    print("Error in formula parsing:", e)
                     definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
                     print(definitions_text)
@@ -242,34 +325,66 @@ class RPEvaluationSession():
         
         return obj_keys, rel_keys, explicit_formulas, definitions_text
     
-    def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> list:
+    def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("formula_maker")}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         # Make up the prompt from data
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         
         timeline_str = self.get_timeline_str()
+        scopes_str = self.get_scopes_str()
         
-        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str)
+        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str, existing_scopes=scopes_str)
         
         
         complete_response = bot.send_message(message, record=True, temperature=0)
         print("Formula Maker Response:")
         print(complete_response)
         
-        reasoning_text, plan_text, formula_text = divide_response_parts(complete_response)
+        scopes_backup = self.scopes.copy()
+        processed_success = False
+        tries_count = 4
+        while not processed_success:
+            try:
+                tries_count -= 1
+                if tries_count <= 0:
+                    print("Error: Too many failing responses.")
+                    exit(1)
+                reasoning_text, plan_text, formula_text, scopes_text = divide_response_parts(complete_response)
+                for scope_line in scopes_text.splitlines():
+                    if ":" in scope_line:
+                        scope_name, scope_meaning = scope_line.split(":", 1)
+                        scope_name = scope_name.strip()
+                        scope_meaning = scope_meaning.strip()
+                        if scope_name in self.scopes:
+                            print_warning_message(f"Warning: {scope_name} already exists in scopes.")
+                        self.scopes[scope_name] = scope_meaning
+                processed_success = True
+            except Exception as e:
+                self.scopes = scopes_backup.copy()
+                print("Error in response division:", e)
+                bot.reset_history()
+                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                print("Retry with:\n")
+                print(complete_response)
+        
 
         current_formula = []
         if formula_text != "None":
             parsed_success = False
+            tries_count = 4
             while not parsed_success:
                 try:
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
                     current_formula = self.parse_formulas(formula_text)
                     parsed_success = True
                 except FOLParsingError as e:
-                    error_message = instruction_templates["error_correction"].format(error_message=str(e))
+                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
                     print("Error returned when parsing:", e)
                     formula_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
@@ -280,21 +395,28 @@ class RPEvaluationSession():
 
     def append_conversation(self, lastest_conversation: str) -> None:
         
-        self.handle_timeline_maker(lastest_conversation)
+        timeline_definitions = self.handle_timeline_maker(lastest_conversation)
         obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
         obj_keys, rel_keys, semantic_defined_formulas, definitions_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
         self.rp_history.append(lastest_conversation)
         
-        complete_current_formula = semantic_defined_formulas + current_formula
-        combined_past_formula = sum(self.formulas, [])
-        combined_past_formula += complete_current_formula
+        complete_current_formula = current_formula.copy()
+        complete_current_formula["global"] = semantic_defined_formulas + complete_current_formula["global"]
         
-        result = self.solve_combined_formulas(combined_past_formula)
+        combined_past_formula = defaultdict(list)
+        combined_past_formula["global"] = []
+        for scope, formulas in complete_current_formula.items():
+            for history_formula in self.formulas:
+                if scope in history_formula:
+                    combined_past_formula[scope] += history_formula[scope]
+            combined_past_formula[scope] += formulas
+        
+        results, unsat_score = self.solve_combined_formulas(combined_past_formula)
             
         self.formulas.append(complete_current_formula)
         
-        pretty_formula = "\n".join([str(formula) for formula in complete_current_formula])
+        pretty_formula = self.scoped_formula_to_str(complete_current_formula)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
@@ -304,18 +426,26 @@ class RPEvaluationSession():
             "new_declarations": current_declarations,
             "pseudo_predefinitions": definitions_text,
             "formula": pretty_formula,
-            "result": result,
+            "result": unsat_score,
         }
         self.logs.append(new_log)
     
-    def parse_formulas(self, formulas_text: str) -> list:
-        formulas = []
+    def parse_formulas(self, formulas_text: str) -> dict:
+        formulas = defaultdict(list)
+        formulas["global"] = []
         for formula_line in formulas_text.splitlines():
             parsing_formula = formula_line.strip()
             if parsing_formula:
+                scope = "global"
+                if "|:" in parsing_formula:
+                    scope, parsing_formula = parsing_formula.split("|:")
+                    scope = scope.strip()
+                    parsing_formula = parsing_formula.strip()
+                    if scope not in self.scopes:
+                        raise FOLParsingError(f"Scope {scope} not found in scope table.")
                 parsed_formula = parse_z3(self.z3_builder, parsing_formula)
-                formulas.append(parsed_formula)
-        return formulas
+                formulas[scope].append(parsed_formula)
+        return dict(formulas)
     
     def parse_exclusive_args(self, definition_line: str):
         rel_just_name = definition_line.split("(")[0]
@@ -361,29 +491,41 @@ class RPEvaluationSession():
                 formulas.append(parsed_formula)
         return formulas
     
-    def solve_combined_formulas(self, formulas: list) -> None:
-        # Add the formulas to the solver
-        var_list = set()
+    def solve_combined_formulas(self, combined_formulas: dict) -> tuple[list, int]:
         solver = Solver()
-        for i, formula in enumerate(formulas):
-            solver.assert_and_track(formula, f"assertion_xx{i}")
-            var_list.update(z3util.get_vars(formula))
-        
+        # Get a list of all variables in the formulas
+        var_list = set()
+        for formulas in combined_formulas.values():
+            for formula in formulas:
+                var_list.update(z3util.get_vars(formula))
         if var_list:
             solver.add(Distinct(*var_list))
+            
+        # First, add the global formulas
+        global_formulas = combined_formulas["global"]
+        for i, formula in enumerate(global_formulas):
+            solver.assert_and_track(formula, f"global_assertion_{i}")
+            
+        # Check the satisfiability of global formulas
+        results = [str(solver.check())]
+        unsat_score = len(solver.unsat_core())
+        global_unsat_score = len(solver.unsat_core())
         
-        # Check if the formulas are satisfiable
-        result = solver.check()
+        # Check formulas by scope
+        for scope, formulas in combined_formulas.items():
+            if scope != "global":
+                solver.push()
+                for i, formula in enumerate(formulas):
+                    solver.assert_and_track(formula, f"{scope}_assertion_{i}")
+                scope_result = solver.check()
+                results.append(str(scope_result))
+                unsat_score += len(solver.unsat_core()) - global_unsat_score
+                solver.pop()
         
         print(solver.assertions())
-        print("Solver result:", result, len(solver.unsat_core()))
+        print("Solver result:", results, unsat_score)
         
-        if result == sat:
-            return 0
-        elif result == unsat:
-            return len(solver.unsat_core())
-        else:
-            return -1
+        return results, unsat_score
     
     def export_logs(self, file_path: str) -> None:
         # Add the global data to the log
@@ -392,6 +534,7 @@ class RPEvaluationSession():
             "full_formulas": "\n".join([str(formula) for formula in self.formulas]),
             "full_declarations": self.get_all_declarations_str(),
             "full_timeline": self.get_timeline_str(),
+            "full_scopes": self.get_scopes_str(),
         }
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(self.logs + [new_log], f, indent=2)
@@ -412,7 +555,7 @@ if __name__ == "__main__":
     sample_conversation = []
     with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
         sample_conversations = json.load(f)
-        sample_conversation = sample_conversations[0]
+        sample_conversation = sample_conversations[-1]
         
     for section in sample_conversation:
         session.append_conversation(section)

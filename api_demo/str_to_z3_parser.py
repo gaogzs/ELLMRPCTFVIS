@@ -123,7 +123,7 @@ class Z3Builder(Transformer):
         terms_children = terms.children
         z3_func = self.get_fun(str(name))
         if z3_func is None:
-            raise FOLParsingError(f"Function {name} not found in function table.")
+            raise FOLParsingError(f"Function {name} not found in function table. Please remove any referenes to it")
         try:
             contructed_func = z3_func(*terms_children)
         except Exception as e:
