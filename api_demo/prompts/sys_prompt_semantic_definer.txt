@@ -6,14 +6,15 @@ You will be in charge of analysing the natural language interpretation of some l
 In [declarations], each line contains a single declaration. The declarations will come in two types, objects and relations. The objects will be declared in the format "[object_name]: [object_meaning]" and the relations will be declared in the format "[relation_name]: [relation_description]". Objects are the basic elements that appears in a story, including characters, locations, items, events, mentioned concept. Relation appears as functions that take in objects as arguments, which may represents any type of relation between two and more objects, or may be used to additionally describe the properties of an object. You should analyse the logical nature of those concepts, and give your output with one spotted nature per line.
 
 Here are some types of nature you may find:
-- full equity: You find that two objects means exactly the same thing whereever they are used, and will never change under any semantic, for example if both "earphone" and "headphone" are declared as "an audio device", you should write them as "earphone = headphone".
+- object equity: You find that two objects means exactly the same thing when used in certain method, and will never change under any semantic, for example if both "earphone" and "headphone" are declared as "an audio device", and you also have a "wears(a, b, t): character [a] wears accessory [b] for time [t]", you should write "forall(a t). wears(a, earphone, t) <-> wears(a, headphone, t)", since both of them are the same thing in this case.
 - time contrained exclusive relation: When a relation of objects declared in some way that will make other usage of the same relation impossible only at the same time, for example for "locates_in(a, b, t): [a] is in location [b] for time [t]" clearly a cannot be in two different locations at the same time, so you can write "locates_in(a, [exclusive_arg], t)" to indicate the exclusiveness at the second argument that same a cannot be in two different locations b at the same time t. Beware that the time parameter here means a range of time, so only relation that occupies properties or actions for the entire time period and is absolutely incompatible in any other ways should be declared as time contrained exclusive relation. For example, "eat(a, b, t): [a] eats [b] for time [t]", you should not declare it as time contrained exclusive relation, although it seems someone can only eat one thing at the same time, but for a range of time, a can obviously eat different things at different time.
 - full exclusive relation: When a relation of objects declared in some way that will make other existence of the same relation of same objects impossible regardless of time, for example for "is_animal(a, b, t): [a] is an animal of type [b] for time [t]" clearly a cannot be a dog and a cat, and it cannot be changed after time by common sense, so you should write "is_animal(a, [exclusive_arg], [free_arg])" to indicate the second argument should be exclusive for the same a, and regardless of the thirdargument. Beware that exclusive relation should not be used too often, it should only be used at very specific relation that are stricly exclusive.
 - relation implication: When two relations are synonym, or an object having a relation can directly imply another specific relation, for example if both "live_in_location(a, b)" and "stay_in_location(a, b)" are declared, you should write them as "forall(a b). live_in_location(a, b) -> stay_in_location(a, b)". But you may not have "forall(a b). live_in_location(a, b) -> locates_in(a, b)" since someone lives in a location does not necessarily mean that they are in that location at the same time. Some implication can be bidirectional, in that case you can use "<->" instead of "->".
 - relation contradiction: When an object having a relation is the antonym, or directly imply the opposite of another specific relation, for example if both "is_animal(a, b)" and "is_plant(a, c)" are declared, you should write them as "forall(a b c). is_animal(a, b) -> not(is_plant(a, c))", since a cannot be both an animal and a plant at the same time, doesn't matter what type of animal or plant it is.
 - relation contradiction limited: Similar to relation contradiction, but only contradicts for the same combination of input. For definitions like "stay_in_location(a, b)" and "leave_location(a, b)" you should write "forall(a b). stay_in_location(a, b) -> not(leave_location(a, b))", since the contradiction happens for a to stay and leave the same location.
+- other natures: If you have found other logical natures between the terms that was not listed above, you may also write them in FOL syntax the same way
 
-[past_declarations] contains objects and relations that exists elseware of the same story that has already been evaluated. The natures should be defined within declarations of [declarations], or between one from [declarations] that did not appear in past declaration and one from [past_declarations].
+[past_declarations] contains objects and relations that exists elseware of the same story that has already been evaluated. The natures should be defined within declarations of [declarations], or between one from [declarations] and one from [past_declarations].
 
 Your output should be in the format:
 
@@ -24,3 +25,19 @@ Your output should be in the format:
 
 Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [definitions] is, based on the previous reasonning, the main body of your definition output. The definition output should only contain one definition per line, no extra indexing or numbering.
 For any section of your answer, if you find that there is no object or relation that can be declared, you should just write "None" in the section.
+
+FOL syntax specification:
+
+Logical operators:
+- "and" "or" "not" "->" "<->"
+- Example: "a and b", "a or b", "not a", "a -> b", "a <-> b"
+The default order of precedence is:
+- "not" > "and" > "or" > "->" > "<->"
+You should use parentheses to indicate the order of precedence explicitly.
+
+Forall and Exists:
+- Example: "forall (a b c) . (a and b) -> c", "exists (a b c) . (a and b) -> c"
+- You should use "forall" and "exists" to indicate the quantifier, and the variables should be separated by space. The main body of the quantifier should be separated by a dot ".".
+
+Functions:
+- Example: "function_name(a, b, c)"

@@ -8,7 +8,7 @@ import z3.z3util
 import lark
 
 from chatbot import ChatBotDummy
-from str_to_z3_parser import Z3Builder, parse_z3
+from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from prompt_loader import PromptLoader
 
 instruction_templates = {
@@ -35,13 +35,11 @@ instruction_templates = {
 {objects}
 **Relations**
 {relations}
-**Pre-defined properties**
-{predefined_properties}
 **Existing Timeline**
 {existing_timelines}
 """,
     "error_correction": """
-Your provided SMT-LIB has returned some error while being passed to Z3 parser. Please check the syntax and fix it. The error message is:
+Your provided formulas has returned some error while being passed to Z3 solver. Please check the syntax and fix it. The error message is:
 {error_message}
 
 Please respond with the corrected complete formulas (The content after **SAT definition**), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared.
@@ -88,13 +86,16 @@ class RPEvaluationSession():
         
         self.prompt_loader = PromptLoader("prompts/")
         
+    def relation_to_str(self, name: str, info: dict) -> str:
+        params_str = ", ".join(info["params"])
+        return f"{name}({params_str}): {info['meaning']}"
     
     def get_all_declarations_str(self) -> str:
         out_str = ""
         for name, meaning in self.objects.items():
             out_str += f"{name}: {meaning}\n"
         for name, info in self.relations.items():
-            out_str += f"{name}({", ".join(info["params"])}): {info["meaning"]}\n"
+            out_str += self.relation_to_str(name, info) + "\n"
         return out_str
     
     def get_keyed_declarations_str(self, obj_keys: list, rel_keys: list) -> str:
@@ -108,7 +109,7 @@ class RPEvaluationSession():
         for key in rel_keys:
             if key in self.relations:
                 info = self.relations[key]
-                rel_str += f"{key}({", ".join(info["params"])}): {info["meaning"]}\n"
+                rel_str += self.relation_to_str(key, info) + "\n"
             else:
                 print(f"Warning: {key} not found in declarations.")
         return obj_str, rel_str
@@ -123,47 +124,7 @@ class RPEvaluationSession():
         if name in self.relations:
             return self.relations[name]["function"]
         else:
-            raise ValueError(f"Relation {name} not found in declarations.")
-    
-    def parse_internal_formula(self, definitions_text: str) -> list:
-        formulas = []
-        new_definition_text = ""
-        for definition_line in definitions_text.splitlines():
-            if "[exclusive_arg]" in definition_line:
-                rel_just_name = definition_line.split("(")[0]
-                if rel_just_name not in self.relations:
-                    print(f"Warning: {rel_just_name} not found in declarations.")
-                    continue
-                edited_params = get_relation_params(definition_line)
-                original_params = self.relations[rel_just_name]["params"]
-                rel_z3_func = self.relations[rel_just_name]["function"]
-                
-                scope_params = []
-                ref_l = []
-                ref_r = []
-                constrain_pairs = []
-                for param_l, param_r in zip(original_params, edited_params):
-                    if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
-                        replace1 = param_l + "1"
-                        replace2 = param_l + "2"
-                        scope_params.append(replace1)
-                        ref_l.append(replace1)
-                        scope_params.append(replace2)
-                        ref_r.append(replace2)
-                        if param_r == "[exclusive_arg]":
-                            constrain_pairs.append(Int(replace1) == Int(replace2))
-                    else:
-                        scope_params.append(param_l)
-                        ref_l.append(param_l)
-                        ref_r.append(param_l)
-                lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
-                rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
-                constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
-                explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
-                formulas.append(explicit_formula)
-            else:
-                new_definition_text += definition_line + "\n"
-        return formulas, new_definition_text
+            return None
     
     def handle_timeline_maker(self, lastest_conversation: str) -> str:
         
@@ -238,30 +199,50 @@ class RPEvaluationSession():
                 
                 rel_keys.append(rel_just_name)
         
-        return obj_keys, rel_keys, declarations_str
+        return obj_keys, rel_keys
 
-    def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list, old_declarations: str) -> tuple[list, list, str, str]:
+    def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("semantic_definer")}]
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
+        
+        old_declarations = ""
+        for name, meaning in self.objects.items():
+            if name not in obj_keys:
+                old_declarations += f"{name}: {meaning}\n"
+        for name, info in self.relations.items():
+            if name not in rel_keys:
+                old_declarations += self.relation_to_str(name, info) + "\n"
                 
         message = instruction_templates["semantic_definer"].format(declarations=current_declarations, past_declarations=old_declarations)
         
-        complete_response = bot.send_message(message, record=False, temperature=0.1)
+        complete_response = bot.send_message(message, record=True, temperature=0)
         print("Semantic Definer Response:")
         print(complete_response)
         
         reasoning_text, definitions_text = divide_response_parts(complete_response)
         
-        # Incase there are some re-defined time-sensitive relations, we need to add them to the declarations
-        explicit_formulas, new_definition_text = self.parse_internal_formula(definitions_text)
+        explicit_formulas = []
+        if definitions_text != "None":
+            parsed_success = False
+            while not parsed_success:
+                try:
+                    explicit_formulas = self.parse_internal_definitions(definitions_text)
+                    parsed_success = True
+                except FOLParsingError as e:
+                    error_message = instruction_templates["error_correction"].format(error_message=str(e))
+                    print("Error in formula parsing:", definitions_text)
+                    definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    print("Retry with:\n")
+                    print(definitions_text)
+            
         
-        return obj_keys, rel_keys, new_definition_text, explicit_formulas
+        return obj_keys, rel_keys, explicit_formulas, definitions_text
     
-    def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list, predefined_text: str) -> AstVector:
+    def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> list:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("formula_maker")}]
         bot = ChatBotDummy(self.client, self.model, sys_prompt)
@@ -271,7 +252,7 @@ class RPEvaluationSession():
         
         timeline_str = self.get_timeline_str()
         
-        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, predefined_properties=predefined_text, existing_timelines=timeline_str)
+        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str)
         
         
         complete_response = bot.send_message(message, record=True, temperature=0)
@@ -285,21 +266,11 @@ class RPEvaluationSession():
             parsed_success = False
             while not parsed_success:
                 try:
-                    current_formula = []
-                    for formula in formula_text.splitlines():
-                        parsing_formula = formula.strip()
-                        parsed_formula = parse_z3(self.z3_builder, formula)
-                        current_formula.append(parsed_formula)
+                    current_formula = self.parse_formulas(formula_text)
                     parsed_success = True
-                except Z3Exception as e:
+                except FOLParsingError as e:
                     error_message = instruction_templates["error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", parsing_formula)
-                    formula_text = bot.send_message(error_message, record=True, temperature=0.1)
-                    print("Retry with:\n")
-                    print(formula_text)
-                except lark.exceptions.UnexpectedEOF as e:
-                    print(f"Unexpected EOF error: {e}\n When parsing {parsing_formula}")
-                    error_message = instruction_templates["error_correction"].format(error_message="Syntax error when parsing: Unexpected EOF")
+                    print("Error returned when parsing:", e)
                     formula_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
                     print(formula_text)
@@ -310,9 +281,9 @@ class RPEvaluationSession():
     def append_conversation(self, lastest_conversation: str) -> None:
         
         self.handle_timeline_maker(lastest_conversation)
-        obj_keys, rel_keys, old_declarations = self.handle_declaration_maker(lastest_conversation)
-        obj_keys, rel_keys, definition_text, semantic_defined_formulas = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys, old_declarations)
-        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys, definition_text)
+        obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
+        obj_keys, rel_keys, semantic_defined_formulas, definitions_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
+        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
         self.rp_history.append(lastest_conversation)
         
         complete_current_formula = semantic_defined_formulas + current_formula
@@ -331,11 +302,64 @@ class RPEvaluationSession():
         new_log = {
             "conversation": lastest_conversation,
             "new_declarations": current_declarations,
-            "pseudo_predefinitions": definition_text,
+            "pseudo_predefinitions": definitions_text,
             "formula": pretty_formula,
             "result": result,
         }
         self.logs.append(new_log)
+    
+    def parse_formulas(self, formulas_text: str) -> list:
+        formulas = []
+        for formula_line in formulas_text.splitlines():
+            parsing_formula = formula_line.strip()
+            if parsing_formula:
+                parsed_formula = parse_z3(self.z3_builder, parsing_formula)
+                formulas.append(parsed_formula)
+        return formulas
+    
+    def parse_exclusive_args(self, definition_line: str):
+        rel_just_name = definition_line.split("(")[0]
+        if rel_just_name not in self.relations:
+            raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
+        edited_params = get_relation_params(definition_line)
+        original_params = self.relations[rel_just_name]["params"]
+        rel_z3_func = self.relations[rel_just_name]["function"]
+        
+        scope_params = []
+        ref_l = []
+        ref_r = []
+        constrain_pairs = []
+        for param_l, param_r in zip(original_params, edited_params):
+            if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
+                replace1 = param_l + "1"
+                replace2 = param_l + "2"
+                scope_params.append(replace1)
+                ref_l.append(replace1)
+                scope_params.append(replace2)
+                ref_r.append(replace2)
+                if param_r == "[exclusive_arg]":
+                    constrain_pairs.append(Int(replace1) == Int(replace2))
+            else:
+                scope_params.append(param_l)
+                ref_l.append(param_l)
+                ref_r.append(param_l)
+        lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
+        rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
+        constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
+        explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
+        return explicit_formula
+        
+    def parse_internal_definitions(self, definitions_text: str) -> list:
+        formulas = []
+        for definition_line in definitions_text.splitlines():
+            if "[exclusive_arg]" in definition_line:
+                explicit_formula = self.parse_exclusive_args(definition_line)
+                formulas.append(explicit_formula)
+            else:
+                parsing_formula = definition_line.strip()
+                parsed_formula = parse_z3(self.z3_builder, parsing_formula)
+                formulas.append(parsed_formula)
+        return formulas
     
     def solve_combined_formulas(self, formulas: list) -> None:
         # Add the formulas to the solver

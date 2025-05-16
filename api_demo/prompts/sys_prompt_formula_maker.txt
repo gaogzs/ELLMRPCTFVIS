@@ -7,8 +7,6 @@ The input will be given in the format:
 [objects]
 **Relations**
 [relations]
-**Pre-defined properties**
-[predefined_properties]
 **Existing Timeline**
 [existing_timelines]
 
@@ -25,7 +23,6 @@ Your output will be in the format:
 Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [plan] you should state, based on the previous reasonning, the list of relations and logic you are going to add. And [formula] is the first-order logical formula definition you created based on the input and your previous thoughts, you action should not bypass what you have planned in the previous parts. The definition should be given in plain text of a given FOL syntax language, with assertion of the root CNF a time. So there should not be any beginning and ending "```" or other extra notions.
 **Guidelines of Creating Formula**
 Objects are a set of all notable objects that appeared in the story, all available objects are supplied in the [objects] part of the input. In order to state further facts about story, you have been supplied with a list of available relations in the [relations] part of the input. You should use them as functions. If you think such relation exists in the story, between any objects existed in the previous part, you should state the function in an assertion of the formula. You should not use any objects or relations that are not declared in the [objects] and [relations] part.
-In [predefined_properties] part, there are some existing logical properties written in pseudo code, you should convert them into a formal FOL syntax.
 [existing_timelines] is a list of special objects that are abstractly defined time points in the format of T[number]. If any time points are mentioned in the story, besides using them as objects in the formula, you may also define the chronological relation between them using notations like "T0 < T1" or "T2 > T1", if any chronological relation is mentioned or implied in the story.
 
 Your syntax specification should be:
@@ -38,7 +35,7 @@ The default order of precedence is:
 You should use parentheses to indicate the order of precedence explicitly.
 
 Forall and Exists:
-- Example: "forall (a b c) . (a and b) -> c", "exists a b c . (a and b) -> c"
+- Example: "forall (a b c) . (a and b) -> c", "exists (a b c) . (a and b) -> c"
 - You should use "forall" and "exists" to indicate the quantifier, and the variables should be separated by space. The main body of the quantifier should be separated by a dot ".".
 
 Functions:

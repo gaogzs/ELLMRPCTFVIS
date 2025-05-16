@@ -9,6 +9,9 @@ with open(grammar_path, 'r') as f:
     grammar = f.read()
 parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
 
+class FOLParsingError(Exception):
+    pass
+
 def close_brackets(formula_str):
     open_count = formula_str.count('(')
     close_count = formula_str.count(')')
@@ -118,9 +121,23 @@ class Z3Builder(Transformer):
     @v_args(inline=True)
     def func(self, name, terms):
         terms_children = terms.children
-        return self.get_fun(name)(*terms_children)
+        z3_func = self.get_fun(str(name))
+        if z3_func is None:
+            raise FOLParsingError(f"Function {name} not found in function table.")
+        try:
+            contructed_func = z3_func(*terms_children)
+        except Exception as e:
+            raise FOLParsingError(f"Error constructing function {name} with arguments {terms_children}: {e}")
+        return contructed_func
 
 def parse_z3(builder, formula_str):
     formula_str = close_brackets(formula_str)
-    tree = parser.parse(formula_str)
-    return builder.transform(tree)
+    try:
+        tree = parser.parse(formula_str)
+    except Exception as e:
+        raise FOLParsingError(f"Syntax error when parsing formula: {formula_str}\n{e}")
+    try:
+        built_formula = builder.transform(tree)
+    except Exception as e:
+        raise FOLParsingError(f"Error when building formula: {formula_str}\n{e}")
+    return built_formula
