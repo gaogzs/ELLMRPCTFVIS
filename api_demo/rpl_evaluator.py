@@ -5,6 +5,7 @@ import re
 import random
 from z3 import *
 import z3.z3util
+import lark
 
 from chatbot import ChatBotDummy
 from str_to_z3_parser import Z3Builder, parse_z3
@@ -43,7 +44,7 @@ instruction_templates = {
 Your provided SMT-LIB has returned some error while being passed to Z3 parser. Please check the syntax and fix it. The error message is:
 {error_message}
 
-Please respond with the fixed SMT-LIB code only (The part after **SAT definition**), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared.
+Please respond with the corrected complete formulas (The content after **SAT definition**), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared.
 """
 }
 
@@ -71,14 +72,6 @@ def get_relation_params(relation_str: str) -> list:
 # def fix_by_lines(smtlib_str):
 #     if smtlib_str.startswith("; "):
 #         return ""
-#     return smtlib_str
-
-# def close_brackets(smtlib_str):
-#     open_count = smtlib_str.count('(')
-#     close_count = smtlib_str.count(')')
-#     difference = open_count - close_count
-#     if difference > 0:
-#         return smtlib_str + (')' * (difference))
 #     return smtlib_str
 
 class RPEvaluationSession():
@@ -138,6 +131,9 @@ class RPEvaluationSession():
         for definition_line in definitions_text.splitlines():
             if "[exclusive_arg]" in definition_line:
                 rel_just_name = definition_line.split("(")[0]
+                if rel_just_name not in self.relations:
+                    print(f"Warning: {rel_just_name} not found in declarations.")
+                    continue
                 edited_params = get_relation_params(definition_line)
                 original_params = self.relations[rel_just_name]["params"]
                 rel_z3_func = self.relations[rel_just_name]["function"]
@@ -286,9 +282,22 @@ class RPEvaluationSession():
 
         current_formula = []
         if formula_text != "None":
-            for formula in formula_text.splitlines():
-                parsed_formula = parse_z3(self.z3_builder, formula)
-                current_formula.append(parsed_formula)
+            parsed_success = False
+            while not parsed_success:
+                try:
+                    for formula in formula_text.splitlines():
+                        parsing_formula = formula.strip()
+                        parsed_formula = parse_z3(self.z3_builder, formula)
+                        current_formula.append(parsed_formula)
+                    parsed_success = True
+                except Z3Exception as e:
+                    error_message = instruction_templates["error_correction"].format(error_message=str(e))
+                    print("Error in formula parsing:", error_message)
+                    formula_text = bot.send_message(error_message, record=False, temperature=0.1)
+                    print("Retry with:\n")
+                    print(formula_text)
+                except lark.exceptions.UnexpectedEOF as e:
+                    print(f"Unexpected EOF error: {e}\n When parsing {parsing_formula}")
         
         return current_formula
         
@@ -303,7 +312,7 @@ class RPEvaluationSession():
         
         complete_current_formula = semantic_defined_formulas + current_formula
         combined_past_formula = sum(self.formulas, [])
-        combined_past_formula += semantic_defined_formulas
+        combined_past_formula += complete_current_formula
         
         result = self.solve_combined_formulas(combined_past_formula)
             
@@ -328,16 +337,17 @@ class RPEvaluationSession():
         var_list = set()
         solver = Solver()
         for i, formula in enumerate(formulas):
-            solver.assert_and_track(formula, str(formula) + str(i))
+            solver.assert_and_track(formula, f"assertion_xx{i}")
             var_list.update(z3util.get_vars(formula))
         
-        solver.add(Distinct(*var_list))
+        if var_list:
+            solver.add(Distinct(*var_list))
         
         # Check if the formulas are satisfiable
         result = solver.check()
         
         print(solver.assertions())
-        print("Solver result:", result)
+        print("Solver result:", result, len(solver.unsat_core()))
         
         if result == sat:
             return 0

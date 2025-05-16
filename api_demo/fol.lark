@@ -1,19 +1,6 @@
 // FOL Language Grammar
 
 // Tokens
-FORALL         : "forall"
-EXISTS         : "exists"
-AND            : "and"
-OR             : "or"
-IMPLIES        : "->"
-IFF            : "<->"
-NOT            : "not"
-LE             : "<="
-GE             : ">="
-LT             : "<"
-GT             : ">"
-EQ             : "="
-NE             : "!="
 IDENT          : /[a-zA-Z][a-zA-Z0-9_]*/            // Variables, predicates, and function names
 CONST          : /[0-9]+/                        // Numeric constants
 %import common.WS
@@ -29,6 +16,7 @@ CONST          : /[0-9]+/                        // Numeric constants
                | "exists" var_list "." formula    -> exists
 
 ?var_list      : IDENT+                           -> var_list
+               | "("IDENT+")"
 
 ?binary_formula: formula "<->" formula               -> iff
                | formula "->" formula           -> imply

@@ -9,6 +9,14 @@ with open(grammar_path, 'r') as f:
     grammar = f.read()
 parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
 
+def close_brackets(formula_str):
+    open_count = formula_str.count('(')
+    close_count = formula_str.count(')')
+    difference = open_count - close_count
+    if difference > 0:
+        return formula_str + (')' * (difference))
+    return formula_str
+
 class IdCollector(Transformer):
     def __init__(self):
         self.variables = set()
@@ -113,5 +121,6 @@ class Z3Builder(Transformer):
         return self.get_fun(name)(*terms_children)
 
 def parse_z3(builder, formula_str):
+    formula_str = close_brackets(formula_str)
     tree = parser.parse(formula_str)
     return builder.transform(tree)
