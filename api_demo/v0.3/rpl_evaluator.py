@@ -5,7 +5,7 @@ import re
 import random
 from z3 import *
 
-from chatbot import ChatBotDummy
+from chatbot import ChatBotSimple
 from prompts_definition import *
 
 instruction_templates = {
@@ -98,7 +98,7 @@ class RPEvaluationSession():
         if self.rp_history:
             sys_prompt.append({"role": "user", "content": "\n".join(self.rp_history)})
             sys_prompt.append({"role": "assistant", "content": "-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str()})
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
         
@@ -123,7 +123,7 @@ class RPEvaluationSession():
     def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
         
         sys_prompt = [{"role": "system", "content": sys_prompts["declaration_maker"]}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         declarations_str = self.get_declarations_str()
         message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
@@ -165,7 +165,7 @@ class RPEvaluationSession():
     def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, str, str]:
         
         sys_prompt = [{"role": "system", "content": sys_prompts["semantic_definer"]}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         current_declarations = ""
         for key in obj_keys + rel_keys:
@@ -208,7 +208,7 @@ class RPEvaluationSession():
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list, predefined_text: str) -> AstVector:
         
         sys_prompt = [{"role": "system", "content": sys_prompts["formula_maker"]}]
-        bot = ChatBotDummy(self.client, self.model, sys_prompt)
+        bot = ChatBotSimple(self.client, self.model, sys_prompt)
         
         # Make up the prompt from data
         objects_str = ""

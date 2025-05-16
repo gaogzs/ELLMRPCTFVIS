@@ -3,7 +3,7 @@ import json
 from openai import OpenAI
 import re
 
-from chatbot import ChatBotDummy
+from chatbot import ChatBotSimple
  
 cur_dir = os.path.dirname(__file__)
 
@@ -230,7 +230,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             identifier_prompt = eval_prompts[eval_type]["evaluator"].copy()
             provider_prompt = eval_prompts[eval_type]["provider"].copy()
         
-        chatbot = ChatBotDummy(client=client, model=model, history=identifier_prompt)
+        chatbot = ChatBotSimple(client=client, model=model, history=identifier_prompt)
         
         summaries = []
         for i in range(3, len(messages), 2):
