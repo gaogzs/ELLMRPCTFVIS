@@ -285,6 +285,7 @@ class RPEvaluationSession():
             parsed_success = False
             while not parsed_success:
                 try:
+                    current_formula = []
                     for formula in formula_text.splitlines():
                         parsing_formula = formula.strip()
                         parsed_formula = parse_z3(self.z3_builder, formula)
@@ -292,12 +293,16 @@ class RPEvaluationSession():
                     parsed_success = True
                 except Z3Exception as e:
                     error_message = instruction_templates["error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", error_message)
-                    formula_text = bot.send_message(error_message, record=False, temperature=0.1)
+                    print("Error in formula parsing:", parsing_formula)
+                    formula_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
                     print(formula_text)
                 except lark.exceptions.UnexpectedEOF as e:
                     print(f"Unexpected EOF error: {e}\n When parsing {parsing_formula}")
+                    error_message = instruction_templates["error_correction"].format(error_message="Syntax error when parsing: Unexpected EOF")
+                    formula_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    print("Retry with:\n")
+                    print(formula_text)
         
         return current_formula
         
