@@ -14,12 +14,11 @@ class ChatBot():
     def set_history(self, history: list) -> None:
         raise NotImplementedError("set_history method must be implemented by subclasses")
 
-
 class ChatBotOpenAISimple(ChatBot):
 
-    def __init__(self, client: OpenAI, model: str, history: list = None) -> None:
-        self.init_history = history.copy()
-        self.history = history
+    def __init__(self, client: OpenAI, model: str, sys_prompt: str = None) -> None:
+        self.history = [{"role": "system", "content": sys_prompt}]
+        self.init_history = self.history.copy()
         self.client = client
         self.model = model
 
@@ -44,3 +43,11 @@ class ChatBotOpenAISimple(ChatBot):
     
     def reset_history(self) -> None:
         self.history = self.init_history.copy()
+    
+    def add_fake_user_message(self, message: str) -> None:
+        fake_user_message = {"role": "user", "content": message}
+        self.history.append(fake_user_message)
+    
+    def add_fake_assistant_message(self, message: str) -> None:
+        fake_assistant_message = {"role": "assistant", "content": message}
+        self.history.append(fake_assistant_message)

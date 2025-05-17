@@ -151,11 +151,11 @@ class RPEvaluationSession():
     
     def handle_timeline_maker(self, lastest_conversation: str) -> str:
         
-        sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("timeline_maker")}]
-        if self.rp_history:
-            sys_prompt.append({"role": "user", "content": "\n".join(self.rp_history)})
-            sys_prompt.append({"role": "assistant", "content": "-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str()})
+        sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker")
         bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
+        if self.rp_history:
+            bot.add_fake_user_message("\n".join(self.rp_history))
+            bot.add_fake_assistant_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
         
         message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
         
@@ -196,7 +196,7 @@ class RPEvaluationSession():
     
     def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
         
-        sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("declaration_maker")}]
+        sys_prompt = self.prompt_loader.load_sys_prompts("declaration_maker")
         bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
@@ -266,7 +266,7 @@ class RPEvaluationSession():
 
     def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
-        sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("semantic_definer")}]
+        sys_prompt = self.prompt_loader.load_sys_prompts("semantic_definer")
         bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
@@ -327,7 +327,7 @@ class RPEvaluationSession():
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
-        sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("formula_maker")}]
+        sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker")
         bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         # Make up the prompt from data
