@@ -8,7 +8,7 @@ import z3.z3util
 import lark
 from collections import defaultdict
 
-from chatbot import ChatBotOpenAISimple
+from chatbot import ChatBot, ChatBotDeepSeekSimple
 from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from prompt_loader import PromptLoader
 
@@ -81,9 +81,9 @@ def get_relation_params(relation_str: str) -> list:
 #     return smtlib_str
 
 class RPEvaluationSession():
-    def __init__(self, client: OpenAI, model: str, history: list = None) -> None:
+    def __init__(self, chatbot: ChatBot, model: str, history: list = None) -> None:
         self.rp_history = history if history is not None else []
-        self.client = client
+        self.chatbot = chatbot
         self.model = model
         self.formulas = []
         self.objects = {}
@@ -152,7 +152,7 @@ class RPEvaluationSession():
     def handle_timeline_maker(self, lastest_conversation: str) -> str:
         
         sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker")
-        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
+        bot = self.chatbot(self.model, sys_prompt)
         if self.rp_history:
             bot.add_fake_user_message("\n".join(self.rp_history))
             bot.add_fake_assistant_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
@@ -197,7 +197,7 @@ class RPEvaluationSession():
     def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
         
         sys_prompt = self.prompt_loader.load_sys_prompts("declaration_maker")
-        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
+        bot = self.chatbot(self.model, sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
         message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
@@ -267,7 +267,7 @@ class RPEvaluationSession():
     def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
         sys_prompt = self.prompt_loader.load_sys_prompts("semantic_definer")
-        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
+        bot = self.chatbot(self.model, sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
@@ -328,7 +328,7 @@ class RPEvaluationSession():
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
         sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker")
-        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
+        bot = self.chatbot(self.model, sys_prompt)
         
         # Make up the prompt from data
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
@@ -541,16 +541,12 @@ class RPEvaluationSession():
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 
-key_dir = os.path.join(cur_dir, "deepseek_api_key")
-with open(key_dir, "r") as f:
-    api_key = f.read().strip()
-client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
 if __name__ == "__main__":
     # Example usage
     model = "deepseek-chat"
-    
-    session = RPEvaluationSession(client, model)
+    used_chatbot = ChatBotDeepSeekSimple
+    session = RPEvaluationSession(used_chatbot, model)
     
     sample_conversation = []
     with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:

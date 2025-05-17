@@ -1,3 +1,4 @@
+import os
 from openai import OpenAI
 
 class ChatBot():
@@ -13,13 +14,27 @@ class ChatBot():
 
     def set_history(self, history: list) -> None:
         raise NotImplementedError("set_history method must be implemented by subclasses")
+    
+    def reset_history(self) -> None:
+        raise NotImplementedError("reset_history method must be implemented by subclasses")
+    
+    def add_fake_user_message(self, message: str) -> None:
+        raise NotImplementedError("add_fake_user_message method must be implemented by subclasses")
+    
+    def add_fake_assistant_message(self, message: str) -> None:
+        raise NotImplementedError("add_fake_assistant_message method must be implemented by subclasses")
 
-class ChatBotOpenAISimple(ChatBot):
+cur_dir = os.path.dirname(os.path.realpath(__file__))
 
-    def __init__(self, client: OpenAI, model: str, sys_prompt: str = None) -> None:
+key_dir = os.path.join(cur_dir, "deepseek_api_key")
+with open(key_dir, "r") as f:
+    api_key = f.read().strip()
+class ChatBotDeepSeekSimple(ChatBot):
+
+    def __init__(self, model: str, sys_prompt: str = None) -> None:
         self.history = [{"role": "system", "content": sys_prompt}]
         self.init_history = self.history.copy()
-        self.client = client
+        self.client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         self.model = model
 
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
