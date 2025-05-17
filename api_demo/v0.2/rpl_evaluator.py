@@ -6,7 +6,7 @@ import random
 
 import fact_graph
 from fact_graph import FactGraph
-from chatbot import ChatBotSimple
+from chatbot import ChatBotOpenAISimple
 
 do_it_command = "move on to function calls"
 

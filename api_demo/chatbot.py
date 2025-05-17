@@ -15,7 +15,7 @@ class ChatBot():
         raise NotImplementedError("set_history method must be implemented by subclasses")
 
 
-class ChatBotSimple(ChatBot):
+class ChatBotOpenAISimple(ChatBot):
 
     def __init__(self, client: OpenAI, model: str, history: list = None) -> None:
         self.init_history = history.copy()

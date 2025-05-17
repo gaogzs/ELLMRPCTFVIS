@@ -8,7 +8,7 @@ import z3.z3util
 import lark
 from collections import defaultdict
 
-from chatbot import ChatBotSimple
+from chatbot import ChatBotOpenAISimple
 from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from prompt_loader import PromptLoader
 
@@ -155,7 +155,7 @@ class RPEvaluationSession():
         if self.rp_history:
             sys_prompt.append({"role": "user", "content": "\n".join(self.rp_history)})
             sys_prompt.append({"role": "assistant", "content": "-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str()})
-        bot = ChatBotSimple(self.client, self.model, sys_prompt)
+        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
         
@@ -197,7 +197,7 @@ class RPEvaluationSession():
     def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("declaration_maker")}]
-        bot = ChatBotSimple(self.client, self.model, sys_prompt)
+        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
         message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
@@ -267,7 +267,7 @@ class RPEvaluationSession():
     def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("semantic_definer")}]
-        bot = ChatBotSimple(self.client, self.model, sys_prompt)
+        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = obj_str + "\n" + rel_str
@@ -328,7 +328,7 @@ class RPEvaluationSession():
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
         sys_prompt = [{"role": "system", "content": self.prompt_loader.load_sys_prompts("formula_maker")}]
-        bot = ChatBotSimple(self.client, self.model, sys_prompt)
+        bot = ChatBotOpenAISimple(self.client, self.model, sys_prompt)
         
         # Make up the prompt from data
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
