@@ -28,8 +28,9 @@ class ChatBot():
         raise NotImplementedError("add_fake_model_message method must be implemented by subclasses")
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
+api_key_dir = os.path.join(cur_dir, "/api_keys")
 
-deepseek_key_dir = os.path.join(cur_dir, "deepseek_api_key")
+deepseek_key_dir = os.path.join(api_key_dir, "deepseek_api_key")
 with open(deepseek_key_dir, "r") as f:
     deepseek_api_key = f.read().strip()
 class ChatBotDeepSeekSimple(ChatBot):
@@ -70,7 +71,7 @@ class ChatBotDeepSeekSimple(ChatBot):
         fake_assistant_message = {"role": "assistant", "content": message}
         self.history.append(fake_assistant_message)
 
-gemini_key_dir = os.path.join(cur_dir, "gemini_api_key")
+gemini_key_dir = os.path.join(api_key_dir, "gemini_api_key")
 with open(gemini_key_dir, "r") as f:
     gemini_api_key = f.read().strip()
     
