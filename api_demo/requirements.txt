@@ -5,3 +5,4 @@ numpy
 networkx
 z3-solver
 lark
+google-genai
