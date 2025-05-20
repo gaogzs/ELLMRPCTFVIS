@@ -1,7 +1,7 @@
 from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple
 
 _PRINT_CONTENT = False
-_MODEL_USED = "gemini-lite"
+_MODEL_USED = "gemini-chat"
 _ERROR_RETRIES = 10
 
 

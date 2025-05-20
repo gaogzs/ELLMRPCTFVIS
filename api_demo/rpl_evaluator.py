@@ -43,17 +43,23 @@ instruction_templates = {
 **Existing Scopes**
 {existing_scopes}
 """,
-    "semantic_error_correction": """
-Your provided formulas has returned some error while being parsed as FOL formula. Please check the syntax and fix it. The error message is:
+    "complete_error_correction": """
+Your provided response has returned some error while being processed. Please check the syntax and fix it. The error message is:
 {error_message}
 
-Please respond with the corrected complete formulas only (No header, no reasoning and anything other than the formula definitions), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
+Please respond with a complete response with repective error corrected.
 """,
-    "formula_maker_error_correction": """
+    "exlusive_error_correction": """
+Your provided exclusiveness definitions has returned some error while being processed. Please check the syntax and fix it. The error message is:
+{error_message}
+
+Please respond with the corrected complete exclusive definitions only (The part of [exclusiveness_definitions], No header, no reasoning and anything other than the formula definitions), in the same format as before. There should be no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
+""",
+    "formula_error_correction": """
 Your provided formulas has returned some error while being parsed as FOL formula. Please check the syntax and fix it. The error message is:
 {error_message}
 
-Please respond with the corrected complete formulas only (No header, no reasoning and anything other than the formula definitions), in the same format as before. There should no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
+Please respond with the corrected complete formulas only (The part of [formula], No header, no reasoning and anything other than the formula definitions), in the same format as before. There should be no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
 """
 }
 
@@ -102,9 +108,10 @@ class RPEvaluationSession():
         return f"{name}({params_str}): {info['meaning']}"
     
     def get_all_declarations_str(self) -> str:
-        out_str = ""
+        out_str = "Objects:\n"
         for name, meaning in self.objects.items():
             out_str += f"{name}: {meaning}\n"
+        out_str += "Relations:\n"
         for name, info in self.relations.items():
             out_str += self.relation_to_str(name, info) + "\n"
         return out_str
@@ -176,15 +183,15 @@ class RPEvaluationSession():
                 new_timeline = self.parse_timeline_declarations(timeline_text)
                 self.timeline.update(new_timeline)
             except Exception as e:
+                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                self.timeline = timeline_backup.copy()
+                print("Error in response division:", e)
                 tries_count -= 1
                 if tries_count <= 0:
                     print("Error: Too many failing responses.")
                     exit(1)
                     
-                self.timeline = timeline_backup.copy()
-                print("Error in response division:", e)
-                bot.reset_history()
-                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                 print("Retry with:\n")
                 print(complete_response)
         
@@ -225,17 +232,17 @@ class RPEvaluationSession():
                 processed_success = True
                         
             except Exception as e:
+                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                self.objects = objects_backup.copy()
+                self.relations = relations_backup.copy()
+                
+                print("Error in response division:", e)
                 tries_count -= 1
                 if tries_count <= 0:
                     print("Error: Too many failing responses.")
                     exit(1)
                     
-                self.objects = objects_backup.copy()
-                self.relations = relations_backup.copy()
-                
-                print("Error in response division:", e)
-                bot.reset_history()
-                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                 print("Retry with:\n")
                 print(complete_response)
         
@@ -249,7 +256,7 @@ class RPEvaluationSession():
         bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
-        current_declarations = obj_str + "\n" + rel_str
+        current_declarations = "Objects:\n" + obj_str + "\n" + "Relaions:\n" + rel_str
         
         old_declarations = ""
         for name, meaning in self.objects.items():
@@ -269,42 +276,61 @@ class RPEvaluationSession():
         tries_count = _ERROR_RETRIES
         while not processed_success:
             try:
-                reasoning_text, definitions_text = divide_response_parts(complete_response)
+                reasoning_text, exclusive_definitions_text, formula_definitions_text = divide_response_parts(complete_response)
                 processed_success = True
             except Exception as e:
+                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                print("Error in response division:", e)
                 tries_count -= 1
                 if tries_count <= 0:
                     print("Error: Too many failing responses.")
                     exit(1)
                     
-                print("Error in response division:", e)
-                bot.reset_history()
-                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                 print("Retry with:\n")
                 print(complete_response)
         
         explicit_formulas = []
-        if definitions_text != "None":
+        if exclusive_definitions_text != "None":
             parsed_success = False
             tries_count = _ERROR_RETRIES
             while not parsed_success:
                 try:
-                    explicit_formulas = self.parse_internal_definitions(definitions_text)
+                    explicit_formulas = self.parse_exclusive_args(exclusive_definitions_text)
                     parsed_success = True
                 except FOLParsingError as e:
+                    error_message = instruction_templates["exlusive_error_correction"].format(error_message=str(e))
+                    print("Error in formula parsing:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print("Error: Too many failing responses.")
                         exit(1)
                         
-                    error_message = instruction_templates["semantic_error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", e)
-                    definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    exclusive_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
-                    print(definitions_text)
-            
+                    print(exclusive_definitions_text)
         
-        return obj_keys, rel_keys, explicit_formulas, definitions_text
+        parsed_formulas = []
+        if formula_definitions_text != "None":
+            parsed_success = False
+            tries_count = _ERROR_RETRIES
+            while not parsed_success:
+                try:
+                    parsed_formulas += self.parse_formulas(formula_definitions_text)
+                    parsed_success = True
+                except FOLParsingError as e:
+                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                    print("Error in formula parsing:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    formula_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    print("Retry with:\n")
+                    print(formula_definitions_text)
+        
+        return obj_keys, rel_keys, explicit_formulas + parsed_formulas, exclusive_definitions_text + "\n" + formula_definitions_text
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
@@ -340,15 +366,15 @@ class RPEvaluationSession():
                         self.scopes[scope_name] = scope_meaning
                 processed_success = True
             except Exception as e:
+                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                self.scopes = scopes_backup.copy()
+                print("Error in response division:", e)
                 tries_count -= 1
                 if tries_count <= 0:
                     print("Error: Too many failing responses.")
                     exit(1)
                     
-                self.scopes = scopes_backup.copy()
-                print("Error in response division:", e)
-                bot.reset_history()
-                complete_response = bot.send_message(message, record=True, temperature=0.2)
+                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                 print("Retry with:\n")
                 print(complete_response)
         
@@ -359,16 +385,16 @@ class RPEvaluationSession():
             tries_count = _ERROR_RETRIES
             while not parsed_success:
                 try:
-                    current_formula = self.parse_formulas(formula_text)
+                    current_formula = self.parse_scoped_formulas(formula_text)
                     parsed_success = True
                 except FOLParsingError as e:
+                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                    print("Error returned when parsing:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print("Error: Too many failing responses.")
                         exit(1)
                         
-                    error_message = instruction_templates["formula_maker_error_correction"].format(error_message=str(e))
-                    print("Error returned when parsing:", e)
                     formula_text = bot.send_message(error_message, record=True, temperature=0.1)
                     print("Retry with:\n")
                     print(formula_text)
@@ -453,9 +479,10 @@ class RPEvaluationSession():
                 rel_meaning = rel_meaning.strip()
                 rel_just_name = rel_name.split("(")[0]
                 rel_params = get_relation_params(rel_name)
-                rel_cases
+                if "'" in rel_cases or '"' in rel_cases:
+                    raise FOLParsingError(f"Invalid relation declaration: relation should not take strings. Please remove relevent relation: {definition_line}")
                 if rel_cases.count(",") % rel_name.count(",") != 0:
-                    raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please check the syntax: {definition_line}")
+                    raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
                 
                 rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
                 if rel_just_name in self.relations:
@@ -464,7 +491,18 @@ class RPEvaluationSession():
         
         return new_relations
     
-    def parse_formulas(self, formulas_text: str) -> dict:
+    def parse_formulas(self, formulas_text: str) -> list:
+        formulas = []
+        for formula_line in formulas_text.splitlines():
+            parsing_formula = formula_line.strip()
+            if  "```" in parsing_formula:
+                continue
+            if parsing_formula:
+                parsed_formula = parse_z3(self.z3_builder, parsing_formula)
+                formulas.append(parsed_formula)
+        return formulas
+    
+    def parse_scoped_formulas(self, formulas_text: str) -> dict:
         formulas = defaultdict(list)
         formulas["global"] = []
         for formula_line in formulas_text.splitlines():
@@ -487,53 +525,45 @@ class RPEvaluationSession():
                             raise FOLParsingError(f"Scope {scope} not found in scope table. Please remove any related usage of this scope for now.")
                 parsed_formula = parse_z3(self.z3_builder, parsing_formula)
                 formulas[scope].append(parsed_formula)
-        return dict(formulas)
+        return formulas
     
-    def parse_exclusive_args(self, definition_line: str):
-        rel_just_name = definition_line.split("(")[0]
-        if rel_just_name not in self.relations:
-            raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
-        edited_params = get_relation_params(definition_line)
-        original_params = self.relations[rel_just_name]["params"]
-        rel_z3_func = self.relations[rel_just_name]["function"]
-        
-        scope_params = []
-        ref_l = []
-        ref_r = []
-        constrain_pairs = []
-        for param_l, param_r in zip(original_params, edited_params):
-            if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
-                replace1 = param_l + "1"
-                replace2 = param_l + "2"
-                scope_params.append(replace1)
-                ref_l.append(replace1)
-                scope_params.append(replace2)
-                ref_r.append(replace2)
-                if param_r == "[exclusive_arg]":
-                    constrain_pairs.append(Int(replace1) == Int(replace2))
-            else:
-                scope_params.append(param_l)
-                ref_l.append(param_l)
-                ref_r.append(param_l)
-        lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
-        rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
-        constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
-        explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
-        return explicit_formula
-        
-    def parse_internal_definitions(self, definitions_text: str) -> list:
+    def parse_exclusive_args(self, definitions_text: str):
         formulas = []
         for definition_line in definitions_text.splitlines():
             if  "```" in definition_line:
                 continue
-            if "[exclusive_arg]" in definition_line or "[free_arg]" in definition_line:
-                explicit_formula = self.parse_exclusive_args(definition_line)
-                formulas.append(explicit_formula)
-            else:
-                parsing_formula = definition_line.strip()
-                parsed_formula = parse_z3(self.z3_builder, parsing_formula)
-                formulas.append(parsed_formula)
+            rel_just_name = definition_line.split("(")[0]
+            if rel_just_name not in self.relations:
+                raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
+            edited_params = get_relation_params(definition_line)
+            original_params = self.relations[rel_just_name]["params"]
+            rel_z3_func = self.relations[rel_just_name]["function"]
+            
+            scope_params = []
+            ref_l = []
+            ref_r = []
+            constrain_pairs = []
+            for param_l, param_r in zip(original_params, edited_params):
+                if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
+                    replace1 = param_l + "1"
+                    replace2 = param_l + "2"
+                    scope_params.append(replace1)
+                    ref_l.append(replace1)
+                    scope_params.append(replace2)
+                    ref_r.append(replace2)
+                    if param_r == "[exclusive_arg]":
+                        constrain_pairs.append(Int(replace1) == Int(replace2))
+                else:
+                    scope_params.append(param_l)
+                    ref_l.append(param_l)
+                    ref_r.append(param_l)
+            lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
+            rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
+            constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
+            explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
+            formulas.append(explicit_formula)
         return formulas
+        
     
     def solve_combined_formulas(self, combined_formulas: dict) -> tuple[list, int]:
         solver = Solver()
@@ -548,8 +578,6 @@ class RPEvaluationSession():
         # First, add the global formulas
         global_formulas = combined_formulas["global"]
         for i, formula in enumerate(global_formulas):
-            if not isinstance(formula, BoolRef):
-                raise FOLParsingError(f"Invalid formula type: {formula}. Expected BoolRef.")
             solver.assert_and_track(formula, f"global_assertion_{i}")
             
         # Check the satisfiability of global formulas

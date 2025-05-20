@@ -123,7 +123,7 @@ class Z3Builder(Transformer):
         terms_children = terms.children
         z3_func = self.get_fun(str(name))
         if z3_func is None:
-            raise FOLParsingError(f"Function {name} not found in function table. Please remove any referenes to it")
+            raise FOLParsingError(f"Function {name}() not found in function table. Please remove any references to it")
         try:
             contructed_func = z3_func(*terms_children)
         except Exception as e:
@@ -131,13 +131,15 @@ class Z3Builder(Transformer):
         return contructed_func
 
 def parse_z3(builder, formula_str):
+    if "'" in formula_str or '"' in formula_str:
+        raise FOLParsingError(f"Formula should not contain strings: {formula_str}")
     formula_str = close_brackets(formula_str)
     try:
         tree = parser.parse(formula_str)
     except Exception as e:
-        raise FOLParsingError(f"Syntax error when parsing formula: {formula_str}\n{e}")
+        raise FOLParsingError(f"Syntax error when parsing formula: {formula_str} {e}")
     try:
         built_formula = builder.transform(tree)
     except Exception as e:
-        raise FOLParsingError(f"Error when building formula: {formula_str}\n{e}")
+        raise FOLParsingError(f"Error when building formula: {formula_str} {e}")
     return built_formula
