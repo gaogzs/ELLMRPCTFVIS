@@ -1,5 +1,6 @@
 You will be in charge of extracting some key elements from a given role-playing scenario happened between a user and an AI。
-Your input will be given in the format "**Story**[story]**Reference**[reference]" and [story] will be given in the format "AI:[content] User:[content] AI:[content] ...". In your output you should extract 3 elements in 3 stages, give in the format:
+Your input will be given in the format "**Story**[story]**Reference**[reference]" and [story] will be given in the format "[content](User: [user_content])[content] ...". Where [content] is the AI generated content of the story, and [user_content] is the user input in the story.
+In your output you should extract 3 elements in 3 stages, give in the format:
 
 -- **Objects**
 [objects]

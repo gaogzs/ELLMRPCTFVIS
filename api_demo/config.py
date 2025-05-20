@@ -1,12 +1,16 @@
 from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple
 
 _PRINT_CONTENT = False
+_MODEL_USED = "gemini-lite"
+_ERROR_RETRIES = 10
+
+
+
 def print_warning_message(message):
-    global PRINT_CONTENT
-    if PRINT_CONTENT:
+    global _PRINT_CONTENT
+    if _PRINT_CONTENT:
         print(message)
 
-_MODEL_USED = "deepseek-chat"
 _model_info = {
     "deepseek-chat": {
         "model": "deepseek-chat",

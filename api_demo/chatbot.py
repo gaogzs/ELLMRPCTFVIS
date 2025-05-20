@@ -28,7 +28,7 @@ class ChatBot():
         raise NotImplementedError("add_fake_model_message method must be implemented by subclasses")
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
-api_key_dir = os.path.join(cur_dir, "/api_keys")
+api_key_dir = os.path.join(cur_dir, "api_keys")
 
 deepseek_key_dir = os.path.join(api_key_dir, "deepseek_api_key")
 with open(deepseek_key_dir, "r") as f:
@@ -82,15 +82,15 @@ class ChatBotGeminiSimple(ChatBot):
         self.history = []
         self.init_history = self.history.copy()
         self.client = genai.Client(api_key=gemini_api_key)
-        self.client.chats.create().get_history
+        self.model = model
     
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
-        new_message = {"role": "user", "parts": {"text": [message]}}
-        response = self.client.models.generate_content(contents=self.history + [new_message], config={"temperature": temperature})
-        response_message = response.text()
+        new_message = {"role": "user", "parts": [{"text": message}]}
+        response = self.client.models.generate_content(contents=self.history + [new_message], model=self.model, config={"temperature": temperature, "system_instruction": self.sys_prompt})
+        response_message = response.text
         if record:
             self.history.append(new_message)
-            new_response_message = {"role": "model", "parts": {"text": [response_message]}}
+            new_response_message = {"role": "model", "parts": [{"text": response_message}]}
             self.history.append(new_response_message)
         return response_message
     
@@ -107,9 +107,9 @@ class ChatBotGeminiSimple(ChatBot):
         self.history = self.init_history.copy()
         
     def add_fake_user_message(self, message: str) -> None:
-        fake_user_message = {"role": "user", "parts": {"text": [message]}}
+        fake_user_message = {"role": "user", "parts": [{"text": message}]}
         self.history.append(fake_user_message)
         
     def add_fake_model_message(self, message: str) -> None:
-        fake_model_message = {"role": "model", "parts": {"text": [message]}}
+        fake_model_message = {"role": "model", "parts": [{"text": message}]}
         self.history.append(fake_model_message)
