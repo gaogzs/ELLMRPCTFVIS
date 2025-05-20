@@ -481,7 +481,10 @@ class RPEvaluationSession():
                     scope = scope.strip()
                     parsing_formula = parsing_formula.strip()
                     if scope not in self.scopes:
-                        raise FOLParsingError(f"Scope {scope} not found in scope table. Please remove any related usage of this scope for now.")
+                        if scope in self.objects:
+                            self.scopes[scope] = self.objects[scope]
+                        else:
+                            raise FOLParsingError(f"Scope {scope} not found in scope table. Please remove any related usage of this scope for now.")
                 parsed_formula = parse_z3(self.z3_builder, parsing_formula)
                 formulas[scope].append(parsed_formula)
         return dict(formulas)
@@ -545,6 +548,8 @@ class RPEvaluationSession():
         # First, add the global formulas
         global_formulas = combined_formulas["global"]
         for i, formula in enumerate(global_formulas):
+            if not isinstance(formula, BoolRef):
+                raise FOLParsingError(f"Invalid formula type: {formula}. Expected BoolRef.")
             solver.assert_and_track(formula, f"global_assertion_{i}")
             
         # Check the satisfiability of global formulas
