@@ -36,7 +36,7 @@
             "type": "string",
             "description": "The description of the relation. Should be a very short description of what this relation is referring to with the objects it take as arguments. Referencing arguments should be encased in '[]'. Make sure it references exactly the same parameters as declared in 'relation_name' part. Example: character [a] lives in location [b] for time [t]"
           },
-          "relation_usage_cases": {
+          "relation_cases": {
             "type": "array",
             "items": {
               "type": "string",
@@ -47,7 +47,7 @@
         "required": [
           "relation_name",
           "relation_description",
-          "relation_usage_cases"
+          "relation_cases"
         ]
       }
     },

@@ -14,7 +14,7 @@ from prompt_loader import PromptLoader
 from schema_loader import SchemaLoader
 from config import print_warning_message, ModelInfo, _ERROR_RETRIES
 
-MODEL_NAME = "gemini-chat"
+MODEL_NAME = "gemini-structured"
 
 
 instruction_templates = {
@@ -169,35 +169,60 @@ class RPEvaluationSession():
         if self.rp_history:
             bot.add_fake_user_message("\n".join(self.rp_history))
             bot.add_fake_model_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
-        
+            
         message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
-        
-        complete_response = bot.send_message(message, record=True, temperature=0.2)
-        print("Timeline Maker Response:")
-        print(complete_response)
         
         timeline_backup = self.timeline.copy()
         processed_success = False
         tries_count = _ERROR_RETRIES
-        while not processed_success:
-            try:
-                reasoning_text, timeline_text = divide_response_parts(complete_response)
-                processed_success = True
-                # Parse the timeline
-                new_timeline = self.parse_timeline_declarations(timeline_text)
-                self.timeline.update(new_timeline)
-            except Exception as e:
-                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                self.timeline = timeline_backup.copy()
-                print("Error in response division:", e)
-                tries_count -= 1
-                if tries_count <= 0:
-                    print("Error: Too many failing responses.")
-                    exit(1)
-                    
-                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                print("Retry with:\n")
-                print(complete_response)
+        
+        if self.model_info.output_format() == "json":
+            output_schema = self.schema_loader.load_output_schema("timeline_maker")
+            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
+            print("Timeline Maker Response:")
+            print(text_response)
+            
+            while not processed_success:
+                try:
+                    new_timeline = self.parse_timeline_declarations_json(json_response)
+                    timeline_text = str(json_response["timeline_definition"])
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.timeline = timeline_backup.copy()
+                    print("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
+                    print("Retry with:\n")
+                    print(text_response)
+        else:
+            complete_response = bot.send_message(message, record=True, temperature=0.2)
+            print("Timeline Maker Response:")
+            print(complete_response)
+            
+            while not processed_success:
+                try:
+                    reasoning_text, timeline_text = divide_response_parts(complete_response)
+                    processed_success = True
+                    # Parse the timeline
+                    new_timeline = self.parse_timeline_declarations(timeline_text)
+                    self.timeline.update(new_timeline)
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.timeline = timeline_backup.copy()
+                    print("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    complete_response = bot.send_message(error_message, record=True, temperature=0.2)
+                    print("Retry with:\n")
+                    print(complete_response)
         
         
         return timeline_text
@@ -210,47 +235,76 @@ class RPEvaluationSession():
         declarations_str = self.get_all_declarations_str()
         message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
         
-        complete_response = bot.send_message(message, record=True, temperature=0.2)
-        print("Declaration Maker Response:")
-        print(complete_response)
-        
         objects_backup = self.objects.copy()
         relations_backup = self.relations.copy()
         processed_success = False
         tries_count = _ERROR_RETRIES
-        while not processed_success:
-            try:
-                objects_text, relations_text, replenishment_text = divide_response_parts(complete_response)
-                
-                # Parse the object declarations
-                new_objects = self.parse_object_declarations(objects_text)
-                obj_keys = new_objects.keys()
-                
-                # Parse the relation declarations
-                new_relations = self.parse_relation_declarations(relations_text)
-                rel_keys = new_relations.keys()
-                
-                self.objects.update(new_objects)
-                self.relations.update(new_relations)
-                        
-                processed_success = True
-                        
-            except Exception as e:
-                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                self.objects = objects_backup.copy()
-                self.relations = relations_backup.copy()
-                
-                print("Error in response division:", e)
-                tries_count -= 1
-                if tries_count <= 0:
-                    print("Error: Too many failing responses.")
-                    exit(1)
-                    
-                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                print("Retry with:\n")
-                print(complete_response)
         
-        objects_text += "\n" + replenishment_text
+        
+        if self.model_info.output_format() == "json":
+            output_schema = self.schema_loader.load_output_schema("declaration_maker")
+            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
+            print("Declaration Maker Response:")
+            print(text_response)
+            while not processed_success:
+                try:
+                    new_objects, new_relations = self.parse_obj_rel_declarations_json(json_response)
+                    obj_keys = new_objects.keys()
+                    rel_keys = new_relations.keys()
+                    self.objects.update(new_objects)
+                    self.relations.update(new_relations)
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.objects = objects_backup.copy()
+                    self.relations = relations_backup.copy()
+                    
+                    print("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
+                    print("Retry with:\n")
+                    print(text_response)
+        else:
+            complete_response = bot.send_message(message, record=True, temperature=0.2)
+            print("Declaration Maker Response:")
+            print(complete_response)
+            while not processed_success:
+                try:
+                    objects_text, relations_text, replenishment_text = divide_response_parts(complete_response)
+                    
+                    # Parse the object declarations
+                    objects_text += "\n" + replenishment_text 
+                    new_objects = self.parse_object_declarations(objects_text)
+                    obj_keys = new_objects.keys()
+                    
+                    # Parse the relation declarations
+                    new_relations = self.parse_relation_declarations(relations_text)
+                    rel_keys = new_relations.keys()
+                    
+                    self.objects.update(new_objects)
+                    self.relations.update(new_relations)
+                            
+                    processed_success = True
+                            
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.objects = objects_backup.copy()
+                    self.relations = relations_backup.copy()
+                    
+                    print("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    complete_response = bot.send_message(error_message, record=True, temperature=0.2)
+                    print("Retry with:\n")
+                    print(complete_response)
+        
         
         return obj_keys, rel_keys
 
@@ -272,69 +326,96 @@ class RPEvaluationSession():
                 
         message = instruction_templates["semantic_definer"].format(declarations=current_declarations, past_declarations=old_declarations)
         
-        complete_response = bot.send_message(message, record=True, temperature=0)
-        print("Semantic Definer Response:")
-        print(complete_response)
-        
         processed_success = False
         tries_count = _ERROR_RETRIES
-        while not processed_success:
-            try:
-                reasoning_text, exclusive_definitions_text, formula_definitions_text = divide_response_parts(complete_response)
-                processed_success = True
-            except Exception as e:
-                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                print("Error in response division:", e)
-                tries_count -= 1
-                if tries_count <= 0:
-                    print("Error: Too many failing responses.")
-                    exit(1)
-                    
-                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                print("Retry with:\n")
-                print(complete_response)
         
-        explicit_formulas = []
-        if exclusive_definitions_text != "None":
-            parsed_success = False
-            tries_count = _ERROR_RETRIES
-            while not parsed_success:
+        if self.model_info.output_format() == "json":
+            output_schema = self.schema_loader.load_output_schema("semantic_definer")
+            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
+            print("Semantic Definer Response:")
+            print(text_response)
+            
+            while not processed_success:
                 try:
-                    explicit_formulas = self.parse_exclusive_args(exclusive_definitions_text)
-                    parsed_success = True
-                except FOLParsingError as e:
-                    error_message = instruction_templates["exlusive_error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", e)
+                    returning_formulas = self.parse_semantic_definer_json(json_response)
+                    pseudo_definitions = str(json_response["exclusiveness_definitions"] + json_response["formulas"])
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    print("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print("Error: Too many failing responses.")
                         exit(1)
                         
-                    exclusive_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
                     print("Retry with:\n")
-                    print(exclusive_definitions_text)
-        
-        parsed_formulas = []
-        if formula_definitions_text != "None":
-            parsed_success = False
-            tries_count = _ERROR_RETRIES
-            while not parsed_success:
+                    print(text_response)
+        else:
+            complete_response = bot.send_message(message, record=True, temperature=0)
+            print("Semantic Definer Response:")
+            print(complete_response)
+            
+            while not processed_success:
                 try:
-                    parsed_formulas += self.parse_formulas(formula_definitions_text)
-                    parsed_success = True
-                except FOLParsingError as e:
-                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
-                    print("Error in formula parsing:", e)
+                    reasoning_text, exclusive_definitions_text, formula_definitions_text = divide_response_parts(complete_response)
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    print("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print("Error: Too many failing responses.")
                         exit(1)
                         
-                    formula_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                     print("Retry with:\n")
-                    print(formula_definitions_text)
+                    print(complete_response)
+            
+            explicit_formulas = []
+            if exclusive_definitions_text != "None":
+                parsed_success = False
+                tries_count = _ERROR_RETRIES
+                while not parsed_success:
+                    try:
+                        explicit_formulas = self.parse_exclusive_args(exclusive_definitions_text)
+                        parsed_success = True
+                    except FOLParsingError as e:
+                        error_message = instruction_templates["exlusive_error_correction"].format(error_message=str(e))
+                        print("Error in formula parsing:", e)
+                        tries_count -= 1
+                        if tries_count <= 0:
+                            print("Error: Too many failing responses.")
+                            exit(1)
+                            
+                        exclusive_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                        print("Retry with:\n")
+                        print(exclusive_definitions_text)
+            
+            parsed_formulas = []
+            if formula_definitions_text != "None":
+                parsed_success = False
+                tries_count = _ERROR_RETRIES
+                while not parsed_success:
+                    try:
+                        parsed_formulas += self.parse_formulas(formula_definitions_text)
+                        parsed_success = True
+                    except FOLParsingError as e:
+                        error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                        print("Error in formula parsing:", e)
+                        tries_count -= 1
+                        if tries_count <= 0:
+                            print("Error: Too many failing responses.")
+                            exit(1)
+                            
+                        formula_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
+                        print("Retry with:\n")
+                        print(formula_definitions_text)
+            
+            returning_formulas = explicit_formulas + parsed_formulas
+            pseudo_definitions = exclusive_definitions_text + "\n" + formula_definitions_text
         
-        return obj_keys, rel_keys, explicit_formulas + parsed_formulas, exclusive_definitions_text + "\n" + formula_definitions_text
+        return returning_formulas, pseudo_definitions
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
@@ -349,59 +430,82 @@ class RPEvaluationSession():
         
         message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str, existing_scopes=scopes_str)
         
-        
-        complete_response = bot.send_message(message, record=True, temperature=0)
-        print("Formula Maker Response:")
-        print(complete_response)
-        
         scopes_backup = self.scopes.copy()
         processed_success = False
         tries_count = _ERROR_RETRIES
-        while not processed_success:
-            try:
-                reasoning_text, plan_text, scopes_text, formula_text  = divide_response_parts(complete_response)
-                for scope_line in scopes_text.splitlines():
-                    if ":" in scope_line:
-                        scope_name, scope_meaning = scope_line.split(":", 1)
-                        scope_name = scope_name.strip()
-                        scope_meaning = scope_meaning.strip()
-                        if scope_name in self.scopes:
-                            print_warning_message(f"Warning: {scope_name} already exists in scopes.")
-                        self.scopes[scope_name] = scope_meaning
-                processed_success = True
-            except Exception as e:
-                error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                self.scopes = scopes_backup.copy()
-                print("Error in response division:", e)
-                tries_count -= 1
-                if tries_count <= 0:
-                    print("Error: Too many failing responses.")
-                    exit(1)
-                    
-                complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                print("Retry with:\n")
-                print(complete_response)
         
-
-        current_formula = []
-        if formula_text != "None":
-            parsed_success = False
-            tries_count = _ERROR_RETRIES
-            while not parsed_success:
+        if self.model_info.output_format() == "json":
+            output_schema = self.schema_loader.load_output_schema("formula_maker")
+            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0)
+            print("Formula Maker Response:")
+            print(text_response)
+            
+            while not processed_success:
                 try:
-                    current_formula = self.parse_scoped_formulas(formula_text)
-                    parsed_success = True
-                except FOLParsingError as e:
-                    error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
-                    print("Error returned when parsing:", e)
+                    current_formula = self.parse_formula_maker_json(json_response)
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.scopes = scopes_backup.copy()
+                    print("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print("Error: Too many failing responses.")
                         exit(1)
                         
-                    formula_text = bot.send_message(error_message, record=True, temperature=0.1)
+                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
                     print("Retry with:\n")
-                    print(formula_text)
+                    print(text_response)
+        else:
+            complete_response = bot.send_message(message, record=True, temperature=0)
+            print("Formula Maker Response:")
+            print(complete_response)
+            
+            while not processed_success:
+                try:
+                    reasoning_text, plan_text, scopes_text, formula_text  = divide_response_parts(complete_response)
+                    for scope_line in scopes_text.splitlines():
+                        if ":" in scope_line:
+                            scope_name, scope_meaning = scope_line.split(":", 1)
+                            scope_name = scope_name.strip()
+                            scope_meaning = scope_meaning.strip()
+                            if scope_name in self.scopes:
+                                print_warning_message(f"Warning: {scope_name} already exists in scopes.")
+                            self.scopes[scope_name] = scope_meaning
+                    processed_success = True
+                except Exception as e:
+                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    self.scopes = scopes_backup.copy()
+                    print("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        print("Error: Too many failing responses.")
+                        exit(1)
+                        
+                    complete_response = bot.send_message(error_message, record=True, temperature=0.2)
+                    print("Retry with:\n")
+                    print(complete_response)
+            
+
+            current_formula = []
+            if formula_text != "None":
+                parsed_success = False
+                tries_count = _ERROR_RETRIES
+                while not parsed_success:
+                    try:
+                        current_formula = self.parse_scoped_formulas(formula_text)
+                        parsed_success = True
+                    except FOLParsingError as e:
+                        error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                        print("Error returned when parsing:", e)
+                        tries_count -= 1
+                        if tries_count <= 0:
+                            print("Error: Too many failing responses.")
+                            exit(1)
+                            
+                        formula_text = bot.send_message(error_message, record=True, temperature=0.1)
+                        print("Retry with:\n")
+                        print(formula_text)
         
         return current_formula
         
@@ -410,7 +514,7 @@ class RPEvaluationSession():
         
         timeline_definitions = self.handle_timeline_maker(lastest_conversation)
         obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
-        obj_keys, rel_keys, semantic_defined_formulas, definitions_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
+        semantic_defined_formulas, definitions_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
         self.rp_history.append(lastest_conversation)
         
@@ -436,6 +540,7 @@ class RPEvaluationSession():
         
         new_log = {
             "conversation": lastest_conversation,
+            "new_timeline": timeline_definitions,
             "new_declarations": current_declarations,
             "pseudo_predefinitions": definitions_text,
             "formula": pretty_formula,
@@ -447,12 +552,12 @@ class RPEvaluationSession():
         new_timeline = {}
         for definition_line in timeline_text.splitlines():
             if ":" in definition_line:
-                time_point_name, time_point_meaning = definition_line.split(":", 1)
+                time_point_name, time_point_description = definition_line.split(":", 1)
                 time_point_name = time_point_name.strip()
-                time_point_meaning = time_point_meaning.strip()
+                time_point_description = time_point_description.strip()
                 if time_point_name in self.timeline:
                     print_warning_message(f"Warning: {time_point_name} already exists in timeline.")
-                new_timeline[time_point_name] = time_point_meaning
+                new_timeline[time_point_name] = time_point_description
 
         return new_timeline
     
@@ -566,6 +671,117 @@ class RPEvaluationSession():
             constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
             explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
             formulas.append(explicit_formula)
+        return formulas
+    
+    def parse_timeline_declarations_json(self, timeline_json: dict) -> dict:
+        new_timeline = {}
+        for definition_line in timeline_json["timeline_definition"]:
+            time_point_name = definition_line["time_point_name"]
+            time_point_description = definition_line["time_point_description"]
+            if time_point_name in self.timeline:
+                print_warning_message(f"Warning: {time_point_name} already exists in timeline.")
+            new_timeline[time_point_name] = time_point_description
+
+        return new_timeline
+    
+    def parse_obj_rel_declarations_json(self, declarations_json: dict) -> tuple[dict, dict]:
+        new_objects = {}
+        for definition_line in declarations_json["objects"]:
+            obj_name = definition_line["object_name"]
+            obj_meaning = definition_line["object_description"]
+            if obj_name in self.objects:
+                print_warning_message(f"Warning: {obj_name} already exists in declarations.")
+            new_objects[obj_name] = obj_meaning
+        
+        new_relations = {}
+        for definition_line in declarations_json["relations"]:
+            rel_name = definition_line["relation_name"]
+            rel_meaning = definition_line["relation_description"]
+            rel_cases = definition_line["relation_cases"]
+            rel_just_name = rel_name.split("(")[0]
+            rel_params = get_relation_params(rel_name)
+            if len(rel_cases) == 0:
+                raise FOLParsingError(f"Invalid relation declaration: declared relation has no usage case. Please check the syntax: {definition_line}")
+            for rel_case in rel_cases:
+                if "'" in rel_case or '"' in rel_case:
+                    raise FOLParsingError(f"Invalid relation declaration: relation should not take strings. Please remove relevent relation: {definition_line}")
+                if rel_case.count(",") != rel_name.count(","):
+                    raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
+            
+            rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
+            if rel_just_name in self.relations:
+                print_warning_message(f"Warning: {rel_just_name} already exists in declarations.")
+            new_relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
+        
+        return new_objects, new_relations
+    
+    def parse_semantic_definer_json(self, definitions_json: dict) -> list:
+        formulas = []
+        for definition_line in definitions_json["exclusiveness_definitions"]:
+            rel_just_name = definition_line.split("(")[0]
+            if rel_just_name not in self.relations:
+                raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
+            edited_params = get_relation_params(definition_line)
+            original_params = self.relations[rel_just_name]["params"]
+            rel_z3_func = self.relations[rel_just_name]["function"]
+            
+            scope_params = []
+            ref_l = []
+            ref_r = []
+            constrain_pairs = []
+            for param_l, param_r in zip(original_params, edited_params):
+                if param_r == "[exclusive_arg]" or param_r == "[free_arg]":
+                    replace1 = param_l + "1"
+                    replace2 = param_l + "2"
+                    scope_params.append(replace1)
+                    ref_l.append(replace1)
+                    scope_params.append(replace2)
+                    ref_r.append(replace2)
+                    if param_r == "[exclusive_arg]":
+                        constrain_pairs.append(Int(replace1) == Int(replace2))
+                else:
+                    scope_params.append(param_l)
+                    ref_l.append(param_l)
+                    ref_r.append(param_l)
+            lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
+            rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
+            constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
+            explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
+            formulas.append(explicit_formula)
+            
+        for formula_line in definitions_json["formulas"]:
+            parsing_formula = formula_line.strip()
+            if parsing_formula:
+                parsed_formula = parse_z3(self.z3_builder, parsing_formula)
+                formulas.append(parsed_formula)
+        
+        return formulas
+    
+    def parse_formula_maker_json(self, formulas_json: dict) -> dict:
+        
+        for scope_line in formulas_json["scopes"]:
+            scope_name = scope_line["scope_name"]
+            scope_meaning = scope_line["scope_description"]
+            if scope_name in self.scopes:
+                print_warning_message(f"Warning: {scope_name} already exists in scopes.")
+            self.scopes[scope_name] = scope_meaning
+        
+        formulas = defaultdict(list)
+        formulas["global"] = []
+        for formula_line in formulas_json["formulas"]:
+            if "scope" in formula_line:
+                scope = formula_line["scope"]
+                if scope not in self.scopes:
+                    if scope in self.objects:
+                        self.scopes[scope] = self.objects[scope]
+                    else:
+                        raise FOLParsingError(f"Scope {scope} not found in scope table. Please remove any related usage of this scope for now.")
+            else:
+                scope = "global"
+                
+            parsing_formula = formula_line["formula"]
+            parsed_formula = parse_z3(self.z3_builder, parsing_formula)
+            formulas[scope].append(parsed_formula)
         return formulas
         
     

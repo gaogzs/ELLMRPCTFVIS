@@ -58,4 +58,4 @@ Variables:
 Constants:
 - Constants are not allowed in the formula at all. Failure Example: "123", "'Hello World!"
 
-For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.
+In none json output: For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.

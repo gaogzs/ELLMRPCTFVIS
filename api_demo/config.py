@@ -1,4 +1,4 @@
-from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple
+from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGeminiStructured
 
 _PRINT_CONTENT = False
 _ERROR_RETRIES = 10
@@ -27,6 +27,12 @@ _model_info = {
         "model": "gemini-2.0-flash-lite",
         "chatbot": ChatBotGeminiSimple,
         "output_format": "text"
+    },
+    
+    "gemini-structured": {
+        "model": "gemini-2.0-flash",
+        "chatbot": ChatBotGeminiStructured,
+        "output_format": "json"
     }
 }
 

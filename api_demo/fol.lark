@@ -16,7 +16,9 @@ CONST          : /[0-9]+/                        // Numeric constants
                | "exists" var_list "." formula    -> exists
 
 ?var_list      : IDENT+                           -> var_list
+               | IDENT ("," IDENT)*                     -> var_list
                | "("IDENT+")"                     -> var_list
+               | "("IDENT ("," IDENT)*")"                     -> var_list
 
 ?binary_formula: formula "<->" formula               -> iff
                | formula "->" formula           -> imply
