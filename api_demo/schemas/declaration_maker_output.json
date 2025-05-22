@@ -1,0 +1,76 @@
+{
+  "type": "object",
+  "properties": {
+    "objects": {
+      "type": "array",
+      "description": "A list of declaration of objects exist in the story.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_name": {
+            "type": "string",
+            "description": "The name of the object. Should ba a single word, a snake case lower case variable name. Example: mr_alex"
+          },
+          "object_description": {
+            "type": "string",
+            "description": "The description of the object. Should be avery short description of what object this is referring to. Example: Mr. Alex, a named character in the story"
+          }
+        },
+        "required": [
+          "object_name",
+          "object_description"
+        ]
+      }
+    },
+    "relations": {
+      "type": "array",
+      "description": "A list of declaration of relations between objects exist in the story.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "relation_name": {
+            "type": "string",
+            "description": "The name of the relation. Should be a single word, a snake case lower case variable name, followed by a bracket with arguments definitions. Arguments should be abstract characters like a, b, c, etc, every relation needs to take at least a time parameter at the end, preferably named as t. Example: live_in_location(a, b, t)"
+          },
+          "relation_description": {
+            "type": "string",
+            "description": "The description of the relation. Should be a very short description of what this relation is referring to with the objects it take as arguments. Referencing arguments should be encased in '[]'. Make sure it references exactly the same parameters as declared in 'relation_name' part. Example: character [a] lives in location [b] for time [t]"
+          },
+          "relation_usage_cases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "A usage case of the relation within your provided section of the story. The time parameter should be an abstract time point, like T0, T1, T2, etc. And other arguments has to be the existing object names you provided in the objects section. Be sure it takes the exactly the same number of parameters as declared in 'relation_name' part and as described in 'relation_description' part. Example: live_in_location(mr_alex, new_york, T0)"
+            }
+          }
+        },
+        "required": [
+          "relation_name",
+          "relation_description",
+          "relation_usage_cases"
+        ]
+      }
+    },
+    "replenishments": {
+      "type": "array",
+      "description": "If there are any objects referenced in the relation usage cases that are not declared in the objects section, they should be declared here.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_name": {
+            "type": "string",
+            "description": "The name of the object. Should ba a single word, a snake case lower case variable name. Example: mr_alex"
+          },
+          "object_description": {
+            "type": "string",
+            "description": "The description of the object. Should be avery short description of what object this is referring to. Example: Mr. Alex, a named character in the story"
+          }
+        },
+        "required": [
+          "object_name",
+          "object_description"
+        ]
+      }
+    }
+  }
+}

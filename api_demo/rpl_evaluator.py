@@ -11,7 +11,10 @@ from collections import defaultdict
 from chatbot import ChatBot, ChatBotDeepSeekSimple
 from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from prompt_loader import PromptLoader
-from config import print_warning_message, get_model_info, ModelInfo, _ERROR_RETRIES
+from schema_loader import SchemaLoader
+from config import print_warning_message, ModelInfo, _ERROR_RETRIES
+
+MODEL_NAME = "gemini-chat"
 
 
 instruction_templates = {
@@ -102,6 +105,7 @@ class RPEvaluationSession():
         self.z3_builder = Z3Builder(self.get_z3_function)
         
         self.prompt_loader = PromptLoader("prompts/")
+        self.schema_loader = SchemaLoader("schemas/")
         
     def relation_to_str(self, name: str, info: dict) -> str:
         params_str = ", ".join(info["params"])
@@ -618,7 +622,7 @@ cur_dir = os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == "__main__":
     # Example usage
-    model_info = get_model_info()
+    model_info = ModelInfo(MODEL_NAME)
     session = RPEvaluationSession(model_info)
     
     sample_conversation = []

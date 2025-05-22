@@ -1,7 +1,6 @@
 from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple
 
 _PRINT_CONTENT = False
-_MODEL_USED = "gemini-chat"
 _ERROR_RETRIES = 10
 
 
@@ -45,9 +44,3 @@ class ModelInfo:
     
     def output_format(self) -> str:
         return self.model_info["output_format"]
-
-
-def get_model_info() -> ModelInfo:
-    model_name = _MODEL_USED
-    
-    return ModelInfo(model_name)
