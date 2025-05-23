@@ -1,0 +1,4 @@
+Your provided formulas has returned some error while being parsed as FOL formula. Please check the syntax and fix it. The error message is:
+{error_message}
+
+Please respond with the corrected complete formulas only (The part of [formula], No header, no reasoning and anything other than the formula definitions), in the same format as before. There should be no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.

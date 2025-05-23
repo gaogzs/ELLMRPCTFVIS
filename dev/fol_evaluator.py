@@ -11,56 +11,9 @@ from collections import defaultdict
 from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from utils.prompt_loader import PromptLoader
 from utils.schema_loader import SchemaLoader
+from utils.input_template_loader import InputTemplateLoader
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
-instruction_templates = {
-    "timeline_maker": """
-**Story**
-{story}
-""",
-    "declaration_builder": """
-**Story**
-{story}
-**Reference**
-{reference}
-""",
-    "semantic_analyser": """
-**Past Declarations**
-{past_declarations}
-**Declarerations**
-{declarations}
-""",
-    "formula_maker": """
-**Story**
-{story}
-**Objects**
-{objects}
-**Relations**
-{relations}
-**Existing Timeline**
-{existing_timelines}
-**Existing Scopes**
-{existing_scopes}
-""",
-    "complete_error_correction": """
-Your provided response has returned some error while being processed. Please check the syntax and fix it. The error message is:
-{error_message}
-
-Please respond with a complete response with repective error corrected.
-""",
-    "exlusive_error_correction": """
-Your provided exclusiveness definitions has returned some error while being processed. Please check the syntax and fix it. The error message is:
-{error_message}
-
-Please respond with the corrected complete exclusive definitions only (The part of [exclusiveness_definitions], No header, no reasoning and anything other than the formula definitions), in the same format as before. There should be no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
-""",
-    "formula_error_correction": """
-Your provided formulas has returned some error while being parsed as FOL formula. Please check the syntax and fix it. The error message is:
-{error_message}
-
-Please respond with the corrected complete formulas only (The part of [formula], No header, no reasoning and anything other than the formula definitions), in the same format as before. There should be no natural language explanation, comments, or informal syntax. Be sure that all the brackets are closed and all used constants are declared. There should not be any beginning and ending "```" or other extra notions.
-"""
-}
 
 def divide_response_parts(response_txt: str) -> list:
     sections = re.split(r"-- \*\*.+\n", response_txt)
@@ -88,7 +41,7 @@ def get_relation_params(relation_str: str) -> list:
 #     return smtlib_str
 
 class RPEvaluationSession():
-    def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/") -> None:
+    def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/", input_template_dir: str = "../input_templates/") -> None:
         self.rp_history = history if history is not None else []
         self.model_info = model_info
         self.chatbot = self.model_info.chatbot()
@@ -102,6 +55,7 @@ class RPEvaluationSession():
         
         self.prompt_loader = PromptLoader(prompt_dir)
         self.schema_loader = SchemaLoader(schema_dir)
+        self.input_template_loader = InputTemplateLoader(input_template_dir)
         
     def relation_to_str(self, name: str, info: dict) -> str:
         params_str = ", ".join(info["params"])
@@ -166,7 +120,7 @@ class RPEvaluationSession():
             bot.add_fake_user_message("\n".join(self.rp_history))
             bot.add_fake_model_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
             
-        message = instruction_templates["timeline_maker"].format(story=lastest_conversation)
+        message = self.input_template_loader.load("timeline_maker").format(story=lastest_conversation)
         
         timeline_backup = self.timeline.copy()
         processed_success = False
@@ -184,7 +138,7 @@ class RPEvaluationSession():
                     timeline_text = str(json_response["timeline_definition"])
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.timeline = timeline_backup.copy()
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -208,7 +162,7 @@ class RPEvaluationSession():
                     new_timeline = self.parse_timeline_declarations(timeline_text)
                     self.timeline.update(new_timeline)
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.timeline = timeline_backup.copy()
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -229,7 +183,7 @@ class RPEvaluationSession():
         bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
-        message = instruction_templates["declaration_builder"].format(story=lastest_conversation, reference=declarations_str)
+        message = self.input_template_loader.load("declaration_builder").format(story=lastest_conversation, reference=declarations_str)
         
         objects_backup = self.objects.copy()
         relations_backup = self.relations.copy()
@@ -251,7 +205,7 @@ class RPEvaluationSession():
                     self.relations.update(new_relations)
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.objects = objects_backup.copy()
                     self.relations = relations_backup.copy()
                     
@@ -287,7 +241,7 @@ class RPEvaluationSession():
                     processed_success = True
                             
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.objects = objects_backup.copy()
                     self.relations = relations_backup.copy()
                     
@@ -320,7 +274,7 @@ class RPEvaluationSession():
             if name not in rel_keys:
                 old_declarations += self.relation_to_str(name, info) + "\n"
                 
-        message = instruction_templates["semantic_analyser"].format(declarations=current_declarations, past_declarations=old_declarations)
+        message = self.input_template_loader.load("semantic_analyser").format(declarations=current_declarations, past_declarations=old_declarations)
         
         processed_success = False
         tries_count = _ERROR_RETRIES
@@ -337,7 +291,7 @@ class RPEvaluationSession():
                     pseudo_definitions = str(json_response["exclusiveness_definitions"] + json_response["formulas"])
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
@@ -357,7 +311,7 @@ class RPEvaluationSession():
                     reasoning_text, exclusive_definitions_text, formula_definitions_text = divide_response_parts(complete_response)
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
@@ -377,7 +331,7 @@ class RPEvaluationSession():
                         explicit_formulas = self.parse_exclusive_args(exclusive_definitions_text)
                         parsed_success = True
                     except FOLParsingError as e:
-                        error_message = instruction_templates["exlusive_error_correction"].format(error_message=str(e))
+                        error_message = self.input_template_loader.load("exclusive_error_correction").format(error_message=str(e))
                         print_dev_message("Error in formula parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:
@@ -397,7 +351,7 @@ class RPEvaluationSession():
                         parsed_formulas += self.parse_formulas(formula_definitions_text)
                         parsed_success = True
                     except FOLParsingError as e:
-                        error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                        error_message = self.input_template_loader.load("formula_error_correction").format(error_message=str(e))
                         print_dev_message("Error in formula parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:
@@ -424,7 +378,7 @@ class RPEvaluationSession():
         timeline_str = self.get_timeline_str()
         scopes_str = self.get_scopes_str()
         
-        message = instruction_templates["formula_maker"].format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str, existing_scopes=scopes_str)
+        message = self.input_template_loader.load("formula_maker").format(story=lastest_conversation, objects=obj_str, relations=rel_str, existing_timelines=timeline_str, existing_scopes=scopes_str)
         
         scopes_backup = self.scopes.copy()
         processed_success = False
@@ -441,7 +395,7 @@ class RPEvaluationSession():
                     current_formula = self.parse_formula_maker_json(json_response)
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.scopes = scopes_backup.copy()
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -470,7 +424,7 @@ class RPEvaluationSession():
                             self.scopes[scope_name] = scope_meaning
                     processed_success = True
                 except Exception as e:
-                    error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
+                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.scopes = scopes_backup.copy()
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -492,7 +446,7 @@ class RPEvaluationSession():
                         current_formula = self.parse_scoped_formulas(formula_text)
                         parsed_success = True
                     except FOLParsingError as e:
-                        error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
+                        error_message = self.input_template_loader.load("formula_error_correction").format(error_message=str(e))
                         print_dev_message("Error returned when parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:

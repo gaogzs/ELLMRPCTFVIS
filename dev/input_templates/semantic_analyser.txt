@@ -1,0 +1,4 @@
+**Past Declarations**
+{past_declarations}
+**Declarerations**
+{declarations}
