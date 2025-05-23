@@ -1,4 +1,4 @@
-from chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGeminiStructured
+from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGeminiStructured
 
 _PRINT_CONTENT = False
 _ERROR_RETRIES = 10

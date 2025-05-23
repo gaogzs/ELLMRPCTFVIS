@@ -8,10 +8,9 @@ import z3.z3util
 import lark
 from collections import defaultdict
 
-from chatbot import ChatBot, ChatBotDeepSeekSimple
-from str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
-from prompt_loader import PromptLoader
-from schema_loader import SchemaLoader
+from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
+from utils.prompt_loader import PromptLoader
+from utils.schema_loader import SchemaLoader
 from config import print_warning_message, ModelInfo, _ERROR_RETRIES
 
 MODEL_NAME = "gemini-structured"
@@ -104,8 +103,8 @@ class RPEvaluationSession():
         self.logs = []
         self.z3_builder = Z3Builder(self.get_z3_function)
         
-        self.prompt_loader = PromptLoader("prompts/")
-        self.schema_loader = SchemaLoader("schemas/")
+        self.prompt_loader = PromptLoader("../prompts/")
+        self.schema_loader = SchemaLoader("../schemas/")
         
     def relation_to_str(self, name: str, info: dict) -> str:
         params_str = ", ".join(info["params"])

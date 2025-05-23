@@ -27,6 +27,7 @@
       "description": "A list of declaration of relations between objects exist in the story.",
       "items": {
         "type": "object",
+        "description": "A definition of a single relation. Composed of the relation declaration, a description of the relation, and a list of usage cases of the relation within the provided section of the story. No extra syntax is required to split the three parts apart since they will be in different json fields in this schema.",
         "properties": {
           "relation_name": {
             "type": "string",

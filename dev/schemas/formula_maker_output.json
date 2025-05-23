@@ -36,7 +36,7 @@
       "description": "A list of FOL formulas respresenting existence of facts and narrative logic found in the story.",
       "items": {
         "type": "object",
-        "description": "A definition of a single formula. Includes an optional scope and a string of FOL formula itself",
+        "description": "A definition of a single formula. Includes an optional scope and a string of FOL formula itself. No extra syntax is required to split the scope and the formula apart since they will be in different json fields in this schema.",
         "properties": {
           "scope": {
             "type": "string",
