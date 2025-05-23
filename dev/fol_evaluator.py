@@ -1,17 +1,11 @@
 import os
 import json
-from openai import OpenAI
 import re
-import random
 from z3 import *
-import z3.z3util
-import lark
 from collections import defaultdict
 
 from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
-from utils.prompt_loader import PromptLoader
-from utils.schema_loader import SchemaLoader
-from utils.input_template_loader import InputTemplateLoader
+from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
 
@@ -40,7 +34,7 @@ def get_relation_params(relation_str: str) -> list:
 #         return ""
 #     return smtlib_str
 
-class RPEvaluationSession():
+class FOLEvaluationSession():
     def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/", input_template_dir: str = "../input_templates/") -> None:
         self.rp_history = history if history is not None else []
         self.model_info = model_info
@@ -790,7 +784,7 @@ if __name__ == "__main__":
     # Example usage
     MODEL_NAME = "gemini-structured"
     model_info = ModelInfo(MODEL_NAME)
-    session = RPEvaluationSession(model_info)
+    session = FOLEvaluationSession(model_info)
     
     sample_conversation = []
     with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
