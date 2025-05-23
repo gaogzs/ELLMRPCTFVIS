@@ -7,6 +7,7 @@ from collections import defaultdict
 from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
 from utils.regex import divide_response_parts, get_relation_params
+from utils.utils import *
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
 
@@ -32,6 +33,9 @@ class FOLEvaluationSession():
         self.schema_loader = SchemaLoader(schema_dir)
         self.input_template_loader = InputTemplateLoader(input_template_dir)
         
+    def get_timeline_str(self) -> str:
+        return dict_pretty_str(self.timeline)
+    
     def relation_to_str(self, name: str, info: dict) -> str:
         params_str = ", ".join(info["params"])
         return f"{name}({params_str}): {info['meaning']}"
@@ -61,22 +65,13 @@ class FOLEvaluationSession():
                 print_warning_message(f"Warning: {key} not found in declarations.")
         return obj_str, rel_str
     
-    def get_timeline_str(self) -> str:
-        out_str = ""
-        for name, meaning in self.timeline.items():
-            out_str += f"{name}: {meaning}\n"
-        return out_str
-    
     def get_scopes_str(self) -> str:
-        out_str = ""
-        for name, meaning in self.scopes.items():
-            out_str += f"{name}: {meaning}\n"
-        return out_str
+        return dict_pretty_str(self.scopes)
     
     def scoped_formula_to_str(self, formula: dict) -> str:
         out_str = ""
         for scope, formulas in formula.items():
-            out_str += f"Scope:\n"
+            out_str += f"Scope: {scope}\n"
             for f in formulas:
                 out_str += str(f) + "\n"
         return out_str
@@ -86,71 +81,6 @@ class FOLEvaluationSession():
             return self.relations[name]["function"]
         else:
             return None
-    
-    def handle_timeline_maker(self, lastest_conversation: str) -> str:
-        
-        sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker")
-        bot = self.chatbot(self.model_info.model(), sys_prompt)
-        if self.rp_history:
-            bot.add_fake_user_message("\n".join(self.rp_history))
-            bot.add_fake_model_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
-            
-        message = self.input_template_loader.load("timeline_maker").format(story=lastest_conversation)
-        
-        timeline_backup = self.timeline.copy()
-        processed_success = False
-        tries_count = _ERROR_RETRIES
-        
-        if self.model_info.output_format() == "json":
-            output_schema = self.schema_loader.load_output_schema("timeline_maker")
-            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print_dev_message("Timeline Maker Response:")
-            print_dev_message(text_response)
-            
-            while not processed_success:
-                try:
-                    new_timeline = self.parse_timeline_declarations_json(json_response)
-                    timeline_text = str(json_response["timeline_definition"])
-                    processed_success = True
-                except Exception as e:
-                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
-                    self.timeline = timeline_backup.copy()
-                    print_dev_message("Error in response division:", e)
-                    tries_count -= 1
-                    if tries_count <= 0:
-                        print_dev_message("Error: Too many failing responses.")
-                        exit(1)
-                        
-                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print_dev_message("Retry with:\n")
-                    print_dev_message(text_response)
-        else:
-            complete_response = bot.send_message(message, record=True, temperature=0.2)
-            print_dev_message("Timeline Maker Response:")
-            print_dev_message(complete_response)
-            
-            while not processed_success:
-                try:
-                    reasoning_text, timeline_text = divide_response_parts(complete_response)
-                    processed_success = True
-                    # Parse the timeline
-                    new_timeline = self.parse_timeline_declarations(timeline_text)
-                    self.timeline.update(new_timeline)
-                except Exception as e:
-                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
-                    self.timeline = timeline_backup.copy()
-                    print_dev_message("Error in response division:", e)
-                    tries_count -= 1
-                    if tries_count <= 0:
-                        print_dev_message("Error: Too many failing responses.")
-                        exit(1)
-                        
-                    complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                    print_dev_message("Retry with:\n")
-                    print_dev_message(complete_response)
-        
-        
-        return timeline_text
     
     def handle_declaration_builder(self, lastest_conversation: str) -> tuple[list, list]:
         
@@ -435,9 +365,10 @@ class FOLEvaluationSession():
         return current_formula
         
 
-    def append_conversation(self, lastest_conversation: str) -> None:
+    def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> None:
         
-        timeline_definitions = self.handle_timeline_maker(lastest_conversation)
+        self.timeline = new_timeline.copy()
+        timeline_definitions = dict_pretty_str(self.timeline)
         obj_keys, rel_keys = self.handle_declaration_builder(lastest_conversation)
         semantic_defined_formulas, definitions_text = self.handle_semantic_analyser(lastest_conversation, obj_keys, rel_keys)
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
@@ -472,19 +403,6 @@ class FOLEvaluationSession():
             "result": unsat_score,
         }
         self.logs.append(new_log)
-        
-    def parse_timeline_declarations(self, timeline_text: str) -> dict:
-        new_timeline = {}
-        for definition_line in timeline_text.splitlines():
-            if ":" in definition_line:
-                time_point_name, time_point_description = definition_line.split(":", 1)
-                time_point_name = time_point_name.strip()
-                time_point_description = time_point_description.strip()
-                if time_point_name in self.timeline:
-                    print_warning_message(f"Warning: {time_point_name} already exists in timeline.")
-                new_timeline[time_point_name] = time_point_description
-
-        return new_timeline
     
     def parse_object_declarations(self, objects_text: str) -> dict:
         new_objects = {}
@@ -597,17 +515,6 @@ class FOLEvaluationSession():
             explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
             formulas.append(explicit_formula)
         return formulas
-    
-    def parse_timeline_declarations_json(self, timeline_json: dict) -> dict:
-        new_timeline = {}
-        for definition_line in timeline_json["timeline_definition"]:
-            time_point_name = definition_line["time_point_name"]
-            time_point_description = definition_line["time_point_description"]
-            if time_point_name in self.timeline:
-                print_warning_message(f"Warning: {time_point_name} already exists in timeline.")
-            new_timeline[time_point_name] = time_point_description
-
-        return new_timeline
     
     def parse_obj_rel_declarations_json(self, declarations_json: dict) -> tuple[dict, dict]:
         new_objects = {}
@@ -758,22 +665,21 @@ class FOLEvaluationSession():
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(self.logs + [new_log], f, indent=2)
 
-cur_dir = os.path.dirname(os.path.realpath(__file__))
-
-
-if __name__ == "__main__":
-    # Example usage
-    MODEL_NAME = "gemini-structured"
-    model_info = ModelInfo(MODEL_NAME)
-    session = FOLEvaluationSession(model_info)
+# No longer usable independently
+# if __name__ == "__main__":
+#     # Example usage
+#     cur_dir = os.path.dirname(os.path.realpath(__file__))
+#     MODEL_NAME = "gemini-structured"
+#     model_info = ModelInfo(MODEL_NAME)
+#     session = FOLEvaluationSession(model_info)
     
-    sample_conversation = []
-    with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
-        sample_conversations = json.load(f)
-        sample_conversation = sample_conversations[-1]
+#     sample_conversation = []
+#     with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
+#         sample_conversations = json.load(f)
+#         sample_conversation = sample_conversations[-1]
         
-    for section in sample_conversation:
-        session.append_conversation(section)
-        session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+#     for section in sample_conversation:
+#         session.append_conversation(section)
+#         session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
         
-    session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+#     session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
