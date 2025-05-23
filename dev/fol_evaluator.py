@@ -6,28 +6,9 @@ from collections import defaultdict
 
 from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
+from utils.regex import divide_response_parts, get_relation_params
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
-
-def divide_response_parts(response_txt: str) -> list:
-    sections = re.split(r"-- \*\*.+\n", response_txt)
-    # print([section.strip() for section in sections if section.strip()])
-    return [section.strip() for section in sections if section.strip()]
-
-
-def add_definition(smtlib_str, new_def):
-    if new_def not in smtlib_str:
-        smtlib_str = new_def + "\n" + smtlib_str
-    return smtlib_str
-
-def get_relation_params(relation_str: str) -> list:
-    match = re.search(r'\(([^()]*)\)', relation_str)
-    if match:
-        params = match.group(1).split(",")
-        params = [param.strip() for param in params]
-        return params
-    else:
-        return []
 
 # def fix_by_lines(smtlib_str):
 #     if smtlib_str.startswith("; "):
