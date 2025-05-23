@@ -18,13 +18,13 @@ instruction_templates = {
 **Story**
 {story}
 """,
-    "declaration_maker": """
+    "declaration_builder": """
 **Story**
 {story}
 **Reference**
 {reference}
 """,
-    "semantic_definer": """
+    "semantic_analyser": """
 **Past Declarations**
 {past_declarations}
 **Declarerations**
@@ -223,13 +223,13 @@ class RPEvaluationSession():
         
         return timeline_text
     
-    def handle_declaration_maker(self, lastest_conversation: str) -> tuple[list, list]:
+    def handle_declaration_builder(self, lastest_conversation: str) -> tuple[list, list]:
         
-        sys_prompt = self.prompt_loader.load_sys_prompts("declaration_maker")
+        sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder")
         bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
-        message = instruction_templates["declaration_maker"].format(story=lastest_conversation, reference=declarations_str)
+        message = instruction_templates["declaration_builder"].format(story=lastest_conversation, reference=declarations_str)
         
         objects_backup = self.objects.copy()
         relations_backup = self.relations.copy()
@@ -238,7 +238,7 @@ class RPEvaluationSession():
         
         
         if self.model_info.output_format() == "json":
-            output_schema = self.schema_loader.load_output_schema("declaration_maker")
+            output_schema = self.schema_loader.load_output_schema("declaration_builder")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
             print_dev_message("Declaration Maker Response:")
             print_dev_message(text_response)
@@ -304,9 +304,9 @@ class RPEvaluationSession():
         
         return obj_keys, rel_keys
 
-    def handle_semantic_definer(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
+    def handle_semantic_analyser(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
-        sys_prompt = self.prompt_loader.load_sys_prompts("semantic_definer")
+        sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser")
         bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
@@ -320,20 +320,20 @@ class RPEvaluationSession():
             if name not in rel_keys:
                 old_declarations += self.relation_to_str(name, info) + "\n"
                 
-        message = instruction_templates["semantic_definer"].format(declarations=current_declarations, past_declarations=old_declarations)
+        message = instruction_templates["semantic_analyser"].format(declarations=current_declarations, past_declarations=old_declarations)
         
         processed_success = False
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
-            output_schema = self.schema_loader.load_output_schema("semantic_definer")
+            output_schema = self.schema_loader.load_output_schema("semantic_analyser")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
             print_dev_message("Semantic Definer Response:")
             print_dev_message(text_response)
             
             while not processed_success:
                 try:
-                    returning_formulas = self.parse_semantic_definer_json(json_response)
+                    returning_formulas = self.parse_semantic_analyser_json(json_response)
                     pseudo_definitions = str(json_response["exclusiveness_definitions"] + json_response["formulas"])
                     processed_success = True
                 except Exception as e:
@@ -509,8 +509,8 @@ class RPEvaluationSession():
     def append_conversation(self, lastest_conversation: str) -> None:
         
         timeline_definitions = self.handle_timeline_maker(lastest_conversation)
-        obj_keys, rel_keys = self.handle_declaration_maker(lastest_conversation)
-        semantic_defined_formulas, definitions_text = self.handle_semantic_definer(lastest_conversation, obj_keys, rel_keys)
+        obj_keys, rel_keys = self.handle_declaration_builder(lastest_conversation)
+        semantic_defined_formulas, definitions_text = self.handle_semantic_analyser(lastest_conversation, obj_keys, rel_keys)
         current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
         self.rp_history.append(lastest_conversation)
         
@@ -711,7 +711,7 @@ class RPEvaluationSession():
         
         return new_objects, new_relations
     
-    def parse_semantic_definer_json(self, definitions_json: dict) -> list:
+    def parse_semantic_analyser_json(self, definitions_json: dict) -> list:
         formulas = []
         for definition_line in definitions_json["exclusiveness_definitions"]:
             rel_just_name = definition_line.split("(")[0]

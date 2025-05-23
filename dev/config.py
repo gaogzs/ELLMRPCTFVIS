@@ -11,10 +11,10 @@ def print_warning_message(message):
     if _PRINT_WARNING:
         print(message)
 
-def print_dev_message(message):
+def print_dev_message(*args, **kwargs):
     global _PRINT_DEV_MESSAGE
     if _PRINT_DEV_MESSAGE:
-        print(message)
+        print(*args, **kwargs)
 
 _model_info = {
     "deepseek-chat": {
