@@ -11,10 +11,7 @@ from collections import defaultdict
 from parser.str_to_z3_parser import Z3Builder, parse_z3, FOLParsingError
 from utils.prompt_loader import PromptLoader
 from utils.schema_loader import SchemaLoader
-from config import print_warning_message, ModelInfo, _ERROR_RETRIES
-
-MODEL_NAME = "gemini-structured"
-
+from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
 instruction_templates = {
     "timeline_maker": """
@@ -91,7 +88,7 @@ def get_relation_params(relation_str: str) -> list:
 #     return smtlib_str
 
 class RPEvaluationSession():
-    def __init__(self, model_info: ModelInfo, history: list = None) -> None:
+    def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/") -> None:
         self.rp_history = history if history is not None else []
         self.model_info = model_info
         self.chatbot = self.model_info.chatbot()
@@ -103,8 +100,8 @@ class RPEvaluationSession():
         self.logs = []
         self.z3_builder = Z3Builder(self.get_z3_function)
         
-        self.prompt_loader = PromptLoader("../prompts/")
-        self.schema_loader = SchemaLoader("../schemas/")
+        self.prompt_loader = PromptLoader(prompt_dir)
+        self.schema_loader = SchemaLoader(schema_dir)
         
     def relation_to_str(self, name: str, info: dict) -> str:
         params_str = ", ".join(info["params"])
@@ -178,8 +175,8 @@ class RPEvaluationSession():
         if self.model_info.output_format() == "json":
             output_schema = self.schema_loader.load_output_schema("timeline_maker")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print("Timeline Maker Response:")
-            print(text_response)
+            print_dev_message("Timeline Maker Response:")
+            print_dev_message(text_response)
             
             while not processed_success:
                 try:
@@ -189,19 +186,19 @@ class RPEvaluationSession():
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
                     self.timeline = timeline_backup.copy()
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(text_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(text_response)
         else:
             complete_response = bot.send_message(message, record=True, temperature=0.2)
-            print("Timeline Maker Response:")
-            print(complete_response)
+            print_dev_message("Timeline Maker Response:")
+            print_dev_message(complete_response)
             
             while not processed_success:
                 try:
@@ -213,15 +210,15 @@ class RPEvaluationSession():
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
                     self.timeline = timeline_backup.copy()
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(complete_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(complete_response)
         
         
         return timeline_text
@@ -243,8 +240,8 @@ class RPEvaluationSession():
         if self.model_info.output_format() == "json":
             output_schema = self.schema_loader.load_output_schema("declaration_maker")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print("Declaration Maker Response:")
-            print(text_response)
+            print_dev_message("Declaration Maker Response:")
+            print_dev_message(text_response)
             while not processed_success:
                 try:
                     new_objects, new_relations = self.parse_obj_rel_declarations_json(json_response)
@@ -258,19 +255,19 @@ class RPEvaluationSession():
                     self.objects = objects_backup.copy()
                     self.relations = relations_backup.copy()
                     
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(text_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(text_response)
         else:
             complete_response = bot.send_message(message, record=True, temperature=0.2)
-            print("Declaration Maker Response:")
-            print(complete_response)
+            print_dev_message("Declaration Maker Response:")
+            print_dev_message(complete_response)
             while not processed_success:
                 try:
                     objects_text, relations_text, replenishment_text = divide_response_parts(complete_response)
@@ -294,15 +291,15 @@ class RPEvaluationSession():
                     self.objects = objects_backup.copy()
                     self.relations = relations_backup.copy()
                     
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(complete_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(complete_response)
         
         
         return obj_keys, rel_keys
@@ -331,8 +328,8 @@ class RPEvaluationSession():
         if self.model_info.output_format() == "json":
             output_schema = self.schema_loader.load_output_schema("semantic_definer")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print("Semantic Definer Response:")
-            print(text_response)
+            print_dev_message("Semantic Definer Response:")
+            print_dev_message(text_response)
             
             while not processed_success:
                 try:
@@ -341,19 +338,19 @@ class RPEvaluationSession():
                     processed_success = True
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(text_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(text_response)
         else:
             complete_response = bot.send_message(message, record=True, temperature=0)
-            print("Semantic Definer Response:")
-            print(complete_response)
+            print_dev_message("Semantic Definer Response:")
+            print_dev_message(complete_response)
             
             while not processed_success:
                 try:
@@ -361,15 +358,15 @@ class RPEvaluationSession():
                     processed_success = True
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(complete_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(complete_response)
             
             explicit_formulas = []
             if exclusive_definitions_text != "None":
@@ -381,15 +378,15 @@ class RPEvaluationSession():
                         parsed_success = True
                     except FOLParsingError as e:
                         error_message = instruction_templates["exlusive_error_correction"].format(error_message=str(e))
-                        print("Error in formula parsing:", e)
+                        print_dev_message("Error in formula parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:
-                            print("Error: Too many failing responses.")
+                            print_dev_message("Error: Too many failing responses.")
                             exit(1)
                             
                         exclusive_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
-                        print("Retry with:\n")
-                        print(exclusive_definitions_text)
+                        print_dev_message("Retry with:\n")
+                        print_dev_message(exclusive_definitions_text)
             
             parsed_formulas = []
             if formula_definitions_text != "None":
@@ -401,15 +398,15 @@ class RPEvaluationSession():
                         parsed_success = True
                     except FOLParsingError as e:
                         error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
-                        print("Error in formula parsing:", e)
+                        print_dev_message("Error in formula parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:
-                            print("Error: Too many failing responses.")
+                            print_dev_message("Error: Too many failing responses.")
                             exit(1)
                             
                         formula_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
-                        print("Retry with:\n")
-                        print(formula_definitions_text)
+                        print_dev_message("Retry with:\n")
+                        print_dev_message(formula_definitions_text)
             
             returning_formulas = explicit_formulas + parsed_formulas
             pseudo_definitions = exclusive_definitions_text + "\n" + formula_definitions_text
@@ -436,8 +433,8 @@ class RPEvaluationSession():
         if self.model_info.output_format() == "json":
             output_schema = self.schema_loader.load_output_schema("formula_maker")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0)
-            print("Formula Maker Response:")
-            print(text_response)
+            print_dev_message("Formula Maker Response:")
+            print_dev_message(text_response)
             
             while not processed_success:
                 try:
@@ -446,19 +443,19 @@ class RPEvaluationSession():
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
                     self.scopes = scopes_backup.copy()
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(text_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(text_response)
         else:
             complete_response = bot.send_message(message, record=True, temperature=0)
-            print("Formula Maker Response:")
-            print(complete_response)
+            print_dev_message("Formula Maker Response:")
+            print_dev_message(complete_response)
             
             while not processed_success:
                 try:
@@ -475,15 +472,15 @@ class RPEvaluationSession():
                 except Exception as e:
                     error_message = instruction_templates["complete_error_correction"].format(error_message=str(e))
                     self.scopes = scopes_backup.copy()
-                    print("Error in response division:", e)
+                    print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
-                        print("Error: Too many failing responses.")
+                        print_dev_message("Error: Too many failing responses.")
                         exit(1)
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
-                    print("Retry with:\n")
-                    print(complete_response)
+                    print_dev_message("Retry with:\n")
+                    print_dev_message(complete_response)
             
 
             current_formula = []
@@ -496,15 +493,15 @@ class RPEvaluationSession():
                         parsed_success = True
                     except FOLParsingError as e:
                         error_message = instruction_templates["formula_error_correction"].format(error_message=str(e))
-                        print("Error returned when parsing:", e)
+                        print_dev_message("Error returned when parsing:", e)
                         tries_count -= 1
                         if tries_count <= 0:
-                            print("Error: Too many failing responses.")
+                            print_dev_message("Error: Too many failing responses.")
                             exit(1)
                             
                         formula_text = bot.send_message(error_message, record=True, temperature=0.1)
-                        print("Retry with:\n")
-                        print(formula_text)
+                        print_dev_message("Retry with:\n")
+                        print_dev_message(formula_text)
         
         return current_formula
         
@@ -815,8 +812,8 @@ class RPEvaluationSession():
                 unsat_score += len(solver.unsat_core()) - global_unsat_score
                 solver.pop()
         
-        print(solver.assertions())
-        print("Solver result:", results, unsat_score)
+        print_dev_message(solver.assertions())
+        print_dev_message("Solver result:", results, unsat_score)
         
         return results, unsat_score
     
@@ -837,6 +834,7 @@ cur_dir = os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == "__main__":
     # Example usage
+    MODEL_NAME = "gemini-structured"
     model_info = ModelInfo(MODEL_NAME)
     session = RPEvaluationSession(model_info)
     

@@ -1,13 +1,19 @@
 from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGeminiStructured
 
-_PRINT_CONTENT = False
+_PRINT_WARNING = False
+_PRINT_DEV_MESSAGE = True
 _ERROR_RETRIES = 10
 
 
 
 def print_warning_message(message):
-    global _PRINT_CONTENT
-    if _PRINT_CONTENT:
+    global _PRINT_WARNING
+    if _PRINT_WARNING:
+        print(message)
+
+def print_dev_message(message):
+    global _PRINT_DEV_MESSAGE
+    if _PRINT_DEV_MESSAGE:
         print(message)
 
 _model_info = {
