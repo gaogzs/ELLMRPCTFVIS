@@ -16,6 +16,17 @@ from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_R
 #         return ""
 #     return smtlib_str
 
+class Relation:
+    def __init__(self, name: str, params: list, meaning: str, function: Function) -> None:
+        self.name = name
+        self.params = params
+        self.meaning = meaning
+        self.function = function
+    
+    def __str__(self):
+        params_str = ", ".join(self.params)
+        return f"{self.name}({params_str}): {self.meaning}"
+
 class FOLEvaluationSession():
     def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/", input_template_dir: str = "../input_templates/") -> None:
         self.rp_history = history if history is not None else []
@@ -36,17 +47,13 @@ class FOLEvaluationSession():
     def get_timeline_str(self) -> str:
         return dict_pretty_str(self.timeline)
     
-    def relation_to_str(self, name: str, info: dict) -> str:
-        params_str = ", ".join(info["params"])
-        return f"{name}({params_str}): {info['meaning']}"
-    
     def get_all_declarations_str(self) -> str:
         out_str = "Objects:\n"
         for name, meaning in self.objects.items():
             out_str += f"{name}: {meaning}\n"
         out_str += "Relations:\n"
         for name, info in self.relations.items():
-            out_str += self.relation_to_str(name, info) + "\n"
+            out_str += str(info) + "\n"
         return out_str
     
     def get_keyed_declarations_str(self, obj_keys: list, rel_keys: list) -> str:
@@ -60,7 +67,7 @@ class FOLEvaluationSession():
         for key in rel_keys:
             if key in self.relations:
                 info = self.relations[key]
-                rel_str += self.relation_to_str(key, info) + "\n"
+                rel_str += str(info) + "\n"
             else:
                 print_warning_message(f"Warning: {key} not found in declarations.")
         return obj_str, rel_str
@@ -78,7 +85,7 @@ class FOLEvaluationSession():
     
     def get_z3_function(self, name: str) -> Function:
         if name in self.relations:
-            return self.relations[name]["function"]
+            return self.relations[name].function
         else:
             return None
     
@@ -90,8 +97,6 @@ class FOLEvaluationSession():
         declarations_str = self.get_all_declarations_str()
         message = self.input_template_loader.load("declaration_builder").format(story=lastest_conversation, reference=declarations_str)
         
-        objects_backup = self.objects.copy()
-        relations_backup = self.relations.copy()
         processed_success = False
         tries_count = _ERROR_RETRIES
         
@@ -111,8 +116,6 @@ class FOLEvaluationSession():
                     processed_success = True
                 except Exception as e:
                     error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
-                    self.objects = objects_backup.copy()
-                    self.relations = relations_backup.copy()
                     
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -147,8 +150,6 @@ class FOLEvaluationSession():
                             
                 except Exception as e:
                     error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
-                    self.objects = objects_backup.copy()
-                    self.relations = relations_backup.copy()
                     
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
@@ -177,7 +178,7 @@ class FOLEvaluationSession():
                 old_declarations += f"{name}: {meaning}\n"
         for name, info in self.relations.items():
             if name not in rel_keys:
-                old_declarations += self.relation_to_str(name, info) + "\n"
+                old_declarations += str(info) + "\n"
                 
         message = self.input_template_loader.load("semantic_analyser").format(declarations=current_declarations, past_declarations=old_declarations)
         
@@ -439,7 +440,7 @@ class FOLEvaluationSession():
                 rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
                 if rel_just_name in self.relations:
                     print_warning_message(f"Warning: {rel_just_name} already exists in declarations.")
-                new_relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
+                new_relations[rel_just_name] = Relation(rel_just_name, rel_params, rel_meaning, rel_z3_func)
         
         return new_relations
     
@@ -488,8 +489,10 @@ class FOLEvaluationSession():
             if rel_just_name not in self.relations:
                 raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
             edited_params = get_relation_params(definition_line)
-            original_params = self.relations[rel_just_name]["params"]
-            rel_z3_func = self.relations[rel_just_name]["function"]
+            original_params = self.relations[rel_just_name].params
+            rel_z3_func = self.relations[rel_just_name].function
+            if len(edited_params) != len(original_params):
+                raise FOLParsingError(f"Invalid exclusive relation declaration: relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
             
             scope_params = []
             ref_l = []
@@ -543,7 +546,7 @@ class FOLEvaluationSession():
             rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
             if rel_just_name in self.relations:
                 print_warning_message(f"Warning: {rel_just_name} already exists in declarations.")
-            new_relations[rel_just_name] = {"params": rel_params, "meaning": rel_meaning, "function": rel_z3_func}
+            new_relations[rel_just_name] = Relation(rel_just_name, rel_params, rel_meaning, rel_z3_func)
         
         return new_objects, new_relations
     
@@ -554,8 +557,10 @@ class FOLEvaluationSession():
             if rel_just_name not in self.relations:
                 raise FOLParsingError(f"Relation {rel_just_name} not found in function table.")
             edited_params = get_relation_params(definition_line)
-            original_params = self.relations[rel_just_name]["params"]
-            rel_z3_func = self.relations[rel_just_name]["function"]
+            original_params = self.relations[rel_just_name].params
+            rel_z3_func = self.relations[rel_just_name].function
+            if len(edited_params) != len(original_params):
+                raise FOLParsingError(f"Invalid exclusive relation declaration: relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
             
             scope_params = []
             ref_l = []
