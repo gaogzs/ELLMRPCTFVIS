@@ -6,3 +6,4 @@ networkx
 z3-solver
 lark
 google-genai
+sentence-transformers
