@@ -1,9 +1,7 @@
-import os
-import json
 
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
-from utils.regex import divide_response_parts, get_relation_params
+from utils.regex import divide_response_parts
 from utils.utils import *
 
 class TimelineMakerSession:
