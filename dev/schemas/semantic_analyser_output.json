@@ -22,5 +22,11 @@
         "description": "A formula of one of the semantic logical nature you have found between the provided relations, or one from the provided relation and one from the past declared relations. It should be a single FOL formula of given specification. Example: forall(a b c) . live_in_location(a, b, t) -> stay_in_location(a, b, t). Specification: quantifier are used in the form of forall(<bounded_vars>) . <formula> or exists(<bounded_vars>) . <formula>. binary operators are used in the form of '<formula> and <formula>' or '<formula> or <formula>' or '<formula> -> <formula>'. Unary operators are used in the form of 'not <formula>'. Brackets can be used for explicit precedence."
       }
     }
-  }
+  },
+  "required": [
+    "reasoning",
+    "exclusiveness_definitions",
+    "formulas"
+  ],
+  "additionalProperties": false
 }

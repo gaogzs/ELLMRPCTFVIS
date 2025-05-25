@@ -23,8 +23,14 @@
         "required": [
           "time_point_name",
           "time_point_description"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [
+    "reasoning",
+    "timeline_definition"
+  ],
+  "additionalProperties": false
 }

@@ -105,7 +105,7 @@ class ChatBotGPTSimple(ChatBot):
     def __init__(self, model: str, sys_prompt: str = None) -> None:
         self.history = [{"role": "system", "content": sys_prompt}]
         self.init_history = self.history.copy()
-        self.client = OpenAI(api_key=deepseek_api_key, base_url="https://api.openai.com")
+        self.client = OpenAI(api_key=gpt_api_key)
         self.model = model
 
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:

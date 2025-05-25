@@ -19,7 +19,8 @@
         "required": [
           "object_name",
           "object_description"
-        ]
+        ],
+        "additionalProperties": false
       }
     },
     "relations": {
@@ -49,7 +50,8 @@
           "relation_name",
           "relation_description",
           "relation_cases"
-        ]
+        ],
+        "additionalProperties": false
       }
     },
     "replenishments": {
@@ -70,8 +72,15 @@
         "required": [
           "object_name",
           "object_description"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [
+    "objects",
+    "relations",
+    "replenishments"
+  ],
+  "additionalProperties": false
 }

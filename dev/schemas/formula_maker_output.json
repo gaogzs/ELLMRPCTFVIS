@@ -28,7 +28,8 @@
         "required": [
           "scope_name",
           "scope_description"
-        ]
+        ],
+        "additionalProperties": false
       }
     },
     "formulas": {
@@ -49,9 +50,18 @@
           }
         },
         "required": [
+          "scope",
           "formula"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [
+    "reasoning",
+    "plan",
+    "scopes",
+    "formulas"
+  ],
+  "additionalProperties": false
 }
