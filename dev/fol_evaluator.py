@@ -91,8 +91,6 @@ class FOLEvaluationSession():
     
     def handle_declaration_builder(self, lastest_conversation: str) -> tuple[list, list]:
         
-        sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder")
-        bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         declarations_str = self.get_all_declarations_str()
         message = self.input_template_loader.load("declaration_builder").format(story=lastest_conversation, reference=declarations_str)
@@ -102,6 +100,8 @@ class FOLEvaluationSession():
         
         
         if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             output_schema = self.schema_loader.load_output_schema("declaration_builder")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
             print_dev_message("Declaration Maker Response:")
@@ -127,6 +127,8 @@ class FOLEvaluationSession():
                     print_dev_message("Retry with:\n")
                     print_dev_message(text_response)
         else:
+            sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             complete_response = bot.send_message(message, record=True, temperature=0.2)
             print_dev_message("Declaration Maker Response:")
             print_dev_message(complete_response)
@@ -166,8 +168,6 @@ class FOLEvaluationSession():
 
     def handle_semantic_analyser(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> tuple[list, list, list, str]:
         
-        sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser")
-        bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
         current_declarations = "Objects:\n" + obj_str + "\n" + "Relaions:\n" + rel_str
@@ -186,6 +186,8 @@ class FOLEvaluationSession():
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             output_schema = self.schema_loader.load_output_schema("semantic_analyser")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
             print_dev_message("Semantic Definer Response:")
@@ -208,6 +210,8 @@ class FOLEvaluationSession():
                     print_dev_message("Retry with:\n")
                     print_dev_message(text_response)
         else:
+            sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             complete_response = bot.send_message(message, record=True, temperature=0)
             print_dev_message("Semantic Definer Response:")
             print_dev_message(complete_response)
@@ -275,8 +279,6 @@ class FOLEvaluationSession():
     
     def handle_formula_maker(self, lastest_conversation: str, obj_keys: list, rel_keys: list) -> dict:
         
-        sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker")
-        bot = self.chatbot(self.model_info.model(), sys_prompt)
         
         # Make up the prompt from data
         obj_str, rel_str = self.get_keyed_declarations_str(obj_keys, rel_keys)
@@ -291,6 +293,8 @@ class FOLEvaluationSession():
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             output_schema = self.schema_loader.load_output_schema("formula_maker")
             text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0)
             print_dev_message("Formula Maker Response:")
@@ -313,6 +317,8 @@ class FOLEvaluationSession():
                     print_dev_message("Retry with:\n")
                     print_dev_message(text_response)
         else:
+            sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
             complete_response = bot.send_message(message, record=True, temperature=0)
             print_dev_message("Formula Maker Response:")
             print_dev_message(complete_response)

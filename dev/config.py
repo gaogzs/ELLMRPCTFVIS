@@ -1,4 +1,4 @@
-from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGeminiStructured
+from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple
 
 _PRINT_WARNING = False
 _PRINT_DEV_MESSAGE = True
@@ -23,6 +23,12 @@ _model_info = {
         "output_format": "text"
     },
     
+    "deepseek-structured": {
+        "model": "deepseek-chat",
+        "chatbot": ChatBotDeepSeekSimple,
+        "output_format": "json"
+    },
+    
     "gemini-chat": {
         "model": "gemini-2.0-flash",
         "chatbot": ChatBotGeminiSimple,
@@ -37,7 +43,7 @@ _model_info = {
     
     "gemini-structured": {
         "model": "gemini-2.0-flash",
-        "chatbot": ChatBotGeminiStructured,
+        "chatbot": ChatBotGeminiSimple,
         "output_format": "json"
     }
 }

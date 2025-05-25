@@ -12,7 +12,7 @@ class TimelineMakerSession:
         
         
         self.model_info = model_info
-        self.sys_prompt = prompt_loader.load_sys_prompts("timeline_maker")
+        self.prompt_loader = prompt_loader
         self.output_schema = schema_loader.load_output_schema("timeline_maker")
         self.input_template_loader = input_template_loader
         
@@ -27,6 +27,10 @@ class TimelineMakerSession:
     def get_timeline_str(self) -> str:
         return dict_pretty_str(self.timeline)
     
+    def get_timeline_schema_form(self) -> dict:
+        out_dict = [{"time_point_name": time_point_name, "time_point_description": time_point_description} for time_point_name, time_point_description in self.timeline.items()]
+        return out_dict
+    
     def append_conversation(self, lastest_conversation: str) -> None:
         new_timeline, timeline_text = self.handle_new_section(lastest_conversation)
         
@@ -36,10 +40,6 @@ class TimelineMakerSession:
         
     def handle_new_section(self, lastest_conversation: str) -> tuple[dict, str]:
         
-        bot = self.chatbot(self.model_info.model(), self.sys_prompt)
-        if self.rp_history:
-            bot.add_fake_user_message("\n".join(self.rp_history))
-            bot.add_fake_model_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
             
         message = self.input_template_loader.load("timeline_maker").format(story=lastest_conversation)
         
@@ -47,6 +47,15 @@ class TimelineMakerSession:
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker_json")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
+            if self.rp_history:
+                bot.add_fake_user_message("\n".join(self.rp_history))
+                fake_json_message = {
+                    "reasoning": "[Hidden]",
+                    "timeline_definition": self.get_timeline_schema_form()
+                }
+                bot.add_fake_model_message(str(fake_json_message))
             text_response, json_response = bot.get_structured_response(message, self.output_schema, record=True, temperature=0.2)
             print_dev_message("Timeline Maker Response:")
             print_dev_message(text_response)
@@ -68,6 +77,11 @@ class TimelineMakerSession:
                     print_dev_message("Retry with:\n")
                     print_dev_message(text_response)
         else:
+            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker_json")
+            bot = self.chatbot(self.model_info.model(), sys_prompt)
+            if self.rp_history:
+                bot.add_fake_user_message("\n".join(self.rp_history))
+                bot.add_fake_model_message("-- **Reasoning**\n[Hidden]\n-- **Timeline Definitions**\n" + self.get_timeline_str())
             complete_response = bot.send_message(message, record=True, temperature=0.2)
             print_dev_message("Timeline Maker Response:")
             print_dev_message(complete_response)

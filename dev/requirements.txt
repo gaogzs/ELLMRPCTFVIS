@@ -1,9 +1,10 @@
 openai
+google-genai
 json
+jsonschema
 matplotlib
 numpy
 networkx
 z3-solver
 lark
-google-genai
 sentence-transformers
