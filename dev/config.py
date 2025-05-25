@@ -1,4 +1,4 @@
-from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGPTSimple
+from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGPTSimple, ChatBotClaudeSimple
 
 _PRINT_WARNING = False
 _PRINT_DEV_MESSAGE = True
@@ -47,15 +47,27 @@ _model_info = {
         "output_format": "json"
     },
     
-    "gpt-mini-structured": {
-        "model": "gpt-4.1-mini",
-        "chatbot": ChatBotGPTSimple,
+    "gemini-lite-structured": {
+        "model": "gemini-2.0-flash-lite",
+        "chatbot": ChatBotGeminiSimple,
         "output_format": "json"
     },
     
     "gpt-structured": {
         "model": "gpt-4.1",
         "chatbot": ChatBotGPTSimple,
+        "output_format": "json"
+    },
+    
+    "gpt-mini-structured": {
+        "model": "gpt-4.1-mini",
+        "chatbot": ChatBotGPTSimple,
+        "output_format": "json"
+    },
+    
+    "claude-sonnet-structured": {
+        "model": "claude-sonnet-4-20250514",
+        "chatbot": ChatBotClaudeSimple,
         "output_format": "json"
     },
 }

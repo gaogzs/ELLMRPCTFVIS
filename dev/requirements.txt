@@ -8,3 +8,4 @@ networkx
 z3-solver
 lark
 sentence-transformers
+anthropic

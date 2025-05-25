@@ -28,6 +28,6 @@ if __name__ == "__main__":
         sample_conversations = json.load(f)
         sample_conversation = sample_conversations[-1]
     
-    do_one_run(sample_conversation, "gpt-structured")
+    do_one_run(sample_conversation, "claude-sonnet-structured")
     
     
