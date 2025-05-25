@@ -47,7 +47,7 @@ class TimelineMakerSession:
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
-            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker_json")
+            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker", subtype="json")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
             if self.rp_history:
                 bot.add_fake_user_message("\n".join(self.rp_history))
@@ -77,7 +77,7 @@ class TimelineMakerSession:
                     print_dev_message("Retry with:\n")
                     print_dev_message(text_response)
         else:
-            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker_json")
+            sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
             if self.rp_history:
                 bot.add_fake_user_message("\n".join(self.rp_history))

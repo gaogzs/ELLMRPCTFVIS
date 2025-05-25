@@ -1,0 +1,69 @@
+You will be in charge of creating a first-order logical formula to describe the existence of facts and narration logic of a given role-playing scenario happened between a user and an AI, which can then be used to check the logical consistency of the story elseware (so the check for consistency itself is not your concern).
+The input will be given in the format:
+
+**Story**
+[story]
+**Objects**
+[objects]
+**Relations**
+[relations]
+**Existing Timeline**
+[existing_timelines]
+**Existing Scopes**
+[existing_scopes]
+
+Where [story] is the content of the story you will be analysing, given in the format "[content](User: [user_content])[content] ...".
+Where [content] is the AI generated content of the story, and [user_content] is the user input in the story.
+Your output will be in the format:
+
+-- **Reasoning**
+[reasoning]
+-- **Plan**
+[plan]
+-- **New Scope Declaration**
+[scopes]
+-- **SAT definition**
+[formula]
+
+Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [plan] you should state, based on the previous reasonning, the list of relations and logic you are going to add. And [formula] is the first-order logical formula definition you created based on the input and your previous thoughts, you action should not bypass what you have planned in the previous parts. The definition should be given in plain text of a given FOL syntax language, every assertion of the root CNF should be printed one formula per line (no "and" statement is needed for root CNF). There should not be any beginning and ending "```" or other extra notions.
+**Guidelines of Creating Formula**
+Objects are a set of all notable objects that appeared in the story, all available objects are supplied in the [objects] part of the input. In order to state further facts about story, you have been supplied with a list of available relations in the [relations] part of the input. You should use them as functions. If you think such relation exists in the story, between any objects existed in the previous part, you should state the function in an assertion of the formula. You should not use any objects or relations that are not declared in the [objects] and [relations] part.
+[existing_timelines] is a list of special objects that are abstractly defined time points in the format of T[number]. If any time points are mentioned in the story, besides using them as objects in the formula, you may also define the chronological relation between them using notations like "T0 < T1" or "T2 > T1", if any chronological relation is mentioned or implied in the story.
+Normally, if a logical proposition is told as a global fact, you can just write the plain formula. However, if the proposition only exists in a specific character's dialogue, thoughts, a book, or any other subjective media that was a part of the narrative and has not proven to be absolutetly true, you should write the formula inside a scope, in the form of "[scope_name]|:[formula]". For example:
+If the story says: "If a man is killed, he is dead.", given "is_killed" and "is_dead" are available relations
+You can write:
+forall (a b) . (is_killed(a, b) -> is_dead(a))
+If the story says: "Detective Joseph hence concluded: \"Whoever this fingerprint belongs, must be the criminal!\"", given "fingerprint_belongs" and "is_criminal" are available relations.
+You can write:
+detective_joseph|: forall (a t) . fingerprint_belongs(this_fingerprint, a, t) -> is_criminal(a, t)
+
+In the input, [existing_scopes] has listed all the available scopes that are already defined in the story, that you can use. If you are using a new scope, you should declare it in the [scopes] part of your output. Where each line in the form of "[scope_name]: [scope_meaning]". Continuing the previous example, if you are using a new scope "detective_joseph", you should declare it in the [scopes] like:
+detective_joseph: Detective Joseph, a character in the story
+
+Scope names are like variables, must be non-repetitive. If you are using an existing scope, you should not declare it again. The [scopes] part should only contain new scopes that you have defined in the current output. You should not repeat any scope that was already declared in the [existing_scopes] part. One line of formula can only use none or one scope, and there will not be sub-scopes.
+
+Your syntax specification should be:
+
+Logical operators:
+- "and" "or" "not" "->" "<->"
+- Example: "a and b", "a or b", "not a", "a -> b", "a <-> b"
+The default order of precedence is:
+- "not" > "and" > "or" > "->" > "<->"
+You should use parentheses to indicate the order of precedence explicitly.
+
+Forall and Exists:
+- Example: "forall (a b c) . (a and b) -> c", "exists (a b c) . (a and b) -> c"
+- You should use "forall" and "exists" to indicate the quantifier, and the variables should be separated by space. The main body of the quantifier should be separated by a dot ".".
+
+Functions:
+- Example: "function_name(a, b, c)"
+
+Variables:
+- Bounded variables are the ones that are declared in the quantifier. Example: "a", "b", "c" in "forall (a b c) . (a and b) -> c"
+- Unbounded variables are the ones that are not declared in the quantifier. Example: "this_fingerprint" in "fingerprint_belongs(this_fingerprint, a)"
+- Variable names has to obey the syntax rule of [a-zA-Z][a-zA-Z0-9_]*
+
+Constants:
+- Constants are not allowed in the formula at all. Failure Example: "123", "'Hello World!"
+
+In none json output: For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.

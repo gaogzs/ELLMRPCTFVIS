@@ -20,8 +20,8 @@ class PromptLoader:
         self.cur_dir = os.path.dirname(os.path.realpath(__file__))
         self.prompt_dir = prompt_dir
 
-    def load_sys_prompts(self, filename):
-        sys_prompt_filename = f"sys_prompt_{filename}.txt"
+    def load_sys_prompts(self, filename, subtype="text"):
+        sys_prompt_filename = f"sys_prompt_{filename}_{subtype}.txt"
         full_prompt_dir = os.path.join(self.cur_dir, self.prompt_dir, sys_prompt_filename)
         read_text = ""
         with open(full_prompt_dir, 'r', encoding="utf-8") as f:
