@@ -6,13 +6,18 @@ from openai import OpenAI
 from google import genai
 from anthropic import Anthropic
 
+from utils.loaders import SchemaLoader
+
 schema_draft = "http://json-schema.org/draft-07/schema#"
 class ChatBot():
+    
+    def __init__(self, model: str, sys_prompt: str, schema_loader: SchemaLoader) -> None:
+        raise NotImplementedError("ChatBot is an abstract class and cannot be instantiated directly.")
 
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         raise NotImplementedError("send_message method must be implemented by subclasses")
 
-    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7):
+    def get_structured_response(self, message: str, schema_key: str, record: bool = True, temperature: float = 0.7):
         raise NotImplementedError("get_structured_response method must be implemented by subclasses")
     
     def append_history(self, conversation: dict) -> None:
@@ -38,7 +43,7 @@ class ChatBot():
 
 class ChatBotDeepSeekSimple(ChatBot):
 
-    def __init__(self, model: str, sys_prompt: str = None) -> None:
+    def __init__(self, model: str, sys_prompt: str = None, schema_loader: SchemaLoader = None) -> None:
         cur_dir = os.path.dirname(os.path.realpath(__file__))
         api_key_dir = os.path.join(cur_dir, "api_keys")
         deepseek_key_dir = os.path.join(api_key_dir, "deepseek_api_key")
@@ -49,6 +54,7 @@ class ChatBotDeepSeekSimple(ChatBot):
         self.init_history = self.history.copy()
         self.client = OpenAI(api_key=deepseek_api_key, base_url="https://api.deepseek.com")
         self.model = model
+        self.schema_loader = schema_loader
 
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         new_message = {"role": "user", "content": message}
@@ -64,7 +70,10 @@ class ChatBotDeepSeekSimple(ChatBot):
             self.history.append(new_response_message)
         return response_message
     
-    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
+    def get_structured_response(self, message: str, schema_key: dict, record: bool = True, temperature: float = 0.7) -> dict:
+        if not self.schema_loader:
+            raise ValueError("Schema loader must be provided for structured responses.")
+        schema = self.schema_loader.load_output_schema(schema_key)
         new_message = {"role": "user", "content": message}
         validating_schema = schema.copy()
         validating_schema["$schema"] = schema_draft
@@ -111,7 +120,7 @@ class ChatBotDeepSeekSimple(ChatBot):
 
 class ChatBotGPTSimple(ChatBot):
 
-    def __init__(self, model: str, sys_prompt: str = None) -> None:
+    def __init__(self, model: str, sys_prompt: str = None, schema_loader: SchemaLoader = None) -> None:
         cur_dir = os.path.dirname(os.path.realpath(__file__))
         api_key_dir = os.path.join(cur_dir, "api_keys")
         gpt_key_dir = os.path.join(api_key_dir, "gpt_api_key")
@@ -122,6 +131,7 @@ class ChatBotGPTSimple(ChatBot):
         self.init_history = self.history.copy()
         self.client = OpenAI(api_key=gpt_api_key)
         self.model = model
+        self.schema_loader = schema_loader
 
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         new_message = {"role": "user", "content": message}
@@ -137,7 +147,10 @@ class ChatBotGPTSimple(ChatBot):
             self.history.append(new_response_message)
         return response_message
     
-    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
+    def get_structured_response(self, message: str, schema_key: str, record: bool = True, temperature: float = 0.7) -> dict:
+        if not self.schema_loader:
+            raise ValueError("Schema loader must be provided for structured responses.")
+        schema = self.schema_loader.load_output_schema(schema_key, "strict")
         new_message = {"role": "user", "content": message}
         response_format = {
             "type": "json_schema",
@@ -186,7 +199,7 @@ class ChatBotGPTSimple(ChatBot):
     
 class ChatBotGeminiSimple(ChatBot):
 
-    def __init__(self, model: str, sys_prompt: str = None) -> None:
+    def __init__(self, model: str, sys_prompt: str = None, schema_loader: SchemaLoader = None) -> None:
         cur_dir = os.path.dirname(os.path.realpath(__file__))
         api_key_dir = os.path.join(cur_dir, "api_keys")
         gemini_key_dir = os.path.join(api_key_dir, "gemini_api_key")
@@ -198,6 +211,7 @@ class ChatBotGeminiSimple(ChatBot):
         self.init_history = self.history.copy()
         self.client = genai.Client(api_key=gemini_api_key)
         self.model = model
+        self.schema_loader = schema_loader
     
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         new_message = {"role": "user", "parts": [{"text": message}]}
@@ -217,7 +231,10 @@ class ChatBotGeminiSimple(ChatBot):
             self.history.append(new_response_message)
         return response_message
     
-    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
+    def get_structured_response(self, message: str, schema_key: str, record: bool = True, temperature: float = 0.7) -> dict:
+        if not self.schema_loader:
+            raise ValueError("Schema loader must be provided for structured responses.")
+        schema = self.schema_loader.load_output_schema(schema_key)
         new_message = {"role": "user", "parts": [{"text": message}]}
         message_config = {
             "temperature": temperature,
@@ -263,7 +280,7 @@ class ChatBotGeminiSimple(ChatBot):
 
 class ChatBotClaudeSimple(ChatBot):
 
-    def __init__(self, model: str, sys_prompt: str = None) -> None:
+    def __init__(self, model: str, sys_prompt: str = None, schema_loader: SchemaLoader = None) -> None:
         cur_dir = os.path.dirname(os.path.realpath(__file__))
         api_key_dir = os.path.join(cur_dir, "api_keys")
         claude_key_dir = os.path.join(api_key_dir, "claude_api_key")
@@ -275,6 +292,7 @@ class ChatBotClaudeSimple(ChatBot):
         self.init_history = self.history.copy()
         self.client = Anthropic(api_key=claude_api_key)
         self.model = model
+        self.schema_loader = schema_loader
     
     def send_message(self, message: str, record: bool = True, temperature: float = 0.7) -> str:
         new_message = {"role": "user", "content": message}
@@ -293,7 +311,10 @@ class ChatBotClaudeSimple(ChatBot):
             self.history.append(new_response_message)
         return response_message
 
-    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
+    def get_structured_response(self, message: str, schema_key: str, record: bool = True, temperature: float = 0.7) -> dict:
+        if not self.schema_loader:
+            raise ValueError("Schema loader must be provided for structured responses.")
+        schema = self.schema_loader.load_output_schema(schema_key, "strict")
         new_message = {"role": "user", "content": message}
         tools = [
             {

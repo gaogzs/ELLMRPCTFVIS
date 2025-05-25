@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "The reasoning and chain-of-thought of the facts and logics you found out."
+    },
+    "plan": {
+      "type": "string",
+      "description": "Using plain language, briefly describe what you are going to do in the next steps."
+    },
+    "scopes": {
+      "type": "array",
+      "description": "A list of new logical scopes that does not exist in existing scopes that you are going to use in the formulas.",
+      "items": {
+        "type": "object",
+        "description": "A definition if a single scope. A scope is used when a certain logic exists in some character's dialogue or media, that waas not proven to be the global ground truth.",
+        "properties": {
+          "scope_name": {
+            "type": "string",
+            "description": "The name of the scope. Example: detective_jonathan"
+          },
+          "scope_description": {
+            "type": "string",
+            "description": "A description of the scope. Example: Detective Jonathan, a character in the story."
+          }
+        },
+        "required": [
+          "scope_name",
+          "scope_description"
+        ]
+      }
+    },
+    "formulas": {
+      "type": "array",
+      "description": "A list of FOL formulas respresenting existence of facts and narrative logic found in the story.",
+      "items": {
+        "type": "object",
+        "description": "A definition of a single formula. Includes an optional scope and a string of FOL formula itself. No extra syntax is required to split the scope and the formula apart since they will be in different json fields in this schema.",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "The name of the scope that this formula belongs to the provided ones has to exist in [existing_scopes] or your newly defined [scopes]. If not provided, it is assumed to be a global formula. Defaul value is 'global'.",
+            "default": "global"
+          },
+          "formula": {
+            "type": "string",
+            "description": "A formula of one of the semantic logical nature you have found between the provided relations, or one from the provided relation and one from the past declared relations. It should be a single FOL formula of given specification. All referenced argument should either exist in the given objects, or in the given timeline (for time argument). Example: forall (a t) . fingerprint_belongs(this_fingerprint, a, t) -> is_criminal(a, t) Example 2: live_in_location(captain_victor, new_york, T0). Specification: quantifier are used in the form of forall(<bounded_vars>) . <formula> or exists(<bounded_vars>) . <formula>. binary operators are used in the form of '<formula> and <formula>' or '<formula> or <formula>' or '<formula> -> <formula>'. Unary operators are used in the form of 'not <formula>'. Brackets can be used for explicit precedence."
+          }
+        },
+        "required": [
+          "scope",
+          "formula"
+        ]
+      }
+    }
+  },
+  "required": [
+    "reasoning",
+    "plan",
+    "scopes",
+    "formulas"
+  ]
+}

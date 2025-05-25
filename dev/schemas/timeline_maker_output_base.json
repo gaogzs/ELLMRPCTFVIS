@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "The reasoning and chain-of-thought of your timeline creation."
+    },
+    "timeline_definition": {
+      "description": "The main body of your timeline definition. Should be a list of time points.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time_point_name": {
+            "type": "string",
+            "description": "The name of the time point. Should be an abstract name in the format of T[number]. Example: T0, T1, T2."
+          },
+          "time_point_description": {
+            "type": "string",
+            "description": "The description of the time point. Should be a short description of the time point. Example: The time before the rain was pouring."
+          }
+        },
+        "required": [
+          "time_point_name",
+          "time_point_description"
+        ]
+      }
+    }
+  },
+  "required": [
+    "reasoning",
+    "timeline_definition"
+  ]
+}

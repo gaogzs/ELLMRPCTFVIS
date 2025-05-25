@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "The reasoning and chain-of-thought of the logical nature you want to define."
+    },
+    "exclusiveness_definitions": {
+      "type": "array",
+      "description": "A list of exclusiveness definitions.",
+      "items": {
+        "type": "string",
+        "description": "A declaration of exclusiveness of provided relation. It should follow the definition of the relation as provided, with related arguments replaced by given token [exclusive_arg] and [free_arg]. Argument marked as [exclusive_arg] means the relation shall not appear with different value of this argument with othe arguments. Argument marked as [free_arg] means the restriction of [exclusive_arg] is not limited by the value of this argument. Example: live_in_location(a, [exclusive_arg], t) means the relation live_in_location(a, b, t) shall not appear with different value of b with same a and t. Example: is_animal(a, [exclusive_arg], [free_arg]) means the relation is_animal(a, b, t) shall not appear with different value of b with same a, doesn't matter what value of t is. "
+      }
+    },
+    "formulas": {
+      "type": "array",
+      "description": "A list of formulas that define the logical nature.",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "description": "A formula of one of the semantic logical nature you have found between the provided relations, or one from the provided relation and one from the past declared relations. It should be a single FOL formula of given specification. Example: forall(a b c) . live_in_location(a, b, t) -> stay_in_location(a, b, t). Specification: quantifier are used in the form of forall(<bounded_vars>) . <formula> or exists(<bounded_vars>) . <formula>. binary operators are used in the form of '<formula> and <formula>' or '<formula> or <formula>' or '<formula> -> <formula>'. Unary operators are used in the form of 'not <formula>'. Brackets can be used for explicit precedence."
+      }
+    }
+  },
+  "required": [
+    "reasoning",
+    "exclusiveness_definitions",
+    "formulas"
+  ]
+}

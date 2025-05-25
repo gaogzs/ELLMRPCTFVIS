@@ -101,13 +101,12 @@ class FOLEvaluationSession():
         
         if self.model_info.output_format() == "json":
             sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder", subtype="json")
-            bot = self.chatbot(self.model_info.model(), sys_prompt)
-            output_schema = self.schema_loader.load_output_schema("declaration_builder")
-            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print_dev_message("Declaration Maker Response:")
-            print_dev_message(text_response)
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
             while not processed_success:
                 try:
+                    text_response, json_response = bot.get_structured_response(message, schema_key="declaration_builder", record=True, temperature=0.2)
+                    print_dev_message("Declaration Maker Response:")
+                    print_dev_message(text_response)
                     new_objects, new_relations = self.parse_obj_rel_declarations_json(json_response)
                     obj_keys = new_objects.keys()
                     rel_keys = new_relations.keys()
@@ -115,17 +114,13 @@ class FOLEvaluationSession():
                     self.relations.update(new_relations)
                     processed_success = True
                 except Exception as e:
-                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
                         exit(1)
-                        
-                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print_dev_message("Retry with:\n")
-                    print_dev_message(text_response)
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
@@ -187,28 +182,23 @@ class FOLEvaluationSession():
         
         if self.model_info.output_format() == "json":
             sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser", subtype="json")
-            bot = self.chatbot(self.model_info.model(), sys_prompt)
-            output_schema = self.schema_loader.load_output_schema("semantic_analyser")
-            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0.2)
-            print_dev_message("Semantic Definer Response:")
-            print_dev_message(text_response)
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
             
             while not processed_success:
                 try:
+                    text_response, json_response = bot.get_structured_response(message, schema_key="semantic_analyser", record=True, temperature=0.2)
+                    print_dev_message("Semantic Definer Response:")
+                    print_dev_message(text_response)
                     returning_formulas = self.parse_semantic_analyser_json(json_response)
                     pseudo_definitions = str(json_response["exclusiveness_definitions"] + json_response["formulas"])
                     processed_success = True
                 except Exception as e:
-                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
                         exit(1)
-                        
-                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print_dev_message("Retry with:\n")
-                    print_dev_message(text_response)
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
@@ -294,28 +284,23 @@ class FOLEvaluationSession():
         
         if self.model_info.output_format() == "json":
             sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker", subtype="json")
-            bot = self.chatbot(self.model_info.model(), sys_prompt)
-            output_schema = self.schema_loader.load_output_schema("formula_maker")
-            text_response, json_response = bot.get_structured_response(message, output_schema, record=True, temperature=0)
-            print_dev_message("Formula Maker Response:")
-            print_dev_message(text_response)
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
             
             while not processed_success:
                 try:
+                    text_response, json_response = bot.get_structured_response(message, schema_key="formula_maker", record=True, temperature=0)
+                    print_dev_message("Formula Maker Response:")
+                    print_dev_message(text_response)
                     current_formula = self.parse_formula_maker_json(json_response)
                     processed_success = True
                 except Exception as e:
-                    error_message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     self.scopes = scopes_backup.copy()
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
                         exit(1)
-                        
-                    text_response, json_response = bot.get_structured_response(error_message, output_schema, record=True, temperature=0.2)
-                    print_dev_message("Retry with:\n")
-                    print_dev_message(text_response)
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
