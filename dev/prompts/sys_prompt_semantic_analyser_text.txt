@@ -14,7 +14,7 @@ Your output should be in the format:
 -- **Formula Definitions**
 [formula]
 
-Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [exclusiveness_definitions] is, based on the previous reasonning, the exclusive relaion you are defining. And then in [formula] is, based on the previous reasonning, the main body of your logical definition output. The definition output should only contain one formula per line, no extra indexing, numbering or text comment.
+Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [exclusiveness_definitions] is, based on the previous reasoning, the exclusive relaion you are defining. And then in [formula] is, based on the previous reasonning, the main body of your logical definition output. The definition output should only contain one formula per line, no extra indexing, numbering or text comment.
 
 Exclusiveness Definitons:
 In [exclusiveness_definitions], you can define some existing relations with exclusive properties. Each line should contain a single definition consist of a single relation with tokens like "[exclusive_arg]" and "[free_arg]".
@@ -58,4 +58,4 @@ Variables:
 Constants:
 - Constants are not allowed in the formula at all. Failure Example: "123", "'Hello World!"
 
-In none json output: For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.
+For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.

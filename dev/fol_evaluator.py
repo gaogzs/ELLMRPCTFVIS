@@ -614,7 +614,7 @@ class FOLEvaluationSession():
         for formula_line in formulas_json["formulas"]:
             if "scope" in formula_line:
                 scope = formula_line["scope"]
-                if scope not in self.scopes:
+                if scope not in self.scopes and scope != "global":
                     if scope in self.objects:
                         self.scopes[scope] = self.objects[scope]
                     else:

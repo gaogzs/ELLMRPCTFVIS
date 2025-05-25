@@ -5,19 +5,26 @@ You will be in charge of analysing the natural language interpretation of some l
 [declarations]
 In [declarations], each line contains a single declaration. The declarations will come in two types, objects and relations. The objects will be declared in the format "[object_name]: [object_meaning]" and the relations will be declared in the format "[relation_name]: [relation_description]". Objects are the basic elements that appears in a story, including characters, locations, items, events, mentioned concept. Relation appears as functions that take in objects as arguments, which may represents any type of relation between two and more objects, or may be used to additionally describe the properties of an object. You should analyse the logical nature of those concepts, and give your output as your spotted nature.
 
-Your output should be in the format:
+Your output should be in the json format:
 
--- **Reasoning**
-[reasoning]
--- **Exclusiveness Definitions**
-[exclusiveness_definitions]
--- **Formula Definitions**
-[formula]
+{
+  "reasoning": "...",
+  "exclusiveness_definitions": [
+    "...",
+    "...",
+    ...
+  ]
+  "formulas": [
+    "...",
+    "...",
+    ...
+  ]
+}
 
-Where [reasoning] is your explanation and chain of thought about what you are planning to do. And then in [exclusiveness_definitions] is, based on the previous reasonning, the exclusive relaion you are defining. And then in [formula] is, based on the previous reasonning, the main body of your logical definition output. The definition output should only contain one formula per line, no extra indexing, numbering or text comment.
+Where "reasoning" is your explanation and chain of thought about what you are planning to do. And then in "exclusiveness_definitions" is, based on the previous reasonning, a list exclusive relaions you are defining. And then in "formulas" is, based on the previous reasoning, the main body of your logical definition output. The definition output should only contain one formula array element.
 
 Exclusiveness Definitons:
-In [exclusiveness_definitions], you can define some existing relations with exclusive properties. Each line should contain a single definition consist of a single relation with tokens like "[exclusive_arg]" and "[free_arg]".
+In "exclusiveness_definitions", you can define some existing relations with exclusive properties. Each line should contain a single definition consist of a single relation with tokens like "[exclusive_arg]" and "[free_arg]".
 Here are some types of exclusiveness you may can define:
 - time contrained exclusive relation: When a relation of objects declared in some way that will make other usage of the same relation impossible only at the same time, for example for "locates_in(a, b, t): [a] is in location [b] for time [t]" clearly a cannot be in two different locations at the same time, so you can write "locates_in(a, [exclusive_arg], t)" to indicate the exclusiveness at the second argument that same a cannot be in two different locations b at the same time t. Beware that the time parameter here means a range of time, so only relation that occupies properties or actions for the entire time period and is absolutely incompatible in any other ways should be declared as time contrained exclusive relation. For example, "eat(a, b, t): [a] eats [b] for time [t]", you should not declare it as time contrained exclusive relation, although it seems someone can only eat one thing at the same time, but for a range of time, a can obviously eat different things at different time.
 - full exclusive relation: Stronger than the previous time contrained exclusive relation. When a relation of objects declared in some way that will make other existence of the same relation of same objects impossible regardless of time, for example for "is_animal(a, b, t): [a] is an animal of type [b] for time [t]" clearly a cannot be a dog and a cat, and it cannot be changed after time by common sense, so you should write "is_animal(a, [exclusive_arg], [free_arg])" to indicate the second argument should be exclusive for the same a, and regardless of the thirdargument. Beware that exclusive relation should not be used too often, it should only be used at very specific relation that are stricly exclusive.
@@ -57,5 +64,3 @@ Variables:
 
 Constants:
 - Constants are not allowed in the formula at all. Failure Example: "123", "'Hello World!"
-
-In none json output: For any section of your answer, if you find that find that there is nothing to be written, you should just write "None" in the section. You should not skip any section, and you should not leave any section empty.

@@ -60,24 +60,22 @@ class ChatBotDeepSeekSimple(ChatBot):
             self.history.append(new_response_message)
         return response_message
     
-    # def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
-    #     new_message = {"role": "user", "content": message}
-    #     response_format = {
-    #         "type": "json_schema",
-    #         "json_schema": {
-    #             "name": "output_schema",
-    #             "strict": True,
-    #             "schema": schema
-    #         }
-    #     }
-    #     response = self.client.chat.completions.create(messages=self.history + [new_message], model=self.model, temperature=temperature, response_format=response_format)
-    #     response_message = response.choices[0].message.content
-    #     response_parsed = json.loads(response_message)
-    #     if record:
-    #         self.history.append(new_message)
-    #         new_response_message = {"role": "assistant", "content": response_message}
-    #         self.history.append(new_response_message)
-    #     return json.dumps(response_parsed, indent=2).encode().decode('unicode_escape'), response_parsed
+    def get_structured_response(self, message: str, schema: dict, record: bool = True, temperature: float = 0.7) -> dict:
+        new_message = {"role": "user", "content": message}
+        validating_schema = schema.copy()
+        validating_schema["$schema"] = schema_draft
+        response_format = {
+            "type": "json_object"
+        }
+        response = self.client.chat.completions.create(messages=self.history + [new_message], model=self.model, temperature=temperature, response_format=response_format)
+        response_message = response.choices[0].message.content
+        response_parsed = json.loads(response_message)
+        jsonschema.validate(instance=response_parsed, schema=validating_schema)
+        if record:
+            self.history.append(new_message)
+            new_response_message = {"role": "assistant", "content": response_message}
+            self.history.append(new_response_message)
+        return json.dumps(response_parsed, indent=2).encode().decode('unicode_escape'), response_parsed
     
     def append_history(self, conversation: dict) -> None:
         self.history.append(conversation)
