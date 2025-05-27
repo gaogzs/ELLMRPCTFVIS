@@ -42,6 +42,11 @@ if __name__ == "__main__":
         sample_conversations = json.load(f)
         sample_conversation = sample_conversations[-1]
     
-    do_one_run(sample_conversation, "gemini-structured")
+    using_model = "gemini-structured"
+    similarity_model = "all-MiniLM-L6-v2"
+    
+    #do_one_run(sample_conversation, using_model)
+    do_one_run_outline(sample_conversation, using_model, similarity_model)
+    print("Pipeline run completed.")
     
     

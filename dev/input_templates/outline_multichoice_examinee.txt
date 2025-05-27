@@ -1,6 +1,6 @@
 **Existing Outline**
 {existing_outline}
-**Previous Story**
+**Latest Story**
 {latest_story}
 **Options**
 {options}

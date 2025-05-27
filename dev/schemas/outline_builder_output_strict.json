@@ -18,7 +18,7 @@
         }
       },
       "required": [
-        "chapter_name",
+        "create",
         "content"
       ],
       "additionalProperties": false

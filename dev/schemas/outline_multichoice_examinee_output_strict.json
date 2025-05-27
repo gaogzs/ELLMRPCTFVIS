@@ -5,14 +5,20 @@
       "type": "number",
       "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1."
     },
-    "selected_option": {
-      "type": "integer",
-      "description": "A list index starting from 0. The index of the selected option from the list of options provided in the input."
+    "option_probabilities": {
+      "type": "array",
+      "description": "A list of float numbers representing the probability that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. The sum of all probabilities in option_probabilities should be equal to 1.",
+      "minItems": 1,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
     }
   },
   "required": [
     "new_chapter_probability",
-    "selected_option"
+    "option_probabilities"
   ],
   "additionalProperties": false
 }

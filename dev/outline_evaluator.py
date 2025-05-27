@@ -5,10 +5,10 @@ from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_R
 from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
 from api_wrapper.sentence_similarity_lm import SentenceSimilarityWorker
 
-SIMILARITY_MODEL = "all-MiniLM-L6-v2"
-EVALUATOR_MODEL = "gemini-structured"
-
 SIMILARITY_LOG_BASE = 0.95
+
+class OutlineProcessingError(Exception):
+    pass
 
 class Section:
     def __init__(self, content: str):
@@ -31,7 +31,7 @@ class Section:
         indent_str = " " * indent_base
         result = indent_str + self.self_to_str() + "\n"
         for subsection in self.subsections:
-            result += subsection.to_str(indent_base + indent_add, indent_add)
+            result += subsection.recur_to_str(indent_base + indent_add, indent_add)
         return result
 
 class Outline:
@@ -62,33 +62,147 @@ class Outline:
         return result
     
 class OutlineEvaluatorSession:
-    def __init__(self, model_info: ModelInfo, prompt_dir: str, schema_dir: str, input_template_dir: str) -> None:
+    def __init__(self, model_info: ModelInfo, similarity_model: str, prompt_dir: str, schema_dir: str, input_template_dir: str) -> None:
         self.model_info = model_info
         self.prompt_loader = PromptLoader(prompt_dir)
         self.schema_loader = SchemaLoader(schema_dir)
         self.input_template_loader = InputTemplateLoader(input_template_dir)
+        self.similarity_model = similarity_model
 
         self.chatbot = self.model_info.chatbot()
         self.outline = Outline()
         self.predictions = []
+        self.rp_history = []
         self.logs = []
 
     def get_outline(self) -> Outline:
         return self.outline
+    
+    def get_previous_story(self) -> str:
+        if self.rp_history:
+            return self.rp_history[-1]
+        return "Empty"
 
     def append_conversation(self, lastest_conversation: str) -> None:
-        new_chapter, new_section, predicted_sections = self.handle_outline_builder(lastest_conversation)
-        similarity_results, prediction_options = self.handle_similarity_worker(new_section, predicted_sections)
-        multichoice_result = self.handle_outline_multichoice_examinee(new_section, new_chapter, prediction_options)
+        previous_outline = self.outline.to_str()
+        previous_story = self.get_previous_story()
+        new_chapter, new_sections, predicted_sections = self.handle_outline_builder(lastest_conversation, previous_outline, previous_story)
+        first_section = new_sections[0]
+        
+        multichoice_result = None
+        similarity_results = None
+        best_similarity = None
+        if self.predictions:
+            last_prediction = self.predictions[-1]
+            similarity_results, prediction_options, best_similarity = self.handle_similarity_worker(first_section, last_prediction)
+            multichoice_result = self.handle_outline_multichoice_examinee(first_section, new_chapter, prediction_options, previous_outline, previous_story)
+        
+        self.predictions.append(predicted_sections)
+        self.rp_history.append(lastest_conversation)
         
         new_log = {
             "conversation": lastest_conversation,
             "new_chapter": new_chapter,
-            "new_section": new_section,
+            "new_sections": new_sections,
             "similarity_results": similarity_results,
+            "best_similarity": best_similarity,
             "multichoice_result": multichoice_result
         }
         self.logs.append(new_log)
+    
+    def handle_outline_builder(self, lastest_conversation: str, existing_outline: str, previous_story: str) -> tuple[str, str, list[str]]:
+        message = self.input_template_loader.load("outline_builder").format(existing_outline=existing_outline, previous_story=previous_story, new_story=lastest_conversation)
+        
+        processed_success = False
+        tries_count = 1
+        
+        if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("outline_builder", subtype="json")
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
+            
+            while not processed_success:
+                try:
+                    text_response, json_response = bot.get_structured_response(message, schema_key="outline_builder", record=True, temperature=0.2)
+                    print_dev_message("Outline Builder Response:")
+                    print_dev_message(text_response)
+                    
+                    new_chapter = None
+                    if json_response["new_chapter"]["create"]:
+                        new_chapter = json_response["new_chapter"]["content"]
+                        self.outline.add_chapter(new_chapter)
+                    
+                    new_sections = json_response["new_sections"]
+                    for section in new_sections:
+                        self.outline.add_section(section)
+                    
+                    predicted_sections = json_response["predicted_sections"]
+                    if not predicted_sections:
+                        raise OutlineProcessingError("No predicted sections found in the response.")
+                        
+                    processed_success = True
+                except Exception as e:
+                    message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    print_dev_message("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        raise e
+        else:
+            raise NotImplementedError("Output format not supported for this method.")
+    
+        return new_chapter, new_sections, predicted_sections
+    
+    def handle_similarity_worker(self, new_section: str, predicted_sections: list[str]) -> tuple[list[float], list[str], float]:
+        similarity_worker = SentenceSimilarityWorker(self.similarity_model)
+
+        similarity_results = [similarity_worker.cosine_similarity(new_section, section) for section in predicted_sections]
+        
+        print_dev_message(f"New Real Section: {new_section}")
+        for prediction, result in zip(predicted_sections, similarity_results):
+            print_dev_message(f"  '{prediction}': {result:.4f}")
+        
+        best_similarity = max(similarity_results)
+        best_prediction_index = similarity_results.index(best_similarity)
+        print_dev_message(f"Best prediction: '{predicted_sections[best_prediction_index]}' with similarity {best_similarity:.4f}")
+        
+        prediction_options = predicted_sections[0:best_prediction_index] + predicted_sections[best_prediction_index + 1:] + [new_section]
+        return similarity_results, prediction_options, best_similarity
+    
+    def handle_outline_multichoice_examinee(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
+        options = "\n".join([f"{i}. {option}" for i, option in enumerate(prediction_options)])
+        correct_answer = prediction_options.index(new_section)
+        message = self.input_template_loader.load("outline_multichoice_examinee").format(existing_outline=existing_outline, latest_story=previous_story, options=options)
+        
+        processed_success = False
+        tries_count = _ERROR_RETRIES
+        
+        if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("outline_multichoice_examinee", subtype="json")
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
+            
+            while not processed_success:
+                try:
+                    text_response, json_response = bot.get_structured_response(message, schema_key="outline_multichoice_examinee", record=True, temperature=0.2)
+                    print_dev_message("Outline Multichoice Examinee Response:")
+                    print_dev_message(text_response)
+                    
+                    multichoice_result = {
+                        "new_chapter_probability": json_response["new_chapter_probability"],
+                        "new_chapter_truth": 0 if new_chapter is None else 1,
+                        "correct_option_likelihood": json_response["option_probabilities"][correct_answer]
+                    }
+                    print_dev_message(multichoice_result)
+                    
+                    processed_success = True
+                except Exception as e:
+                    message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    print_dev_message("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        raise e
+        else:
+            raise NotImplementedError("Output format not supported for this method.")
+        
+        return multichoice_result
         
     def export_logs(self, file_path: str) -> None:
         with open(file_path, "w", encoding="utf-8") as f:
