@@ -7,7 +7,7 @@
     },
     "option_likelihoods": {
       "type": "array",
-      "description": "A list of float numbers representing the probability that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. The sum of all probabilities in option_likelihoods should be equal to 1.",
+      "description": "A list of float numbers representing the likelihoods that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. All likelihoods are independant and do not have to sum up to 1.",
       "minItems": 1,
       "items": {
         "type": "number",
