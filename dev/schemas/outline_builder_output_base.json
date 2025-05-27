@@ -28,7 +28,7 @@
       "minItems": 1,
       "items": {
         "type": "string",
-        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about."
+        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about. It should be a brief general summary of the trend of the story, and should not contain specific details from the main body of the story."
       }
     },
     "predicted_sections": {
@@ -38,7 +38,7 @@
       "description": "A list of different predictions of the next section that you think will be added to the outline later",
       "items": {
         "type": "string",
-        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about."
+        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about. It should be in similar style as the new sections."
       }
     }
   },
