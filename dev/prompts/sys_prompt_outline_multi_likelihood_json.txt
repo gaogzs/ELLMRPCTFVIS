@@ -14,7 +14,7 @@ Where [existing_outline] is a 2-level hierarchical structure, where the first le
 Your output should be given in a json format:
 
 {
-  "new_chapter_probability": "..",
+  "new_chapter_probability": ..,
   "option_likelihoods": [.., .., ...],
 }
-Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. option_likelihoods is a list of float numbers between 0 and 1, representing the likelihood that each option will be the next section of the outline. The order of the likelihood should match the order of the options given in the input. All likelihoods are independant and do not have to sum up to 1.
+Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "option_likelihoods" is a list of float numbers between 0 and 1, representing the likelihood that each option is the real next section of the outline. The order of the likelihood should match the order of the options given in the input. All likelihoods values should sum up to 1.

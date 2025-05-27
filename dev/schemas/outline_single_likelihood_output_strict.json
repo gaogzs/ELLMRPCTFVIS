@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "new_chapter_probability": {
+      "type": "number",
+      "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "likelihood": {
+      "type": "number",
+      "description": "A float number representing the likelihoods that the prediction will be the next section of the outline",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": [
+    "new_chapter_probability",
+    "likelihood"
+  ],
+  "additionalProperties": false
+}

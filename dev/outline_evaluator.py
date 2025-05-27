@@ -1,11 +1,12 @@
 import os
 import json
+import math
 
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 from utils.loaders import PromptLoader, SchemaLoader, InputTemplateLoader
 from api_wrapper.sentence_similarity_lm import SentenceSimilarityWorker
 
-SIMILARITY_LOG_BASE = 0.95
+SIMILARITY_BASE_VALUE = 0.7
 
 class OutlineProcessingError(Exception):
     pass
@@ -89,27 +90,26 @@ class OutlineEvaluatorSession:
         new_chapter, new_sections, predicted_sections = self.handle_outline_builder(lastest_conversation, previous_outline, previous_story)
         first_section = new_sections[0]
         
-        multichoice_result = None
+        single_likelihood_result = None
+        multi_likelihood_result = None
         similarity_results = None
-        best_similarity = None
         last_prediction = None
         if self.predictions:
             last_prediction = self.predictions[-1]
-            similarity_results, prediction_options, best_similarity = self.handle_similarity_worker(first_section, last_prediction)
-            multichoice_result = self.handle_outline_multichoice_examinee(first_section, new_chapter, prediction_options, previous_outline, previous_story)
+            similarity_results, prediction_options = self.handle_similarity_worker(first_section, last_prediction)
+            multi_likelihood_result = self.handle_outline_multi_likelihood(first_section, new_chapter, prediction_options, previous_outline, previous_story)
+            single_likelihood_result = self.handle_outline_single_likelihood(first_section, new_chapter, prediction_options, previous_outline, previous_story)
         
         self.predictions.append(predicted_sections)
         self.rp_history.append(lastest_conversation)
-        
-        corresponding_similarity_results = {prediction: similarity for prediction, similarity in zip(last_prediction, similarity_results)} if similarity_results else None
         
         new_log = {
             "conversation": lastest_conversation,
             "new_chapter": new_chapter,
             "new_sections": new_sections,
-            "similarity_results": corresponding_similarity_results,
-            "best_similarity": best_similarity,
-            "multichoice_result": multichoice_result
+            "similarity_results": similarity_results,
+            "multi_likelihood_result": multi_likelihood_result,
+            "single_likelihood_result": single_likelihood_result,
         }
         self.logs.append(new_log)
     
@@ -117,7 +117,7 @@ class OutlineEvaluatorSession:
         message = self.input_template_loader.load("outline_builder").format(existing_outline=existing_outline, previous_story=previous_story, new_story=lastest_conversation)
         
         processed_success = False
-        tries_count = 1
+        tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
             sys_prompt = self.prompt_loader.load_sys_prompts("outline_builder", subtype="json")
@@ -154,26 +154,40 @@ class OutlineEvaluatorSession:
     
         return new_chapter, new_sections, predicted_sections
     
-    def handle_similarity_worker(self, new_section: str, predicted_sections: list[str]) -> tuple[list[float], list[str], float]:
+    def handle_similarity_worker(self, new_section: str, predicted_sections: list[str]) -> tuple[list[float], list[str]]:
         similarity_worker = SentenceSimilarityWorker(self.similarity_model)
 
-        similarity_results = [similarity_worker.cosine_similarity(new_section, section) for section in predicted_sections]
+        similarities = [similarity_worker.cosine_similarity(new_section, section) for section in predicted_sections]
         
         print_dev_message(f"New Real Section: {new_section}")
-        for prediction, result in zip(predicted_sections, similarity_results):
+        for prediction, result in zip(predicted_sections, similarities):
             print_dev_message(f"  '{prediction}': {result:.4f}")
         
-        best_similarity = max(similarity_results)
-        best_prediction_index = similarity_results.index(best_similarity)
+        best_similarity = max(similarities)
+        best_prediction_index = similarities.index(best_similarity)
         print_dev_message(f"Best prediction: '{predicted_sections[best_prediction_index]}' with similarity {best_similarity:.4f}")
         
-        prediction_options = predicted_sections[0:best_prediction_index] + predicted_sections[best_prediction_index + 1:] + [new_section]
-        return similarity_results, prediction_options, best_similarity
+        similarity_base = SIMILARITY_BASE_VALUE
+        prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity < similarity_base and similarity != best_similarity]
+        while not prediction_options:
+            similarity_base += 0.1
+            prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity < similarity_base]
+        
+        corresponding_similarities = {prediction: similarity for prediction, similarity in zip(predicted_sections, similarities)}
+        
+        similarity_results = {
+            "similarities": corresponding_similarities,
+            "best_similarity": best_similarity,
+            "best_similarity_score": 1 / math.log(best_similarity, SIMILARITY_BASE_VALUE),
+        }
+        
+        return similarity_results, prediction_options
     
-    def handle_outline_multichoice_examinee(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
-        options = "\n".join([f"{i}. {option}" for i, option in enumerate(prediction_options)])
-        correct_answer = prediction_options.index(new_section)
-        message = self.input_template_loader.load("outline_multi_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, options=options)
+    def handle_outline_multi_likelihood(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
+        options = prediction_options + [new_section]
+        options_text = "\n".join([f"{i}. {option}" for i, option in enumerate(options)])
+        correct_answer_index = options.index(new_section)
+        message = self.input_template_loader.load("outline_multi_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, options=options_text)
         
         processed_success = False
         tries_count = _ERROR_RETRIES
@@ -185,21 +199,64 @@ class OutlineEvaluatorSession:
             while not processed_success:
                 try:
                     text_response, json_response = bot.get_structured_response(message, schema_key="outline_multi_likelihood", record=True, temperature=0.2)
-                    print_dev_message("Outline Multichoice Examinee Response:")
+                    print_dev_message("Outline Multi Likelihood Response:")
                     print_dev_message(text_response)
                     
-                    corresponding_prediction_results = {option: result for option, result in zip(prediction_options, json_response["option_likelihoods"])}
+                    corresponding_prediction_results = {option: result for option, result in zip(options, json_response["option_likelihoods"])}
+                    
+                    final_score = json_response["option_likelihoods"][correct_answer_index] * len(options) - 1
                     multichoice_result = {
                         "new_chapter_probability": json_response["new_chapter_probability"],
                         "new_chapter_truth": 0 if new_chapter is None else 1,
                         "option_likelihoods": corresponding_prediction_results,
-                        "correct_option_likelihood": json_response["option_likelihoods"][correct_answer]
+                        "correct_option_score": final_score
                     }
                     print_dev_message(multichoice_result)
                     
                     processed_success = True
                 except Exception as e:
                     message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
+                    print_dev_message("Error in response division:", e)
+                    tries_count -= 1
+                    if tries_count <= 0:
+                        raise e
+        else:
+            raise NotImplementedError("Output format not supported for this method.")
+        
+        return multichoice_result
+    
+    def handle_outline_single_likelihood(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
+        
+        processed_success = False
+        tries_count = _ERROR_RETRIES
+        
+        if self.model_info.output_format() == "json":
+            sys_prompt = self.prompt_loader.load_sys_prompts("outline_single_likelihood", subtype="json")
+            bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
+            
+            while not processed_success:
+                try:
+                    corresponding_prediction_results = {}
+                    for prediction in prediction_options:
+                        message = self.input_template_loader.load("outline_single_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, prediction=prediction)
+                        text_response, json_response = bot.get_structured_response(message, schema_key="outline_single_likelihood", record=False, temperature=0)
+                        corresponding_prediction_results[prediction] = json_response["likelihood"]
+                    score_average = sum(corresponding_prediction_results.values()) / len(corresponding_prediction_results)
+                    
+                    message = self.input_template_loader.load("outline_single_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, prediction=new_section)
+                    corresponding_prediction_results[new_section] = json_response["likelihood"]
+                    
+                    final_score = json_response["likelihood"] - score_average
+                    multichoice_result = {
+                        "new_chapter_probability": json_response["new_chapter_probability"],
+                        "new_chapter_truth": 0 if new_chapter is None else 1,
+                        "option_likelihoods": corresponding_prediction_results,
+                        "correct_option_score": final_score
+                    }
+                    print_dev_message(multichoice_result)
+                    
+                    processed_success = True
+                except Exception as e:
                     print_dev_message("Error in response division:", e)
                     tries_count -= 1
                     if tries_count <= 0:

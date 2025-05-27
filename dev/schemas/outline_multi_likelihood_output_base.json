@@ -3,11 +3,13 @@
   "properties": {
     "new_chapter_probability": {
       "type": "number",
-      "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1."
+      "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1.",
+      "minimum": 0,
+      "maximum": 1
     },
     "option_likelihoods": {
       "type": "array",
-      "description": "A list of float numbers representing the likelihoods that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. All likelihoods are independant and do not have to sum up to 1.",
+      "description": "A list of float numbers representing the likelihoods that each is the real next section of the outline. The order of the probabilities should match the order of the options given in the input. All likelihoods values should sum up to 1.",
       "minItems": 1,
       "items": {
         "type": "number",

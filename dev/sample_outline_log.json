@@ -3,226 +3,340 @@
         "conversation": "Detective Sam Carter entered the dimly lit room. \"What a mess!\", he muttered, surveying the scattered papers and overturned furniture. The victim, a local journalist, lay sprawled on the floor, a pen still clutched in his hand.\n(User: Sam knelt beside the body, examining the scene. \"Looks like he was onto something big. But what?\" He noticed a torn piece of paper sticking out from under the desk.)",
         "new_chapter": "The investigation begins with the detective arriving at the crime scene.",
         "new_sections": [
-            "Detective Carter arrives at a messy crime scene and finds the body of a journalist."
+            "Detective Carter arrives at the crime scene and discovers the body of a journalist."
         ],
         "similarity_results": null,
-        "best_similarity": null,
-        "multichoice_result": null
+        "multi_likelihood_result": null,
+        "single_likelihood_result": null
     },
     {
         "conversation": "Carefully, he pulled it free. It was a fragment of a map, marked with an 'X' in red ink. \"This could be the key to solving this case,\" he thought.\n(User: Sam stood up, pocketing the map. \"I need to find out where this leads. But first, I should check the victim's contacts. Maybe someone knows what he was working on.\")",
         "new_chapter": null,
         "new_sections": [
-            "The detective discovers a map fragment and decides to investigate its location and the victim's contacts."
+            "The detective discovers a map fragment and decides to investigate the victim's contacts."
         ],
         "similarity_results": {
-            "The detective examines the torn piece of paper found under the desk.": 0.49068301916122437,
-            "The detective interviews witnesses or potential suspects.": 0.5590734481811523,
-            "The detective visits the victim's office or home to gather more clues.": 0.6611090898513794,
-            "The detective analyzes the evidence collected from the crime scene.": 0.6542692184448242,
-            "The detective uncovers a conspiracy related to the journalist's investigation.": 0.5666048526763916
+            "similarities": {
+                "The detective examines the torn piece of paper found under the desk.": 0.500255286693573,
+                "The detective interviews witnesses at the crime scene.": 0.5339570641517639,
+                "The detective researches the journalist's recent work.": 0.5719406604766846,
+                "The detective visits the journalist's office.": 0.5349910855293274,
+                "The detective uncovers a potential motive for the murder.": 0.6403582096099854
+            },
+            "best_similarity": 0.6403582096099854,
+            "best_similarity_score": 0.8002084201146171
         },
-        "best_similarity": 0.6611090898513794,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "The detective examines the torn piece of paper found under the desk.": 0.85,
-                "The detective interviews witnesses or potential suspects.": 0.3,
-                "The detective analyzes the evidence collected from the crime scene.": 0.2,
-                "The detective uncovers a conspiracy related to the journalist's investigation.": 0.1,
-                "The detective discovers a map fragment and decides to investigate its location and the victim's contacts.": 0.15
+                "The detective examines the torn piece of paper found under the desk.": 0.7,
+                "The detective interviews witnesses at the crime scene.": 0.1,
+                "The detective researches the journalist's recent work.": 0.1,
+                "The detective visits the journalist's office.": 0.05,
+                "The detective discovers a map fragment and decides to investigate the victim's contacts.": 0.05
             },
-            "correct_option_likelihood": 0.15
+            "correct_option_score": -0.75
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.05,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "The detective examines the torn piece of paper found under the desk.": 0.95,
+                "The detective interviews witnesses at the crime scene.": 0.3,
+                "The detective researches the journalist's recent work.": 0.8,
+                "The detective visits the journalist's office.": 0.1,
+                "The detective discovers a map fragment and decides to investigate the victim's contacts.": 0.1
+            },
+            "correct_option_score": -0.4375
         }
     },
     {
         "conversation": "He made his way to the victim's office, where a cluttered desk held a computer and a stack of files. As he booted up the computer, a message popped up on the screen: \"If you find this, I’m in trouble. Meet me at the old warehouse by the docks.\"\n(User: Sam's heart raced. \"Looks like I’m not the only one looking for answers. I need to get to that warehouse before it’s too late.\")",
         "new_chapter": null,
         "new_sections": [
-            "The detective finds a message on the victim's computer indicating trouble and a meeting at a warehouse."
+            "The detective discovers a message on the victim's computer indicating trouble and a meeting at a warehouse."
         ],
         "similarity_results": {
-            "The detective investigates the location marked on the map.": 0.4896577000617981,
-            "The detective interviews the victim's contacts.": 0.6006162762641907,
-            "The detective uncovers a conspiracy related to the journalist's investigation.": 0.501850962638855,
-            "The detective visits the location on the map and finds another clue.": 0.5053948163986206,
-            "The detective finds a connection between the map and the victim's contacts.": 0.5557092428207397
+            "similarities": {
+                "The detective interviews the victim's contacts and uncovers a potential lead.": 0.5785142779350281,
+                "The detective follows the map to a hidden location.": 0.4878752827644348,
+                "The detective researches the journalist's past investigations.": 0.48420262336730957,
+                "The detective analyzes the map fragment for further clues.": 0.4754354655742645,
+                "The detective encounters a suspect while investigating the victim's contacts.": 0.627727210521698
+            },
+            "best_similarity": 0.627727210521698,
+            "best_similarity_score": 0.7659728589964955
         },
-        "best_similarity": 0.6006162762641907,
-        "multichoice_result": {
+        "multi_likelihood_result": {
+            "new_chapter_probability": 0.05,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "The detective interviews the victim's contacts and uncovers a potential lead.": 0.5,
+                "The detective follows the map to a hidden location.": 0.2,
+                "The detective researches the journalist's past investigations.": 0.1,
+                "The detective analyzes the map fragment for further clues.": 0.1,
+                "The detective discovers a message on the victim's computer indicating trouble and a meeting at a warehouse.": 0.1
+            },
+            "correct_option_score": -0.5
+        },
+        "single_likelihood_result": {
             "new_chapter_probability": 0.1,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "The detective investigates the location marked on the map.": 0.7,
-                "The detective uncovers a conspiracy related to the journalist's investigation.": 0.3,
-                "The detective visits the location on the map and finds another clue.": 0.6,
-                "The detective finds a connection between the map and the victim's contacts.": 0.8,
-                "The detective finds a message on the victim's computer indicating trouble and a meeting at a warehouse.": 0.4
+                "The detective interviews the victim's contacts and uncovers a potential lead.": 0.95,
+                "The detective follows the map to a hidden location.": 0.7,
+                "The detective researches the journalist's past investigations.": 0.8,
+                "The detective analyzes the map fragment for further clues.": 0.7,
+                "The detective discovers a message on the victim's computer indicating trouble and a meeting at a warehouse.": 0.7
             },
-            "correct_option_likelihood": 0.4
+            "correct_option_score": -0.08750000000000002
         }
     },
     {
         "conversation": "He grabbed his coat and headed out, the rain pouring down as he made his way to the docks. The old warehouse loomed ahead, its windows dark and foreboding.\n(User: Sam approached cautiously, scanning the area for any signs of life. \"This place gives me the creeps,\" he muttered, pushing the door open.)",
-        "new_chapter": "The detective arrives at the warehouse and prepares to investigate.",
+        "new_chapter": "Detective Carter arrives at the old warehouse by the docks.",
         "new_sections": [
-            "The detective arrives at the old warehouse by the docks, cautiously entering to investigate."
+            "The detective arrives at the warehouse and cautiously enters."
         ],
         "similarity_results": {
-            "The detective arrives at the warehouse and encounters a dangerous situation.": 0.7795363068580627,
-            "The detective investigates the warehouse and finds clues related to the case.": 0.6784327030181885,
-            "The detective meets the person who sent the message at the warehouse.": 0.5799087285995483,
-            "The detective is ambushed at the warehouse.": 0.7090243697166443,
-            "The detective uncovers a conspiracy connected to the journalist's murder at the warehouse.": 0.5988833904266357
+            "similarities": {
+                "The detective arrives at the warehouse and encounters a dangerous situation.": 0.844552755355835,
+                "The detective investigates the warehouse and finds clues related to the journalist's murder.": 0.6238029599189758,
+                "The detective meets a contact at the warehouse who provides information about the case.": 0.6366075277328491,
+                "The detective is ambushed at the warehouse and must fight to survive.": 0.648163914680481,
+                "The detective uncovers a conspiracy connected to the map fragment at the warehouse.": 0.5706266760826111
+            },
+            "best_similarity": 0.844552755355835,
+            "best_similarity_score": 2.111151270619876
         },
-        "best_similarity": 0.7795363068580627,
-        "multichoice_result": {
+        "multi_likelihood_result": {
+            "new_chapter_probability": 0.05,
+            "new_chapter_truth": 1,
+            "option_likelihoods": {
+                "The detective investigates the warehouse and finds clues related to the journalist's murder.": 0.15,
+                "The detective meets a contact at the warehouse who provides information about the case.": 0.2,
+                "The detective is ambushed at the warehouse and must fight to survive.": 0.15,
+                "The detective uncovers a conspiracy connected to the map fragment at the warehouse.": 0.1,
+                "The detective arrives at the warehouse and cautiously enters.": 0.4
+            },
+            "correct_option_score": 1.0
+        },
+        "single_likelihood_result": {
             "new_chapter_probability": 0.1,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "The detective investigates the warehouse and finds clues related to the case.": 0.7,
-                "The detective meets the person who sent the message at the warehouse.": 0.8,
-                "The detective is ambushed at the warehouse.": 0.6,
-                "The detective uncovers a conspiracy connected to the journalist's murder at the warehouse.": 0.5,
-                "The detective arrives at the old warehouse by the docks, cautiously entering to investigate.": 0.9
+                "The detective investigates the warehouse and finds clues related to the journalist's murder.": 0.9,
+                "The detective meets a contact at the warehouse who provides information about the case.": 0.9,
+                "The detective is ambushed at the warehouse and must fight to survive.": 0.8,
+                "The detective uncovers a conspiracy connected to the map fragment at the warehouse.": 0.8,
+                "The detective arrives at the warehouse and cautiously enters.": 0.8
             },
-            "correct_option_likelihood": 0.9
+            "correct_option_score": -0.050000000000000044
         }
     },
     {
         "conversation": "Inside, the air was thick with dust and the smell of saltwater. Shadows danced in the corners as he stepped further in. Suddenly, a figure emerged from the darkness. \"You’re late,\" the figure said, voice low and gravelly.\n(User: Sam squinted, trying to make out the face. \"Who are you? And what do you know about the journalist?\")",
-        "new_chapter": "The detective encounters a mysterious figure in the warehouse.",
+        "new_chapter": "Detective Carter encounters a mysterious figure inside the warehouse.",
         "new_sections": [
-            "The detective enters the warehouse and is confronted by a mysterious figure who claims he is late, leading to a tense exchange."
+            "Detective Carter encounters a mysterious figure who claims he is late."
         ],
         "similarity_results": {
-            "The detective encounters someone inside the warehouse.": 0.7261456847190857,
-            "The detective finds clues inside the warehouse related to the victim's case.": 0.6790834665298462,
-            "A fight breaks out in the warehouse.": 0.4041273295879364,
-            "The detective discovers a hidden room or passage within the warehouse.": 0.733208179473877,
-            "The detective is ambushed while searching the warehouse.": 0.6525403261184692
+            "similarities": {
+                "The detective encounters someone inside the warehouse.": 0.41497308015823364,
+                "The detective finds clues inside the warehouse related to the journalist's death.": 0.38243311643600464,
+                "A fight breaks out in the warehouse.": 0.10567875951528549,
+                "The detective discovers a hidden room or passage in the warehouse.": 0.46186310052871704,
+                "The detective finds the person the journalist was supposed to meet.": 0.5096344947814941
+            },
+            "best_similarity": 0.5096344947814941,
+            "best_similarity_score": 0.529143039270892
         },
-        "best_similarity": 0.733208179473877,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "The detective encounters someone inside the warehouse.": 0.7,
-                "The detective finds clues inside the warehouse related to the victim's case.": 0.8,
-                "A fight breaks out in the warehouse.": 0.3,
-                "The detective is ambushed while searching the warehouse.": 0.5,
-                "The detective enters the warehouse and is confronted by a mysterious figure who claims he is late, leading to a tense exchange.": 0.2
+                "The detective encounters someone inside the warehouse.": 0.2,
+                "The detective finds clues inside the warehouse related to the journalist's death.": 0.3,
+                "A fight breaks out in the warehouse.": 0.15,
+                "The detective discovers a hidden room or passage in the warehouse.": 0.2,
+                "Detective Carter encounters a mysterious figure who claims he is late.": 0.15
             },
-            "correct_option_likelihood": 0.2
+            "correct_option_score": -0.25
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 1,
+            "option_likelihoods": {
+                "The detective encounters someone inside the warehouse.": 0.9,
+                "The detective finds clues inside the warehouse related to the journalist's death.": 0.9,
+                "A fight breaks out in the warehouse.": 0.9,
+                "The detective discovers a hidden room or passage in the warehouse.": 0.8,
+                "Detective Carter encounters a mysterious figure who claims he is late.": 0.8
+            },
+            "correct_option_score": -0.07499999999999996
         }
     },
     {
         "conversation": "The figure stepped into the light, revealing a familiar face. It was Mia, a former colleague of the journalist. \"I know he was onto something big, and now they’re after me too,\" she said, glancing nervously around the warehouse.\n(User: Sam felt a surge of adrenaline. \"We need to get out of here. But first, tell me everything you know about the map and what he was investigating.)\"",
         "new_chapter": null,
         "new_sections": [
-            "The detective encounters Mia, who reveals the journalist was onto something big and that she is also being targeted, and the detective asks her about the map and the journalist's investigation."
+            "Detective Carter encounters Mia, who reveals the journalist was onto something big and that she is also being targeted."
         ],
         "similarity_results": {
-            "The figure reveals information about the journalist and the map fragment.": 0.5324028730392456,
-            "A fight breaks out between the detective and the figure.": 0.45110946893692017,
-            "The figure escapes, leaving the detective with a clue.": 0.44861263036727905,
-            "The detective recognizes the figure from a previous case.": 0.4253979027271271,
-            "The figure is an informant who was supposed to meet the journalist.": 0.4640918970108032
+            "similarities": {
+                "The figure reveals information about the journalist's death.": 0.4020828306674957,
+                "A fight breaks out between the detective and the figure.": 0.3801769018173218,
+                "The figure leads the detective to another clue within the warehouse.": 0.38675540685653687,
+                "The figure is revealed to be someone the detective knows.": 0.4230708181858063,
+                "The detective questions the figure about his involvement.": 0.4578874707221985
+            },
+            "best_similarity": 0.4578874707221985,
+            "best_similarity_score": 0.4566129990045648
         },
-        "best_similarity": 0.5324028730392456,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.1,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "A fight breaks out between the detective and the figure.": 0.3,
-                "The figure escapes, leaving the detective with a clue.": 0.2,
-                "The detective recognizes the figure from a previous case.": 0.1,
-                "The figure is an informant who was supposed to meet the journalist.": 0.4,
-                "The detective encounters Mia, who reveals the journalist was onto something big and that she is also being targeted, and the detective asks her about the map and the journalist's investigation.": 0.6
+                "The figure reveals information about the journalist's death.": 0.4,
+                "A fight breaks out between the detective and the figure.": 0.2,
+                "The figure leads the detective to another clue within the warehouse.": 0.1,
+                "The figure is revealed to be someone the detective knows.": 0.1,
+                "Detective Carter encounters Mia, who reveals the journalist was onto something big and that she is also being targeted.": 0.2
             },
-            "correct_option_likelihood": 0.6
+            "correct_option_score": 0.0
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "The figure reveals information about the journalist's death.": 0.9,
+                "A fight breaks out between the detective and the figure.": 0.7,
+                "The figure leads the detective to another clue within the warehouse.": 0.7,
+                "The figure is revealed to be someone the detective knows.": 0.8,
+                "Detective Carter encounters Mia, who reveals the journalist was onto something big and that she is also being targeted.": 0.8
+            },
+            "correct_option_score": 0.025000000000000022
         }
     },
     {
         "conversation": "Mia took a deep breath, her eyes darting to the shadows. \"He was investigating a smuggling ring operating out of the docks. The map leads to their hideout. If we can get there first, we might find the evidence we need to take them down.\"\n(User: Sam nodded, determination in his eyes. \"Let’s move. We don’t have much time before they realize we’re onto them.\")",
         "new_chapter": null,
         "new_sections": [
-            "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting a decision to go there."
+            "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to suggest they leave immediately."
         ],
         "similarity_results": {
-            "Mia reveals details about the map and the journalist's investigation, potentially leading to a new location or clue.": 0.8002138733863831,
-            "The detective and Mia are ambushed while trying to escape the warehouse.": 0.5763391852378845,
-            "The detective and Mia escape the warehouse and seek refuge in a safe location.": 0.6067762970924377,
-            "Mia is hesitant to reveal everything she knows, leading to a tense negotiation with the detective.": 0.5817852020263672,
-            "The detective and Mia discover a hidden passage or room within the warehouse containing more clues.": 0.6372923851013184
+            "similarities": {
+                "Mia reveals details about the map and the journalist's investigation.": 0.7044617533683777,
+                "The detective and Mia are attacked in the warehouse.": 0.5000267028808594,
+                "The detective and Mia escape the warehouse and seek a safe place.": 0.6452558040618896,
+                "Mia leads the detective to a hidden clue related to the map.": 0.7311921119689941,
+                "The detective and Mia discuss potential suspects and motives.": 0.6181347370147705
+            },
+            "best_similarity": 0.7311921119689941,
+            "best_similarity_score": 1.1392488501253304
         },
-        "best_similarity": 0.8002138733863831,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "The detective and Mia are ambushed while trying to escape the warehouse.": 0.3,
-                "The detective and Mia escape the warehouse and seek refuge in a safe location.": 0.2,
-                "Mia is hesitant to reveal everything she knows, leading to a tense negotiation with the detective.": 0.15,
-                "The detective and Mia discover a hidden passage or room within the warehouse containing more clues.": 0.1,
-                "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting a decision to go there.": 0.6
+                "The detective and Mia are attacked in the warehouse.": 0.15,
+                "The detective and Mia escape the warehouse and seek a safe place.": 0.25,
+                "The detective and Mia discuss potential suspects and motives.": 0.35,
+                "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to suggest they leave immediately.": 0.25
             },
-            "correct_option_likelihood": 0.6
+            "correct_option_score": 0.0
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "The detective and Mia are attacked in the warehouse.": 0.9,
+                "The detective and Mia escape the warehouse and seek a safe place.": 0.9,
+                "The detective and Mia discuss potential suspects and motives.": 0.9,
+                "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to suggest they leave immediately.": 0.9
+            },
+            "correct_option_score": 0.0
         }
     },
     {
         "conversation": "They made their way through the maze of crates and barrels, the sound of footsteps echoing in the distance. Just as they reached the exit, a group of men in masks appeared, blocking their path.\n(User: Sam cursed under his breath. \"Looks like we’re not the only ones interested in that map. We need to fight our way out of here!\")",
         "new_chapter": null,
         "new_sections": [
-            "The detective and Mia are ambushed by masked men while trying to leave the warehouse, leading to a fight."
+            "Sam and Mia are ambushed by masked men while trying to escape the warehouse."
         ],
         "similarity_results": {
-            "The detective and Mia arrive at the smuggler's hideout and begin their investigation.": 0.6389675140380859,
-            "The detective and Mia encounter resistance at the hideout, leading to a confrontation.": 0.692471444606781,
-            "The detective and Mia discover evidence of the smuggling operation.": 0.5205115079879761,
-            "The detective and Mia escape the hideout with the evidence.": 0.631144106388092,
-            "The detective and Mia use the evidence to expose the smuggling ring.": 0.49717074632644653
+            "similarities": {
+                "Sam and Mia travel to the hideout indicated by the map.": 0.6228839159011841,
+                "Sam and Mia encounter resistance while trying to reach the hideout.": 0.654062032699585,
+                "Sam and Mia find evidence of the smuggling ring at the hideout.": 0.5768570303916931,
+                "Sam and Mia are ambushed at the hideout.": 0.7554274797439575,
+                "Sam and Mia debate their next course of action after learning about the smuggling ring.": 0.4291561543941498
+            },
+            "best_similarity": 0.7554274797439575,
+            "best_similarity_score": 1.271697675475891
         },
-        "best_similarity": 0.692471444606781,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "The detective and Mia arrive at the smuggler's hideout and begin their investigation.": 0.85,
-                "The detective and Mia discover evidence of the smuggling operation.": 0.1,
-                "The detective and Mia escape the hideout with the evidence.": 0.02,
-                "The detective and Mia use the evidence to expose the smuggling ring.": 0.01,
-                "The detective and Mia are ambushed by masked men while trying to leave the warehouse, leading to a fight.": 0.02
+                "Sam and Mia travel to the hideout indicated by the map.": 0.6,
+                "Sam and Mia encounter resistance while trying to reach the hideout.": 0.2,
+                "Sam and Mia find evidence of the smuggling ring at the hideout.": 0.1,
+                "Sam and Mia debate their next course of action after learning about the smuggling ring.": 0.05,
+                "Sam and Mia are ambushed by masked men while trying to escape the warehouse.": 0.05
             },
-            "correct_option_likelihood": 0.02
+            "correct_option_score": -0.75
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "Sam and Mia travel to the hideout indicated by the map.": 0.9,
+                "Sam and Mia encounter resistance while trying to reach the hideout.": 0.9,
+                "Sam and Mia find evidence of the smuggling ring at the hideout.": 0.9,
+                "Sam and Mia debate their next course of action after learning about the smuggling ring.": 0.7,
+                "Sam and Mia are ambushed by masked men while trying to escape the warehouse.": 0.7
+            },
+            "correct_option_score": -0.15000000000000002
         }
     },
     {
         "conversation": "With adrenaline pumping, Sam and Mia charged forward, dodging punches and throwing their own. The fight was chaotic, but they managed to push through the group and escape into the night.\n(User: Breathing heavily, Sam glanced at Mia. \"We need to get to that hideout before they regroup. Let’s go!\")",
         "new_chapter": null,
         "new_sections": [
-            "The detective and Mia fight their way out of the warehouse and decide to head to the smuggling ring's hideout."
+            "Sam and Mia fight their way out of the warehouse and decide to head to the smuggling ring's hideout."
         ],
         "similarity_results": {
-            "The detective and Mia fight the masked men and escape the warehouse.": 0.7496767044067383,
-            "The detective and Mia are captured by the masked men.": 0.5414716005325317,
-            "The detective and Mia defeat some of the masked men but are forced to retreat.": 0.5656809210777283,
-            "The detective and Mia find a way to sneak past the masked men.": 0.6054110527038574,
-            "The detective and Mia are rescued by unexpected allies.": 0.5908811092376709
+            "similarities": {
+                "Sam and Mia engage in a fight with the masked men.": 0.5769460201263428,
+                "Sam and Mia manage to escape the warehouse and are pursued by the masked men.": 0.732941210269928,
+                "Sam and Mia are captured by the masked men and taken to the smuggling ring's hideout.": 0.752487301826477,
+                "Sam and Mia find a hidden passage to escape the warehouse.": 0.7349451780319214,
+                "Mia uses her knowledge of the warehouse to create a diversion.": 0.5143824219703674
+            },
+            "best_similarity": 0.752487301826477,
+            "best_similarity_score": 1.2542585102951735
         },
-        "best_similarity": 0.7496767044067383,
-        "multichoice_result": {
+        "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "The detective and Mia are captured by the masked men.": 0.15,
-                "The detective and Mia defeat some of the masked men but are forced to retreat.": 0.4,
-                "The detective and Mia find a way to sneak past the masked men.": 0.2,
-                "The detective and Mia are rescued by unexpected allies.": 0.05,
-                "The detective and Mia fight their way out of the warehouse and decide to head to the smuggling ring's hideout.": 0.7
+                "Sam and Mia engage in a fight with the masked men.": 0.6,
+                "Mia uses her knowledge of the warehouse to create a diversion.": 0.2,
+                "Sam and Mia fight their way out of the warehouse and decide to head to the smuggling ring's hideout.": 0.2
             },
-            "correct_option_likelihood": 0.7
+            "correct_option_score": -0.3999999999999999
+        },
+        "single_likelihood_result": {
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "Sam and Mia engage in a fight with the masked men.": 0.95,
+                "Mia uses her knowledge of the warehouse to create a diversion.": 0.8,
+                "Sam and Mia fight their way out of the warehouse and decide to head to the smuggling ring's hideout.": 0.8
+            },
+            "correct_option_score": -0.07499999999999996
         }
     }
 ]

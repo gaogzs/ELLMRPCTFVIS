@@ -1,0 +1,18 @@
+You will be presented with an outline summary of a role-playing scenario happened between a user and an AI. And your task is to determine how likely the presented prediction will be the next section of the outline of the story.
+You input will be given in the format:
+
+**Existing Outline**
+{existing_outline}
+**Latest Story**
+{latest_story}
+**Prediction**
+{prediction}
+
+Where [existing_outline] is a 2-level hierarchical structure, where the first level is kown as a "chapter", each stand for a major part of the story where the theme is relatively independent, and each "chapter" is known as a "section", which is a sub-part of the chapter that contains more detailed information about a segment of the story. [latest_story] is the latest part of the main body of the story. Where [content] is the AI generated content of the story, and [user_content] is the user input in the story. Be sure to consider how might the user's input influence the trend of the story.
+Your output should be given in a json format:
+
+{
+  "new_chapter_probability": ..,
+  "likelihood": ..,
+}
+Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "likelihood" is a float number between 0 and 1, representing the likelihood that the [prediction] will be the next section of the outline.
