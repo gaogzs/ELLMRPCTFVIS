@@ -101,7 +101,7 @@ class OutlineEvaluatorSession:
         self.predictions.append(predicted_sections)
         self.rp_history.append(lastest_conversation)
         
-        corresponding_similarity_results = {prediction: similarity for prediction, similarity in zip(predicted_sections, similarity_results)} if similarity_results else None
+        corresponding_similarity_results = {prediction: similarity for prediction, similarity in zip(last_prediction, similarity_results)} if similarity_results else None
         
         new_log = {
             "conversation": lastest_conversation,
@@ -173,18 +173,18 @@ class OutlineEvaluatorSession:
     def handle_outline_multichoice_examinee(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
         options = "\n".join([f"{i}. {option}" for i, option in enumerate(prediction_options)])
         correct_answer = prediction_options.index(new_section)
-        message = self.input_template_loader.load("outline_multichoice_examinee").format(existing_outline=existing_outline, latest_story=previous_story, options=options)
+        message = self.input_template_loader.load("outline_multi_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, options=options)
         
         processed_success = False
         tries_count = _ERROR_RETRIES
         
         if self.model_info.output_format() == "json":
-            sys_prompt = self.prompt_loader.load_sys_prompts("outline_multichoice_examinee", subtype="json")
+            sys_prompt = self.prompt_loader.load_sys_prompts("outline_multi_likelihood", subtype="json")
             bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
             
             while not processed_success:
                 try:
-                    text_response, json_response = bot.get_structured_response(message, schema_key="outline_multichoice_examinee", record=True, temperature=0.2)
+                    text_response, json_response = bot.get_structured_response(message, schema_key="outline_multi_likelihood", record=True, temperature=0.2)
                     print_dev_message("Outline Multichoice Examinee Response:")
                     print_dev_message(text_response)
                     
