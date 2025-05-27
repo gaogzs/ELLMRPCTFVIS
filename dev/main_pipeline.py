@@ -21,22 +21,20 @@ def do_one_run(target_narrative: list[str], model: str) -> None:
         timeline_session.append_conversation(section)
         new_timeline = timeline_session.get_timeline()
         fol_session.append_conversation(section, new_timeline=new_timeline)
-        fol_session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+        fol_session.export_logs(os.path.join(cur_dir, "sample_fol_log.json"))
 
-def do_one_run_outline(target_narrative: list[str], model: str) -> None:
+def do_one_run_outline(target_narrative: list[str], model: str, similarity_model: str) -> None:
     prompt_dir = os.path.join(cur_dir, "prompts")
     schema_dir = os.path.join(cur_dir, "schemas")
     input_template_dir = os.path.join(cur_dir, "input_templates")
 
     using_model_info = ModelInfo(model)
 
-    outline_session = OutlineEvaluatorSession(using_model_info, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+    outline_session = OutlineEvaluatorSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
     
     for section in target_narrative:
         outline_session.append_conversation(section)
-        new_outline = outline_session.get_outline()
-        print(new_outline.get_latest_section().title)
-        print(new_outline.get_latest_section().description)
+        outline_session.export_logs(os.path.join(cur_dir, "sample_outline_log.json"))
 
 if __name__ == "__main__":
     sample_conversation = []
