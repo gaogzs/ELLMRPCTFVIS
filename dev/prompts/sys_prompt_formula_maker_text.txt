@@ -35,10 +35,10 @@ You can write:
 forall (a b) . (is_killed(a, b) -> is_dead(a))
 If the story says: "Detective Joseph hence concluded: \"Whoever this fingerprint belongs, must be the criminal!\"", given "fingerprint_belongs" and "is_criminal" are available relations.
 You can write:
-detective_joseph|: forall (a t) . fingerprint_belongs(this_fingerprint, a, t) -> is_criminal(a, t)
+detective_joseph_claim|: forall (a t) . fingerprint_belongs(this_fingerprint, a, t) -> is_criminal(a, t)
 
-In the input, [existing_scopes] has listed all the available scopes that are already defined in the story, that you can use. If you are using a new scope, you should declare it in the [scopes] part of your output. Where each line in the form of "[scope_name]: [scope_meaning]". Continuing the previous example, if you are using a new scope "detective_joseph", you should declare it in the [scopes] like:
-detective_joseph: Detective Joseph, a character in the story
+In the input, [existing_scopes] has listed all the available scopes that are already defined in the story, that you can use. If you are using a new scope, you should declare it in the [scopes] part of your output. Where each line in the form of "[scope_name]: [scope_meaning]". Continuing the previous example, if you are using a new scope "detective_joseph_claim", you should declare it in the [scopes] like:
+detective_joseph_claim: The logic claimed by Detective Joseph, a character in the story.
 
 Scope names are like variables, must be non-repetitive. If you are using an existing scope, you should not declare it again. The [scopes] part should only contain new scopes that you have defined in the current output. You should not repeat any scope that was already declared in the [existing_scopes] part. One line of formula can only use none or one scope, and there will not be sub-scopes.
 

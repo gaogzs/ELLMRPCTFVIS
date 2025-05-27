@@ -1,0 +1,34 @@
+You will be in charge of summarising a given role-playing scenario happened between a user and an AI into an outline.
+The input will be given in the format
+
+**Existing Outline**
+[existing_outline]
+**Previous Story**
+[previous_story]
+**New Story**
+[new_story]
+
+Where [new_story] is the latest section of the story you will be analysing, given in the format "[content](User: [user_content])[content] ...". Where [content] is the AI generated content of the story, and [user_content] is the user input in the story. And [previous_story] is a part of the story that was right before the [new_story], which you should use as a reference to understand the context of the [new_story].
+[existing_outline] is the existing outline created out of the previous parts of the story, which you should use as a reference in order to add new section based on it.
+An outline here is a 2-level hierarchical structure, where the first level is kown as a "chapter", each stand for a major part of the story where the theme is relatively independent, and each "chapter" is known as a "section", which is a sub-part of the chapter that contains more detailed information about a segment of the story. Normally one segment of the story generated out of one round of user interaction should be summaried as one "section" in the outline, unless the content is estraordinarily long, in which case you can add multiple sections.
+You output should be given in the form of an appending content to the existing outline, in the following json format:
+
+{
+  "reasoning": "..",
+  "new_chapter": {
+    "create": true/false,
+    "content": "..",
+  },
+  "new_sections": [
+    "..",
+    ...
+  ],
+  "predicted_sections": [
+    "..",
+    ...
+  ]
+}
+
+"reasoning" is your explanation and chain of thought about what you are planning to do.
+Only when you are sure that the [new_story] given is sufficiently independant from the previous plot, you can create a new chapter by setting "create" to true, and you should also provide a one sentence description of the new chapter in "content". Otherwise, you should set "create" to false, and you should not provide any content in "content", in this case the new section(s) will be added under the latest chapter of the existing outline. "new_sections" is a list of new sections that you are going to add to the existing outline, where each element is a one sentence description of a section. As said earlier, in most circumstances you will only need to add one section. You should not repeat any content that was already in the [existing_outline] part, and you should not leave any section empty.
+"predicted_sections" is a list of 5 different predictions of the next section that you think will be added to the outline later. Be sure to consider how might the user's input influence the trend of the story.

@@ -44,17 +44,17 @@ You can write:
 If the story says: "Detective Joseph hence concluded: \"Whoever this fingerprint belongs, must be the criminal!\"", given "fingerprint_belongs" and "is_criminal" are available relations.
 You can write:
 {
-  "scope": "detective_joseph",
+  "scope": "detective_joseph_claim",
   "formula": "forall (a t) . fingerprint_belongs(this_fingerprint, a, t) -> is_criminal(a, t)"
 }
 
-In the input, [existing_scopes] has listed all the available scopes that are already defined in the story, that you can use. If you are using a new scope, you should declare it in the "scopes" part of your output. Where each element has a "scope_name" and a "scope_description". Continuing the previous example, if you are using a new scope "detective_joseph", you should declare it in the "scopes" like:
+In the input, [existing_scopes] has listed all the available scopes that are already defined in the story, that you can use. If you are using a new scope, you should declare it in the "scopes" part of your output. Where each element has a "scope_name" and a "scope_description". Continuing the previous example, if you are using a new scope "detective_joseph_claim", you should declare it in the "scopes" like:
 {
   ...
   "scopes": [
     {
-      "scope_name": "detective_joseph",
-      "scope_description": "Detective Joseph, a character in the story."
+      "scope_name": "detective_joseph_claim",
+      "scope_description": "The logic claimed by Detective Joseph, a character in the story."
     }
     ...
   ]

@@ -4,6 +4,7 @@ import json
 from config import ModelInfo
 from fol_evaluator import FOLEvaluationSession
 from timeline_maker import TimelineMakerSession
+from outline_evaluator import OutlineEvaluatorSession
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 def do_one_run(target_narrative: list[str], model: str) -> None:
@@ -21,6 +22,21 @@ def do_one_run(target_narrative: list[str], model: str) -> None:
         new_timeline = timeline_session.get_timeline()
         fol_session.append_conversation(section, new_timeline=new_timeline)
         fol_session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+
+def do_one_run_outline(target_narrative: list[str], model: str) -> None:
+    prompt_dir = os.path.join(cur_dir, "prompts")
+    schema_dir = os.path.join(cur_dir, "schemas")
+    input_template_dir = os.path.join(cur_dir, "input_templates")
+
+    using_model_info = ModelInfo(model)
+
+    outline_session = OutlineEvaluatorSession(using_model_info, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+    
+    for section in target_narrative:
+        outline_session.append_conversation(section)
+        new_outline = outline_session.get_outline()
+        print(new_outline.get_latest_section().title)
+        print(new_outline.get_latest_section().description)
 
 if __name__ == "__main__":
     sample_conversation = []

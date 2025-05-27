@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "new_chapter_probability": {
+      "type": "number",
+      "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1."
+    },
+    "selected_option": {
+      "type": "integer",
+      "description": "A list index starting from 0. The index of the selected option from the list of options provided in the input."
+    }
+  },
+  "required": [
+    "new_chapter_probability",
+    "selected_option"
+  ],
+  "additionalProperties": false
+}

@@ -18,11 +18,11 @@
         "properties": {
           "scope_name": {
             "type": "string",
-            "description": "The name of the scope. Example: detective_jonathan"
+            "description": "The name of the scope. Example: detective_joseph_claim"
           },
           "scope_description": {
             "type": "string",
-            "description": "A description of the scope. Example: Detective Jonathan, a character in the story."
+            "description": "A description of the scope. Example: The logic claimed by Detective Joseph, a character in the story."
           }
         },
         "required": [
@@ -41,7 +41,7 @@
         "properties": {
           "scope": {
             "type": "string",
-            "description": "The name of the scope that this formula belongs to the provided ones has to exist in [existing_scopes] or your newly defined [scopes]. If not provided, it is assumed to be a global formula. Defaul value is 'global'.",
+            "description": "The name of the scope that this formula belongs to the provided ones has to exist in [existing_scopes] or your newly defined [scopes]. If not provided, it is assumed to be a global formula. Default value is 'global'.",
             "default": "global"
           },
           "formula": {
