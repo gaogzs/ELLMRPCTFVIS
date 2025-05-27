@@ -67,7 +67,7 @@ class TimelineMakerSession:
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
                         
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker", subtype="text")
@@ -91,7 +91,7 @@ class TimelineMakerSession:
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                     print_dev_message("Retry with:\n")

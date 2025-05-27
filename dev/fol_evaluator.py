@@ -120,7 +120,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("declaration_builder", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
@@ -152,7 +152,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                     print_dev_message("Retry with:\n")
@@ -198,7 +198,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("semantic_analyser", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
@@ -216,7 +216,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                     print_dev_message("Retry with:\n")
@@ -236,7 +236,7 @@ class FOLEvaluationSession():
                         tries_count -= 1
                         if tries_count <= 0:
                             print_dev_message("Error: Too many failing responses.")
-                            exit(1)
+                            raise e
                             
                         exclusive_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
                         print_dev_message("Retry with:\n")
@@ -256,7 +256,7 @@ class FOLEvaluationSession():
                         tries_count -= 1
                         if tries_count <= 0:
                             print_dev_message("Error: Too many failing responses.")
-                            exit(1)
+                            raise e
                             
                         formula_definitions_text = bot.send_message(error_message, record=True, temperature=0.1)
                         print_dev_message("Retry with:\n")
@@ -300,7 +300,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
         else:
             sys_prompt = self.prompt_loader.load_sys_prompts("formula_maker", subtype="text")
             bot = self.chatbot(self.model_info.model(), sys_prompt)
@@ -327,7 +327,7 @@ class FOLEvaluationSession():
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
-                        exit(1)
+                        raise e
                         
                     complete_response = bot.send_message(error_message, record=True, temperature=0.2)
                     print_dev_message("Retry with:\n")
@@ -348,7 +348,7 @@ class FOLEvaluationSession():
                         tries_count -= 1
                         if tries_count <= 0:
                             print_dev_message("Error: Too many failing responses.")
-                            exit(1)
+                            raise e
                             
                         formula_text = bot.send_message(error_message, record=True, temperature=0.1)
                         print_dev_message("Retry with:\n")
