@@ -92,6 +92,7 @@ class OutlineEvaluatorSession:
         multichoice_result = None
         similarity_results = None
         best_similarity = None
+        last_prediction = None
         if self.predictions:
             last_prediction = self.predictions[-1]
             similarity_results, prediction_options, best_similarity = self.handle_similarity_worker(first_section, last_prediction)
@@ -100,11 +101,13 @@ class OutlineEvaluatorSession:
         self.predictions.append(predicted_sections)
         self.rp_history.append(lastest_conversation)
         
+        corresponding_similarity_results = {prediction: similarity for prediction, similarity in zip(predicted_sections, similarity_results)} if similarity_results else None
+        
         new_log = {
             "conversation": lastest_conversation,
             "new_chapter": new_chapter,
             "new_sections": new_sections,
-            "similarity_results": similarity_results,
+            "similarity_results": corresponding_similarity_results,
             "best_similarity": best_similarity,
             "multichoice_result": multichoice_result
         }
@@ -185,10 +188,12 @@ class OutlineEvaluatorSession:
                     print_dev_message("Outline Multichoice Examinee Response:")
                     print_dev_message(text_response)
                     
+                    corresponding_prediction_results = {option: result for option, result in zip(prediction_options, json_response["option_likelihoods"])}
                     multichoice_result = {
                         "new_chapter_probability": json_response["new_chapter_probability"],
                         "new_chapter_truth": 0 if new_chapter is None else 1,
-                        "correct_option_likelihood": json_response["option_probabilities"][correct_answer]
+                        "option_likelihoods": corresponding_prediction_results,
+                        "correct_option_likelihood": json_response["option_likelihoods"][correct_answer]
                     }
                     print_dev_message(multichoice_result)
                     

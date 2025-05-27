@@ -1,9 +1,9 @@
 [
     {
         "conversation": "Detective Sam Carter entered the dimly lit room. \"What a mess!\", he muttered, surveying the scattered papers and overturned furniture. The victim, a local journalist, lay sprawled on the floor, a pen still clutched in his hand.\n(User: Sam knelt beside the body, examining the scene. \"Looks like he was onto something big. But what?\" He noticed a torn piece of paper sticking out from under the desk.)",
-        "new_chapter": "Detective Sam Carter investigates the murder of a journalist in his apartment.",
+        "new_chapter": "Detective Sam Carter investigates the crime scene of a murdered journalist.",
         "new_sections": [
-            "Detective Carter arrives at the crime scene and observes the state of the room and the victim's body."
+            "Detective Carter arrives at the crime scene and observes the state of the room and the victim."
         ],
         "similarity_results": null,
         "best_similarity": null,
@@ -13,19 +13,26 @@
         "conversation": "Carefully, he pulled it free. It was a fragment of a map, marked with an 'X' in red ink. \"This could be the key to solving this case,\" he thought.\n(User: Sam stood up, pocketing the map. \"I need to find out where this leads. But first, I should check the victim's contacts. Maybe someone knows what he was working on.\")",
         "new_chapter": null,
         "new_sections": [
-            "Sam discovers a fragment of a map marked with an 'X' and decides to investigate the victim's contacts."
+            "Detective Carter discovers a map fragment at the crime scene and decides to investigate the victim's contacts."
         ],
-        "similarity_results": [
-            0.5203101634979248,
-            0.4477072060108185,
-            0.5579245090484619,
-            0.48668336868286133,
-            0.6598514318466187
-        ],
-        "best_similarity": 0.6598514318466187,
+        "similarity_results": {
+            "Detective Carter interviews the victim's contacts and uncovers potential leads.": 0.3629051744937897,
+            "Detective Carter follows the map to a hidden location.": 0.5181982517242432,
+            "Detective Carter researches the significance of the location marked on the map.": 0.7220786809921265,
+            "Detective Carter encounters a suspect while investigating the map's location.": 0.5815746784210205,
+            "Detective Carter analyzes the victim's notes to find connections to the map.": 0.4291497468948364
+        },
+        "best_similarity": 0.7220786809921265,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "Sam examines the torn piece of paper found under the desk.": 0.7,
+                "The detective interviews potential witnesses or neighbors.": 0.1,
+                "The detective visits the victim's office or home to gather more information.": 0.1,
+                "Sam reflects on the case and forms initial theories about the motive and the killer.": 0.05,
+                "Detective Carter discovers a map fragment at the crime scene and decides to investigate the victim's contacts.": 0.05
+            },
             "correct_option_likelihood": 0.05
         }
     },
@@ -33,39 +40,53 @@
         "conversation": "He made his way to the victim's office, where a cluttered desk held a computer and a stack of files. As he booted up the computer, a message popped up on the screen: \"If you find this, I’m in trouble. Meet me at the old warehouse by the docks.\"\n(User: Sam's heart raced. \"Looks like I’m not the only one looking for answers. I need to get to that warehouse before it’s too late.\")",
         "new_chapter": null,
         "new_sections": [
-            "Sam discovers a message on the victim's computer about a meeting at the old warehouse by the docks."
+            "Detective Carter discovers a message on the victim's computer and decides to head to the old warehouse by the docks."
         ],
-        "similarity_results": [
-            0.5744616389274597,
-            0.46680766344070435,
-            0.5446621179580688,
-            0.5508019924163818,
-            0.5844137668609619
-        ],
-        "best_similarity": 0.5844137668609619,
+        "similarity_results": {
+            "Detective Carter arrives at the warehouse and encounters a dangerous situation.": 0.5826656818389893,
+            "Detective Carter investigates the warehouse and finds clues about the journalist's murder.": 0.5886733531951904,
+            "Detective Carter confronts the person who sent the message and uncovers a conspiracy.": 0.5219218730926514,
+            "Detective Carter gets into a fight at the warehouse.": 0.6026426553726196,
+            "Detective Carter finds the killer at the warehouse.": 0.6332848072052002
+        },
+        "best_similarity": 0.6332848072052002,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "Detective Carter interviews the victim's contacts and uncovers potential leads.": 0.5,
+                "Detective Carter follows the map to a hidden location.": 0.2,
+                "Detective Carter researches the significance of the location marked on the map.": 0.15,
+                "Detective Carter encounters a suspect while investigating the map's location.": 0.05,
+                "Detective Carter discovers a message on the victim's computer and decides to head to the old warehouse by the docks.": 0.1
+            },
             "correct_option_likelihood": 0.1
         }
     },
     {
         "conversation": "He grabbed his coat and headed out, the rain pouring down as he made his way to the docks. The old warehouse loomed ahead, its windows dark and foreboding.\n(User: Sam approached cautiously, scanning the area for any signs of life. \"This place gives me the creeps,\" he muttered, pushing the door open.)",
-        "new_chapter": null,
+        "new_chapter": "Detective Carter arrives at the old warehouse and cautiously enters, sensing danger.",
         "new_sections": [
-            "Sam arrives at the old warehouse by the docks and cautiously enters, sensing a foreboding atmosphere."
+            "Detective Carter arrives at the old warehouse in the rain."
         ],
-        "similarity_results": [
-            0.769611120223999,
-            0.44665706157684326,
-            0.5392327308654785,
-            0.3774786591529846,
-            0.4371202290058136
-        ],
-        "best_similarity": 0.769611120223999,
+        "similarity_results": {
+            "Detective Carter explores the interior of the warehouse.": 0.6950928568840027,
+            "Detective Carter encounters someone inside the warehouse.": 0.5550450086593628,
+            "Detective Carter finds clues or evidence within the warehouse.": 0.41850370168685913,
+            "A fight or confrontation occurs inside the warehouse.": 0.6452764868736267,
+            "Detective Carter discovers the journalist's whereabouts.": 0.6135399341583252
+        },
+        "best_similarity": 0.6950928568840027,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
-            "new_chapter_truth": 0,
+            "new_chapter_truth": 1,
+            "option_likelihoods": {
+                "Detective Carter investigates the warehouse and finds clues about the journalist's murder.": 0.2,
+                "Detective Carter confronts the person who sent the message and uncovers a conspiracy.": 0.2,
+                "Detective Carter gets into a fight at the warehouse.": 0.2,
+                "Detective Carter finds the killer at the warehouse.": 0.1,
+                "Detective Carter arrives at the old warehouse in the rain.": 0.3
+            },
             "correct_option_likelihood": 0.3
         }
     },
@@ -73,39 +94,53 @@
         "conversation": "Inside, the air was thick with dust and the smell of saltwater. Shadows danced in the corners as he stepped further in. Suddenly, a figure emerged from the darkness. \"You’re late,\" the figure said, voice low and gravelly.\n(User: Sam squinted, trying to make out the face. \"Who are you? And what do you know about the journalist?\")",
         "new_chapter": null,
         "new_sections": [
-            "Sam enters the warehouse and is confronted by a mysterious figure who claims he is late."
+            "Detective Carter enters the warehouse and is confronted by a mysterious figure."
         ],
-        "similarity_results": [
-            0.8126769661903381,
-            0.6837980151176453,
-            0.43175655603408813,
-            0.7750035524368286,
-            0.7165947556495667
-        ],
-        "best_similarity": 0.8126769661903381,
+        "similarity_results": {
+            "The figure reveals information about the journalist's murder.": 0.8189283013343811,
+            "A fight breaks out between Detective Carter and the figure.": 0.8789030313491821,
+            "Detective Carter questions the figure about the map fragment.": 0.8006418943405151,
+            "The figure leads Detective Carter to another clue.": 0.5221813321113586,
+            "The figure escapes, leaving Detective Carter to investigate further.": 0.6320080161094666
+        },
+        "best_similarity": 0.8789030313491821,
         "multichoice_result": {
-            "new_chapter_probability": 0.05,
+            "new_chapter_probability": 0.1,
             "new_chapter_truth": 0,
-            "correct_option_likelihood": 0.15
+            "option_likelihoods": {
+                "Detective Carter explores the interior of the warehouse.": 0.2,
+                "Detective Carter finds clues or evidence within the warehouse.": 0.2,
+                "A fight or confrontation occurs inside the warehouse.": 0.2,
+                "Detective Carter discovers the journalist's whereabouts.": 0.1,
+                "Detective Carter enters the warehouse and is confronted by a mysterious figure.": 0.3
+            },
+            "correct_option_likelihood": 0.3
         }
     },
     {
         "conversation": "The figure stepped into the light, revealing a familiar face. It was Mia, a former colleague of the journalist. \"I know he was onto something big, and now they’re after me too,\" she said, glancing nervously around the warehouse.\n(User: Sam felt a surge of adrenaline. \"We need to get out of here. But first, tell me everything you know about the map and what he was investigating.)\"",
         "new_chapter": null,
         "new_sections": [
-            "Sam confronts Mia, who reveals the journalist was investigating something big and that she is also in danger, prompting Sam to ask about the map and the investigation."
+            "Mia, a former colleague, reveals that the journalist was investigating something big and that she is now being targeted as well."
         ],
-        "similarity_results": [
-            0.4081462025642395,
-            0.49310600757598877,
-            0.5377911329269409,
-            0.42538774013519287,
-            0.45233193039894104
-        ],
-        "best_similarity": 0.5377911329269409,
+        "similarity_results": {
+            "Sam and Mia discuss the map and the journalist's investigation.": 0.4736589789390564,
+            "Sam and Mia are attacked in the warehouse and must defend themselves.": 0.21424341201782227,
+            "Sam and Mia escape the warehouse and seek a safe place to discuss the situation.": 0.16138289868831635,
+            "Mia reveals more details about the conspiracy and the people involved.": 0.26232874393463135,
+            "Sam and Mia decide on their next course of action based on the information Mia provides.": 0.2721330225467682
+        },
+        "best_similarity": 0.4736589789390564,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "A fight breaks out between Detective Carter and the figure.": 0.4,
+                "Detective Carter questions the figure about the map fragment.": 0.3,
+                "The figure leads Detective Carter to another clue.": 0.1,
+                "The figure escapes, leaving Detective Carter to investigate further.": 0.1,
+                "Mia, a former colleague, reveals that the journalist was investigating something big and that she is now being targeted as well.": 0.1
+            },
             "correct_option_likelihood": 0.1
         }
     },
@@ -113,40 +148,54 @@
         "conversation": "Mia took a deep breath, her eyes darting to the shadows. \"He was investigating a smuggling ring operating out of the docks. The map leads to their hideout. If we can get there first, we might find the evidence we need to take them down.\"\n(User: Sam nodded, determination in his eyes. \"Let’s move. We don’t have much time before they realize we’re onto them.\")",
         "new_chapter": null,
         "new_sections": [
-            "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to decide they must go there immediately."
+            "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to decide to move quickly."
         ],
-        "similarity_results": [
-            0.6898993253707886,
-            0.6639316082000732,
-            0.6035621762275696,
-            0.768409788608551,
-            0.7176951169967651
-        ],
-        "best_similarity": 0.768409788608551,
+        "similarity_results": {
+            "Sam and Mia head towards the docks, encountering obstacles along the way.": 0.7081209421157837,
+            "Sam and Mia arrive at the smuggling hideout and begin their investigation.": 0.5242800116539001,
+            "Sam and Mia are ambushed by the smugglers, leading to a confrontation.": 0.6123577952384949,
+            "Sam and Mia find crucial evidence within the hideout.": 0.6093449592590332,
+            "Sam and Mia escape the hideout and plan their next move to expose the smuggling ring.": 0.5753651261329651
+        },
+        "best_similarity": 0.7081209421157837,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
-            "correct_option_likelihood": 0.1
+            "option_likelihoods": {
+                "Sam and Mia are attacked in the warehouse and must defend themselves.": 0.15,
+                "Sam and Mia escape the warehouse and seek a safe place to discuss the situation.": 0.3,
+                "Mia reveals more details about the conspiracy and the people involved.": 0.25,
+                "Sam and Mia decide on their next course of action based on the information Mia provides.": 0.15,
+                "Mia reveals the journalist was investigating a smuggling ring and the map leads to their hideout, prompting Sam to decide to move quickly.": 0.15
+            },
+            "correct_option_likelihood": 0.15
         }
     },
     {
         "conversation": "They made their way through the maze of crates and barrels, the sound of footsteps echoing in the distance. Just as they reached the exit, a group of men in masks appeared, blocking their path.\n(User: Sam cursed under his breath. \"Looks like we’re not the only ones interested in that map. We need to fight our way out of here!\")",
         "new_chapter": null,
         "new_sections": [
-            "Sam and Mia are ambushed by masked men while trying to leave the warehouse, leading to a fight."
+            "Sam and Mia are ambushed by masked men while trying to leave the warehouse and decide to fight their way out."
         ],
-        "similarity_results": [
-            0.6241041421890259,
-            0.5931658744812012,
-            0.7389711141586304,
-            0.6266497373580933,
-            0.5365115404129028
-        ],
-        "best_similarity": 0.7389711141586304,
+        "similarity_results": {
+            "Sam and Mia engage in a fight with the masked men, using their skills and the environment to their advantage.": 0.547032356262207,
+            "Sam and Mia manage to defeat the masked men and escape the warehouse, but not without injuries.": 0.6332627534866333,
+            "Sam and Mia are captured by the masked men and taken to the smuggling ring's hideout.": 0.7533577084541321,
+            "During the fight, Sam or Mia recognizes one of the masked men, providing a clue to the smuggling ring's identity.": 0.5384207367897034,
+            "The fight is interrupted by the arrival of another party, either allies or enemies, changing the dynamics of the situation.": 0.6667875051498413
+        },
+        "best_similarity": 0.7533577084541321,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
-            "correct_option_likelihood": 0.15
+            "option_likelihoods": {
+                "Sam and Mia head towards the docks, encountering obstacles along the way.": 0.55,
+                "Sam and Mia arrive at the smuggling hideout and begin their investigation.": 0.2,
+                "Sam and Mia find crucial evidence within the hideout.": 0.1,
+                "Sam and Mia escape the hideout and plan their next move to expose the smuggling ring.": 0.1,
+                "Sam and Mia are ambushed by masked men while trying to leave the warehouse and decide to fight their way out.": 0.05
+            },
+            "correct_option_likelihood": 0.05
         }
     },
     {
@@ -155,17 +204,24 @@
         "new_sections": [
             "Sam and Mia fight their way out of the warehouse and decide to head to the hideout."
         ],
-        "similarity_results": [
-            0.6317712664604187,
-            0.7714455127716064,
-            0.7076449394226074,
-            0.5678087472915649,
-            0.460161030292511
-        ],
-        "best_similarity": 0.7714455127716064,
+        "similarity_results": {
+            "Sam and Mia arrive at the smuggler's hideout.": 0.5910577774047852,
+            "Sam and Mia infiltrate the hideout and gather information.": 0.6924716234207153,
+            "Sam and Mia confront the leader of the smuggling ring.": 0.691983699798584,
+            "A tense standoff ensues, leading to a final showdown.": 0.557897686958313,
+            "Sam and Mia expose the smuggling operation and bring the criminals to justice.": 0.368204265832901
+        },
+        "best_similarity": 0.6924716234207153,
         "multichoice_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
+            "option_likelihoods": {
+                "Sam and Mia engage in a fight with the masked men, using their skills and the environment to their advantage.": 0.5,
+                "Sam and Mia are captured by the masked men and taken to the smuggling ring's hideout.": 0.15,
+                "During the fight, Sam or Mia recognizes one of the masked men, providing a clue to the smuggling ring's identity.": 0.15,
+                "The fight is interrupted by the arrival of another party, either allies or enemies, changing the dynamics of the situation.": 0.1,
+                "Sam and Mia fight their way out of the warehouse and decide to head to the hideout.": 0.1
+            },
             "correct_option_likelihood": 0.1
         }
     }

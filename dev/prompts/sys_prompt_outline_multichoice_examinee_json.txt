@@ -15,6 +15,6 @@ Your output should be given in a json format:
 
 {
   "new_chapter_probability": "..",
-  "option_probabilities": [.., .., ...],
+  "option_likelihoods": [.., .., ...],
 }
-Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. option_probabilities is a list of float numbers between 0 and 1, representing the probability that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. The sum of all probabilities in option_probabilities should be equal to 1.
+Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. option_likelihoods is a list of float numbers between 0 and 1, representing the probability that each option will be the next section of the outline. The order of the probabilities should match the order of the options given in the input. The sum of all probabilities in option_likelihoods should be equal to 1.

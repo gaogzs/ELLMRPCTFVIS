@@ -7,7 +7,7 @@ from timeline_maker import TimelineMakerSession
 from outline_evaluator import OutlineEvaluatorSession
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
-def do_one_run(target_narrative: list[str], model: str) -> None:
+def do_one_run_fol(target_narrative: list[str], model: str) -> None:
     prompt_dir = os.path.join(cur_dir, "prompts")
     schema_dir = os.path.join(cur_dir, "schemas")
     input_template_dir = os.path.join(cur_dir, "input_templates")
