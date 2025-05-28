@@ -168,10 +168,7 @@ class OutlineEvaluatorSession:
         print_dev_message(f"Best prediction: '{predicted_sections[best_prediction_index]}' with similarity {best_similarity:.4f}")
         
         similarity_base = SIMILARITY_BASE_VALUE
-        prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity != best_similarity]
-        while not prediction_options:
-            similarity_base += 0.1
-            prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity < similarity_base]
+        prediction_options = predicted_sections[:best_prediction_index] + predicted_sections[best_prediction_index + 1:]
         
         corresponding_similarities = {prediction: similarity for prediction, similarity in zip(predicted_sections, similarities)}
         
@@ -241,12 +238,12 @@ class OutlineEvaluatorSession:
                         message = self.input_template_loader.load("outline_single_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, prediction=prediction)
                         text_response, json_response = bot.get_structured_response(message, schema_key="outline_single_likelihood", record=False, temperature=0)
                         corresponding_prediction_results[prediction] = json_response["likelihood"]
-                    score_average = sum(corresponding_prediction_results.values()) / len(corresponding_prediction_results)
+                    score_sum = sum(corresponding_prediction_results.values())
                     
                     message = self.input_template_loader.load("outline_single_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, prediction=new_section)
                     corresponding_prediction_results[new_section] = json_response["likelihood"]
                     
-                    final_score = json_response["likelihood"] - score_average
+                    final_score = json_response["likelihood"] / (score_sum + json_response["likelihood"]) * len(corresponding_prediction_results) - 1
                     multichoice_result = {
                         "new_chapter_probability": json_response["new_chapter_probability"],
                         "new_chapter_truth": 0 if new_chapter is None else 1,

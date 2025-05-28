@@ -1,4 +1,4 @@
-You will be presented with an outline summary of a role-playing scenario happened between a user and an AI. And your task is to determine which of the provided options is most likely to be the next section of the outline.
+You will be presented with an outline summary of a role-playing scenario happened between a user and an AI. And your task is to determine which of the provided options is most likely to be the real next section of the outline, and which are predicitions made by the AI based on the existing content.
 You input will be given in the format:
 
 **Existing Outline**
@@ -18,4 +18,4 @@ Your output should be given in a json format:
   "new_chapter_probability": ..,
   "option_likelihoods": [.., .., ...],
 }
-Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "option_likelihoods" is a list of float numbers between 0 and 1, representing the likelihood that how likely an option will be the next section directly following the given outline. The order of the likelihood should match the order of the options given in the input. All likelihoods values should sum up to 1.
+Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "option_likelihoods" is a list of float numbers between 0 and 1, representing the likelihood that how likely an option is the real next section directly following the given outline. The order of the likelihood should match the order of the options given in the input. All likelihoods values should sum up to 1.
