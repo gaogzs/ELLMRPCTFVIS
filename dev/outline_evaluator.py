@@ -168,7 +168,7 @@ class OutlineEvaluatorSession:
         print_dev_message(f"Best prediction: '{predicted_sections[best_prediction_index]}' with similarity {best_similarity:.4f}")
         
         similarity_base = SIMILARITY_BASE_VALUE
-        prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity < similarity_base and similarity != best_similarity]
+        prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity != best_similarity]
         while not prediction_options:
             similarity_base += 0.1
             prediction_options = [prediction for prediction, similarity in zip(predicted_sections, similarities) if similarity < similarity_base]
@@ -185,7 +185,7 @@ class OutlineEvaluatorSession:
     
     def handle_outline_multi_likelihood(self, new_section: str, new_chapter: str, prediction_options: list[str], existing_outline: str, previous_story: str) -> dict:
         options = prediction_options + [new_section]
-        options_text = "\n".join([f"{i}. {option}" for i, option in enumerate(options)])
+        options_text = "\n".join([f"{i + 1}. {option}" for i, option in enumerate(options)])
         correct_answer_index = options.index(new_section)
         message = self.input_template_loader.load("outline_multi_likelihood").format(existing_outline=existing_outline, latest_story=previous_story, options=options_text)
         

@@ -38,7 +38,7 @@
       "description": "A list of different predictions of the next section that you think will be added to the outline later",
       "items": {
         "type": "string",
-        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about. It should be in similar style as the new sections."
+        "description": "A single section of the chapter. This should be a one-sentence summary of what the section is about. It does not have to be too general, they should be aas specific as your currently created new section, as long as they are possible section content that may come next."
       }
     }
   },

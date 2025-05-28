@@ -1,6 +1,10 @@
 {
   "type": "object",
   "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "The reasoning and chain-of-thought of your answer."
+    },
     "new_chapter_probability": {
       "type": "number",
       "description": "The probability that the current chapter will terminate and a new chapter will be created right after the current section. This should be a number between 0 and 1.",
@@ -19,6 +23,7 @@
     }
   },
   "required": [
+    "reasoning",
     "new_chapter_probability",
     "option_likelihoods"
   ]
