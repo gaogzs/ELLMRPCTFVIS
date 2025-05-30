@@ -357,7 +357,7 @@ class FOLEvaluationSession():
         return current_formula
         
 
-    def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> None:
+    def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> int:
         
         self.timeline = new_timeline.copy()
         timeline_definitions = dict_pretty_str(self.timeline)
@@ -395,6 +395,7 @@ class FOLEvaluationSession():
             "result": unsat_score,
         }
         self.logs.append(new_log)
+        return unsat_score
     
     def parse_object_declarations(self, objects_text: str) -> dict:
         new_objects = {}
