@@ -21,7 +21,7 @@ def do_one_run_fol(target_narrative: list[str], model: str) -> None:
         timeline_session.append_conversation(section)
         new_timeline = timeline_session.get_timeline()
         fol_session.append_conversation(section, new_timeline=new_timeline)
-        fol_session.export_logs(os.path.join(cur_dir, "sample_fol_log.json"))
+        fol_session.export_logs(os.path.join(cur_dir, "sample_fol_log2.json"))
 
 def do_one_run_outline(target_narrative: list[str], model: str, similarity_model: str) -> None:
     prompt_dir = os.path.join(cur_dir, "prompts")
@@ -45,8 +45,8 @@ if __name__ == "__main__":
     using_model = "gemini-structured"
     similarity_model = "all-MiniLM-L6-v2"
     
-    #do_one_run(sample_conversation, using_model)
-    do_one_run_outline(sample_conversation, using_model, similarity_model)
+    do_one_run_fol(sample_conversation, using_model)
+    #do_one_run_outline(sample_conversation, using_model, similarity_model)
     print("Pipeline run completed.")
     
     
