@@ -266,9 +266,9 @@ def test_evaluation(sample_messages, eval_type, model, shots, slicing=True):
             new_entry["chat_evaluation"] = evaluation
             last_eval = evaluation
             
-            # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
-            # new_entry["reasoner_evaluation"] = evaluation
-            # new_entry["reason_reasoning"] = reason
+            evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots, history=histories)
+            new_entry["reasoner_evaluation"] = evaluation
+            new_entry["reason_reasoning"] = reason
             
             histories.append(new_entry)
     else:
@@ -281,16 +281,16 @@ def test_evaluation(sample_messages, eval_type, model, shots, slicing=True):
         new_entry["chat_evaluation"] = evaluation
         last_eval = evaluation
         
-        # evaluation, reason = llm_evaluation(sample_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
-        # new_entry["reasoner_evaluation"] = evaluation
-        # new_entry["reason_reasoning"] = reason
+        evaluation, reason = llm_evaluation(sample_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots)
+        new_entry["reasoner_evaluation"] = evaluation
+        new_entry["reason_reasoning"] = reason
         
         histories.append(new_entry)
         
     return histories
 
 if __name__ == "__main__":
-    eval_type = "continuous-summarising"
+    eval_type = "multiple-scoring-speaker-v1"
     eval_model = "deepseek-chat"
     prompt_shots = 1
     
@@ -298,10 +298,10 @@ if __name__ == "__main__":
     
     
     test_histories = []
-    for test_sample in samples:
+    for test_sample in samples[:1]:
         sample_messages = test_sample["messages"]
         
-        test_history = test_evaluation(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots, slicing=False)
+        test_history = test_evaluation(sample_messages, eval_type=eval_type, model=eval_model, shots=prompt_shots, slicing=True)
         test_histories.append(test_history)
         
         with open(output_dir, "w", encoding="utf-8") as f:

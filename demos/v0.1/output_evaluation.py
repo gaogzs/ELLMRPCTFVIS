@@ -66,6 +66,8 @@ def multi_value_scoring(dir, score_keyword, metrics_used=["average"], store_keyw
         
         if len(eval_hists) > 1:
             store_filename = f"{filename}_{i}"
+        else:
+            store_filename = filename
         
         if store_keyword == "":
             plt.savefig(os.path.join(visual_dir, f"{store_filename}_{score_keyword}_line_graph.png"))
@@ -76,4 +78,5 @@ def multi_value_scoring(dir, score_keyword, metrics_used=["average"], store_keyw
     
 
 if __name__ == "__main__":
-    multi_value_scoring(dir="output_subjective-identifying_1_shot.json", score_keyword="chat_evaluation", metrics_used=None)
+    multi_value_scoring(dir="output_multiple-scoring-speaker-v1_1_shot.json", score_keyword="chat_evaluation", metrics_used=None)
+    multi_value_scoring(dir="output_multiple-scoring-speaker-v1_1_shot.json", score_keyword="reasoner_evaluation", metrics_used=None)
