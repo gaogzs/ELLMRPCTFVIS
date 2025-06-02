@@ -199,9 +199,9 @@ if __name__ == "__main__":
     session = RPEvaluationSession(client, model)
     
     sample_conversation = []
-    with open(os.path.join(cur_dir, "sample_rp.json"), "r") as f:
+    with open(os.path.join(cur_dir, "sample_rp2.json"), "r") as f:
         sample_conversation = json.load(f)
     
     for section in sample_conversation:
         session.append_conversation(section)
-        session.export_logs(os.path.join(cur_dir, "sample_rp_log.json"))
+        session.export_logs(os.path.join(cur_dir, "sample_rp2_log.json"))
