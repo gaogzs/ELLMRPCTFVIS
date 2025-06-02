@@ -112,6 +112,8 @@ class OutlineEvaluatorSession:
             "single_likelihood_result": single_likelihood_result,
         }
         self.logs.append(new_log)
+        
+        # Return predicability and abruptness
     
     def handle_outline_builder(self, lastest_conversation: str, existing_outline: str, previous_story: str) -> tuple[str, str, list[str]]:
         message = self.input_template_loader.load("outline_builder").format(existing_outline=existing_outline, previous_story=previous_story, new_story=lastest_conversation)
