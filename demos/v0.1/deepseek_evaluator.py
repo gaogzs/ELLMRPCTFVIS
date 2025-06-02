@@ -4,6 +4,8 @@ from openai import OpenAI
 import re
 
 from chatbot import ChatBotOpenAISimple
+from sentence_transformers import SentenceTransformer, util
+
  
 cur_dir = os.path.dirname(__file__)
 
@@ -153,7 +155,7 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
             
         return (eval_score, eval_reason)
     
-    elif eval_type == "subjective-identifying":
+    elif eval_type == "subjective-summarising":
         temperature = 0
         if shots is not None:
             identifier_prompt = eval_prompts[eval_type]["identifier"][:shots * 2 + 1].copy()
@@ -195,28 +197,43 @@ def llm_evaluation(messages, eval_type="single-scoring", model="deepseek-chat", 
         # Comparing the current summary with the previous one
         relative_score = 1
         history_score = 1
+        similarity_model = "sentence-transformers"
         if history:
             hist_identifier_reponse = []
             for entry in history:
                 hist_identifier_reponse.append(entry["chat_evaluation"]["identification"])
-            user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse[-1]}\nSummary 2: {identifier_reponse}"}
-            response = client.chat.completions.create(
-                model=model,
-                messages=comparer_prompt + [user_input],
-                temperature=temperature,
-                stream=False
-            )
-            relative_score = float(response.choices[0].message.content.split(" ")[0])
-            print(relative_score)
-            user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse}\nSummary 2: {identifier_reponse}"}
-            response = client.chat.completions.create(
-                model=model,
-                messages=comparer_prompt + [user_input],
-                temperature=temperature,
-                stream=False
-            )
-            history_score = float(response.choices[0].message.content.split(" ")[0])
-            print(history_score)
+            if similarity_model == "deepseek":
+                user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse[-1]}\nSummary 2: {identifier_reponse}"}
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=comparer_prompt + [user_input],
+                    temperature=temperature,
+                    stream=False
+                )
+                relative_score = float(response.choices[0].message.content.split(" ")[0])
+                print(relative_score)
+                user_input = {"role": "user", "content": f"Summary 1: {hist_identifier_reponse}\nSummary 2: {identifier_reponse}"}
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=comparer_prompt + [user_input],
+                    temperature=temperature,
+                    stream=False
+                )
+                history_score = float(response.choices[0].message.content.split(" ")[0])
+                print(history_score)
+            elif similarity_model == "sentence-transformers":
+                model = SentenceTransformer("all-MiniLM-L6-v2")
+                last_embeddings = model.encode(hist_identifier_reponse[-1], convert_to_tensor=True)
+                current_embedding = model.encode(identifier_reponse, convert_to_tensor=True)
+                
+                relative_score = util.pytorch_cos_sim(last_embeddings, current_embedding).item()
+                print(relative_score)
+                
+                history_embeddings = model.encode(str(hist_identifier_reponse), convert_to_tensor=True)
+                history_score = util.pytorch_cos_sim(history_embeddings, current_embedding).item()
+                print(history_score)
+            else:
+                raise ValueError(f"Unknown similarity model: {similarity_model}")
         
         
         eval_score = {"identification": identifier_reponse, "truth_score": truth_score, "relative_score": relative_score, "history_score": history_score}
@@ -266,9 +283,9 @@ def test_evaluation(sample_messages, eval_type, model, shots, slicing=True):
             new_entry["chat_evaluation"] = evaluation
             last_eval = evaluation
             
-            evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots, history=histories)
-            new_entry["reasoner_evaluation"] = evaluation
-            new_entry["reason_reasoning"] = reason
+            # evaluation, reason = llm_evaluation(sliced_messages, eval_type=eval_type, model="deepseek-reasoner", shots=shots, history=histories)
+            # new_entry["reasoner_evaluation"] = evaluation
+            # new_entry["reason_reasoning"] = reason
             
             histories.append(new_entry)
     else:
@@ -290,7 +307,7 @@ def test_evaluation(sample_messages, eval_type, model, shots, slicing=True):
     return histories
 
 if __name__ == "__main__":
-    eval_type = "multiple-scoring-speaker-v1"
+    eval_type = "subjective-summarising"
     eval_model = "deepseek-chat"
     prompt_shots = 1
     
