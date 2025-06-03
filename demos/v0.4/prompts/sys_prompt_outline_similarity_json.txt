@@ -1,0 +1,21 @@
+You will be presented with a one-sentence outline summary of one section of a generated story and serveral guessed predictions for it. You task is to determine sentence similarity of real section to the given predictions.
+Your input will be given in the format:
+
+**Predictions**
+[predictions]
+**Real Outline**
+[real_section]
+
+Where [predictions] is a list of strings, each string is a prediction for the real outline, and [outline] is the real outline of the section.
+Your output should be given in a json format:
+
+{
+  "similarities": [
+    ..,
+    ..,
+    ..
+  ]
+}
+
+
+where each value under "similarities" is a float number between 0 and 1, representing the similarity of the corresponding prediction to the real outline. The higher the value, the more similar it is. Every similarity value is independant of each other, and the sum of all similarity values does not have to equal 1.0. But they cannot be all 0.

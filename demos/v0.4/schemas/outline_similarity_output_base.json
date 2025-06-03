@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "similarities": {
+      "type": "array",
+      "description": "A list of numbers where each value is a float number between 0 and 1, representing the similarity of the corresponding prediction to the real outline. The higher the value, the more similar it is. Every similarity value is independant of each other, and the sum of all similarity values does not have to equal 1.0, but they cannot be all 0.",
+      "minItems": 1,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    }
+  },
+  "required": [
+    "similarities"
+  ]
+}

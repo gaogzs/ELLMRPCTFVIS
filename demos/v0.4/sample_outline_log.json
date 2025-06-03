@@ -1,7 +1,7 @@
 [
     {
         "conversation": "AI: Maridan is a young sergeant serving in the king's knightly order. He is known for his bravery and loyalty. One day, he receives a secret mission from the king to investigate a series of mysterious disappearances in the kingdom. Maridan sets out on his quest, determined to uncover the truth and protect his people.\n(User: Maridan first decides to gather information from the villagers.)",
-        "new_chapter": "The story begins with Maridan receiving a secret mission from the king to investigate mysterious disappearances.",
+        "new_chapter": "The story begins with Maridan, a young sergeant, receiving a secret mission from the king to investigate mysterious disappearances.",
         "new_sections": [
             "Maridan decides to gather information from the villagers regarding the disappearances."
         ],
@@ -13,252 +13,252 @@
         "conversation": "AI: Maridan visits the nearby village and speaks with the villagers. They tell him about strange noises coming from the forest at night and sightings of shadowy figures. Maridan takes note of their accounts and decides to investigate the forest next.\n(User: He plans to enter the forest at dawn, hoping to find clues about the disappearances.)",
         "new_chapter": null,
         "new_sections": [
-            "Maridan speaks with the villagers, learns about strange noises and shadowy figures, and decides to investigate the forest at dawn."
+            "Maridan gathers information from the villagers about strange noises and shadowy figures, and plans to investigate the forest at dawn."
         ],
         "similarity_results": {
             "similarities": {
-                "Maridan interviews villagers and gathers initial clues about the disappearances.": 0.6889159083366394,
-                "Maridan follows a lead to a nearby forest, suspecting it's related to the disappearances.": 0.6138647794723511,
-                "Maridan seeks advice from the king's advisor on how to proceed with the investigation.": 0.5180549025535583,
-                "Maridan encounters a mysterious figure who may have information about the disappearances.": 0.6136085987091064,
-                "Maridan discovers a hidden symbol or message that could be a key to solving the mystery.": 0.5438307523727417
+                "Maridan interviews villagers and gathers initial clues about the disappearances.": 0.85,
+                "Maridan follows a lead from the villagers to a nearby forest.": 0.65,
+                "Maridan seeks advice from the village elder about the disappearances.": 0.7,
+                "Maridan discovers a hidden symbol or message while investigating the village.": 0.4,
+                "Maridan encounters a suspicious character in the village who may be involved in the disappearances.": 0.5
             },
-            "best_similarity": 0.6889159083366394,
-            "best_similarity_score": 0.9571670005488014
+            "best_similarity": 0.85,
+            "best_similarity_score": 2.1946670768811316
         },
         "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan follows a lead to a nearby forest, suspecting it's related to the disappearances.": 0.1,
-                "Maridan seeks advice from the king's advisor on how to proceed with the investigation.": 0.05,
-                "Maridan encounters a mysterious figure who may have information about the disappearances.": 0.1,
-                "Maridan discovers a hidden symbol or message that could be a key to solving the mystery.": 0.1,
-                "Maridan speaks with the villagers, learns about strange noises and shadowy figures, and decides to investigate the forest at dawn.": 0.65
+                "Maridan follows a lead from the villagers to a nearby forest.": 0.15,
+                "Maridan seeks advice from the village elder about the disappearances.": 0.25,
+                "Maridan discovers a hidden symbol or message while investigating the village.": 0.1,
+                "Maridan encounters a suspicious character in the village who may be involved in the disappearances.": 0.2,
+                "Maridan gathers information from the villagers about strange noises and shadowy figures, and plans to investigate the forest at dawn.": 0.3
             },
-            "correct_option_score": 2.25
+            "correct_option_score": 0.5
         },
         "single_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan follows a lead to a nearby forest, suspecting it's related to the disappearances.": 0.8,
-                "Maridan seeks advice from the king's advisor on how to proceed with the investigation.": 0.3,
-                "Maridan encounters a mysterious figure who may have information about the disappearances.": 0.7,
-                "Maridan discovers a hidden symbol or message that could be a key to solving the mystery.": 0.7,
-                "Maridan speaks with the villagers, learns about strange noises and shadowy figures, and decides to investigate the forest at dawn.": 0.7
+                "Maridan follows a lead from the villagers to a nearby forest.": 0.8,
+                "Maridan seeks advice from the village elder about the disappearances.": 0.8,
+                "Maridan discovers a hidden symbol or message while investigating the village.": 0.7,
+                "Maridan encounters a suspicious character in the village who may be involved in the disappearances.": 0.8,
+                "Maridan gathers information from the villagers about strange noises and shadowy figures, and plans to investigate the forest at dawn.": 0.8
             },
-            "correct_option_score": 0.09374999999999978
+            "correct_option_score": 0.02564102564102555
         }
     },
     {
         "conversation": "AI: At dawn, Maridan enters the forest, armed with his sword and shield. The forest is dense and eerie, with sunlight barely penetrating through the thick canopy. As he ventures deeper, he hears rustling sounds and sees fleeting shadows. He remains cautious and alert, ready to confront any danger.\n(User: Maridan decides to follow the sounds, hoping they will lead him to the source of the mystery.)",
         "new_chapter": null,
         "new_sections": [
-            "Maridan enters the forest at dawn, cautiously following rustling sounds and fleeting shadows in search of clues."
+            "Maridan enters the forest at dawn and follows the rustling sounds, hoping to find the source of the mystery."
         ],
         "similarity_results": {
             "similarities": {
-                "Maridan enters the forest and discovers a hidden trail.": 0.7472927570343018,
-                "Maridan encounters a mysterious creature in the forest.": 0.7195546627044678,
-                "Maridan finds evidence of a dark ritual in the forest.": 0.6859030723571777,
-                "Maridan gets lost in the forest and struggles to find his way back.": 0.5759665966033936,
-                "Maridan sets a trap, hoping to capture one of the shadowy figures.": 0.5423259735107422
+                "Maridan enters the forest at dawn and discovers strange footprints.": 0.85,
+                "Maridan encounters a mysterious creature in the forest.": 0.55,
+                "Maridan finds a hidden cave in the forest.": 0.45,
+                "Maridan gets lost in the forest and has to find his way back.": 0.4,
+                "Maridan discovers a clue that leads him to a nearby town.": 0.3
             },
-            "best_similarity": 0.7472927570343018,
-            "best_similarity_score": 1.2244321116278296
+            "best_similarity": 0.85,
+            "best_similarity_score": 2.1946670768811316
         },
         "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan encounters a mysterious creature in the forest.": 0.1,
-                "Maridan finds evidence of a dark ritual in the forest.": 0.1,
-                "Maridan gets lost in the forest and struggles to find his way back.": 0.1,
-                "Maridan sets a trap, hoping to capture one of the shadowy figures.": 0.1,
-                "Maridan enters the forest at dawn, cautiously following rustling sounds and fleeting shadows in search of clues.": 0.6
+                "Maridan encounters a mysterious creature in the forest.": 0.15,
+                "Maridan finds a hidden cave in the forest.": 0.2,
+                "Maridan gets lost in the forest and has to find his way back.": 0.1,
+                "Maridan discovers a clue that leads him to a nearby town.": 0.1,
+                "Maridan enters the forest at dawn and follows the rustling sounds, hoping to find the source of the mystery.": 0.45
             },
-            "correct_option_score": 2.0
+            "correct_option_score": 1.25
         },
         "single_likelihood_result": {
             "new_chapter_probability": 0.1,
             "new_chapter_truth": 0,
             "option_likelihoods": {
                 "Maridan encounters a mysterious creature in the forest.": 0.8,
-                "Maridan finds evidence of a dark ritual in the forest.": 0.8,
-                "Maridan gets lost in the forest and struggles to find his way back.": 0.7,
-                "Maridan sets a trap, hoping to capture one of the shadowy figures.": 0.7,
-                "Maridan enters the forest at dawn, cautiously following rustling sounds and fleeting shadows in search of clues.": 0.7
+                "Maridan finds a hidden cave in the forest.": 0.7,
+                "Maridan gets lost in the forest and has to find his way back.": 0.6,
+                "Maridan discovers a clue that leads him to a nearby town.": 0.7,
+                "Maridan enters the forest at dawn and follows the rustling sounds, hoping to find the source of the mystery.": 0.7
             },
-            "correct_option_score": -0.05405405405405417
+            "correct_option_score": -1.1102230246251565e-16
         }
     },
     {
         "conversation": "AI: Maridan follows the sounds cautiously, moving through the underbrush. He comes across a clearing where he sees a group of hooded figures performing a ritual. They seem to be summoning something dark and sinister. Maridan realizes that these figures are behind the disappearances and decides to confront them.\n(User: He prepares to fight the hooded figures, ready to protect the kingdom.)",
         "new_chapter": "Maridan discovers a group of hooded figures performing a dark ritual and prepares to confront them.",
         "new_sections": [
-            "Maridan follows the sounds in the forest and discovers hooded figures performing a ritual, realizing they are behind the disappearances and preparing to fight them."
+            "Maridan discovers hooded figures performing a ritual in a clearing and prepares to fight them."
         ],
         "similarity_results": {
             "similarities": {
-                "Maridan discovers a hidden trail leading deeper into the forest.": 0.7079949975013733,
-                "Maridan encounters a strange creature lurking in the shadows.": 0.6304188966751099,
-                "Maridan finds a campsite with signs of recent activity.": 0.5622601509094238,
-                "Maridan stumbles upon a mystical artifact that seems connected to the disappearances.": 0.6532344818115234,
-                "Maridan gets lost in the dense forest and must find his way back.": 0.6080284118652344
+                "Maridan encounters a mysterious creature in the forest.": 0.1,
+                "Maridan discovers a hidden trail leading deeper into the forest.": 0.15,
+                "Maridan finds evidence of a struggle, suggesting someone was recently captured.": 0.2,
+                "Maridan stumbles upon an abandoned campsite with strange symbols.": 0.1,
+                "Maridan gets lost in the forest and must find his way back.": 0.05
             },
-            "best_similarity": 0.7079949975013733,
-            "best_similarity_score": 1.0328876128521662
+            "best_similarity": 0.2,
+            "best_similarity_score": 0.22161460295122554
         },
         "multi_likelihood_result": {
-            "new_chapter_probability": 0.1,
+            "new_chapter_probability": 0.05,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "Maridan encounters a strange creature lurking in the shadows.": 0.15,
-                "Maridan finds a campsite with signs of recent activity.": 0.2,
-                "Maridan stumbles upon a mystical artifact that seems connected to the disappearances.": 0.1,
-                "Maridan gets lost in the dense forest and must find his way back.": 0.1,
-                "Maridan follows the sounds in the forest and discovers hooded figures performing a ritual, realizing they are behind the disappearances and preparing to fight them.": 0.45
+                "Maridan encounters a mysterious creature in the forest.": 0.2,
+                "Maridan discovers a hidden trail leading deeper into the forest.": 0.2,
+                "Maridan stumbles upon an abandoned campsite with strange symbols.": 0.15,
+                "Maridan gets lost in the forest and must find his way back.": 0.05,
+                "Maridan discovers hooded figures performing a ritual in a clearing and prepares to fight them.": 0.4
             },
-            "correct_option_score": 1.25
+            "correct_option_score": 1.0
         },
         "single_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "Maridan encounters a strange creature lurking in the shadows.": 0.8,
-                "Maridan finds a campsite with signs of recent activity.": 0.8,
-                "Maridan stumbles upon a mystical artifact that seems connected to the disappearances.": 0.7,
-                "Maridan gets lost in the dense forest and must find his way back.": 0.6,
-                "Maridan follows the sounds in the forest and discovers hooded figures performing a ritual, realizing they are behind the disappearances and preparing to fight them.": 0.6
+                "Maridan encounters a mysterious creature in the forest.": 0.8,
+                "Maridan discovers a hidden trail leading deeper into the forest.": 0.8,
+                "Maridan stumbles upon an abandoned campsite with strange symbols.": 0.7,
+                "Maridan gets lost in the forest and must find his way back.": 0.6,
+                "Maridan discovers hooded figures performing a ritual in a clearing and prepares to fight them.": 0.6
             },
             "correct_option_score": -0.1428571428571428
         }
     },
     {
         "conversation": "AI: As Maridan steps forward, the hooded figures suddenly disappeared, leaving behind a dark mist. Maridan feels a chill run down his spine but remains resolute. He searches the clearing for any clues and finds nothing, he had no choice but to return to the order and report his findings to the king. He vows to continue his investigation and protect the kingdom from any threats.\n(User: Maridan returns to the order and informs the king about the hooded figures and the dark ritual he witnessed.)",
-        "new_chapter": "Maridan reports his findings to the king and prepares for the next phase of the investigation.",
+        "new_chapter": null,
         "new_sections": [
-            "Maridan returns to the order, informs the king about the hooded figures and the dark ritual, and vows to continue his investigation."
+            "The hooded figures disappear, leaving behind a dark mist, and Maridan returns to the order to report his findings to the king."
         ],
         "similarity_results": {
             "similarities": {
-                "Maridan engages in a battle with the hooded figures, attempting to stop their ritual.": 0.6338992118835449,
-                "Maridan is captured by the hooded figures and must find a way to escape.": 0.6863581538200378,
-                "Maridan defeats the hooded figures and uncovers the entity they were trying to summon.": 0.6751362681388855,
-                "Maridan investigates the purpose of the ritual and the entity the figures were trying to summon.": 0.6321648359298706,
-                "Maridan returns to the kingdom to report his findings and prepare for a larger threat.": 0.7474992275238037
+                "Maridan engages in combat with the hooded figures, attempting to disrupt their ritual.": 0.1,
+                "Maridan is captured by the hooded figures and learns more about their sinister plans.": 0.1,
+                "Maridan defeats the hooded figures and uncovers the source of their power.": 0.1,
+                "Maridan discovers the hooded figures are controlled by a powerful entity.": 0.1,
+                "Maridan is forced to retreat and seek reinforcements after realizing the hooded figures are too strong.": 0.1
             },
-            "best_similarity": 0.7474992275238037,
-            "best_similarity_score": 1.2255944059186674
+            "best_similarity": 0.1,
+            "best_similarity_score": 0.15490195998574322
         },
         "multi_likelihood_result": {
-            "new_chapter_probability": 0.05,
-            "new_chapter_truth": 1,
+            "new_chapter_probability": 0.1,
+            "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan engages in a battle with the hooded figures, attempting to stop their ritual.": 0.6,
-                "Maridan is captured by the hooded figures and must find a way to escape.": 0.15,
-                "Maridan defeats the hooded figures and uncovers the entity they were trying to summon.": 0.1,
-                "Maridan investigates the purpose of the ritual and the entity the figures were trying to summon.": 0.1,
-                "Maridan returns to the order, informs the king about the hooded figures and the dark ritual, and vows to continue his investigation.": 0.05
+                "Maridan is captured by the hooded figures and learns more about their sinister plans.": 0.2,
+                "Maridan defeats the hooded figures and uncovers the source of their power.": 0.4,
+                "Maridan discovers the hooded figures are controlled by a powerful entity.": 0.1,
+                "Maridan is forced to retreat and seek reinforcements after realizing the hooded figures are too strong.": 0.3,
+                "The hooded figures disappear, leaving behind a dark mist, and Maridan returns to the order to report his findings to the king.": 0.0
             },
-            "correct_option_score": -0.75
+            "correct_option_score": -1.0
         },
         "single_likelihood_result": {
             "new_chapter_probability": 0.1,
-            "new_chapter_truth": 1,
+            "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan engages in a battle with the hooded figures, attempting to stop their ritual.": 0.95,
-                "Maridan is captured by the hooded figures and must find a way to escape.": 0.7,
-                "Maridan defeats the hooded figures and uncovers the entity they were trying to summon.": 0.8,
-                "Maridan investigates the purpose of the ritual and the entity the figures were trying to summon.": 0.7,
-                "Maridan returns to the order, informs the king about the hooded figures and the dark ritual, and vows to continue his investigation.": 0.7
+                "Maridan is captured by the hooded figures and learns more about their sinister plans.": 0.7,
+                "Maridan defeats the hooded figures and uncovers the source of their power.": 0.8,
+                "Maridan discovers the hooded figures are controlled by a powerful entity.": 0.7,
+                "Maridan is forced to retreat and seek reinforcements after realizing the hooded figures are too strong.": 0.7,
+                "The hooded figures disappear, leaving behind a dark mist, and Maridan returns to the order to report his findings to the king.": 0.7
             },
-            "correct_option_score": -0.09090909090909083
+            "correct_option_score": -0.02777777777777779
         }
     },
     {
         "conversation": "AI: The king was furious about Maridan's report. He relieved Maridan of his duties and sent him to the dungeons for failing to protect the kingdom. Maridan, now a prisoner, vows to escape and continue his quest to uncover the truth behind the mysterious disappearances. He knows that he must find a way to clear his name and prove his loyalty to the king.\n(User: Maridan starts planning his escape from the dungeons.)",
-        "new_chapter": "Maridan is imprisoned after reporting his findings, leading him to plan an escape and continue his quest from within the shadows.",
+        "new_chapter": "Maridan is imprisoned and plans to escape to continue his quest.",
         "new_sections": [
-            "Maridan, now imprisoned, begins to formulate a plan to escape the dungeons and continue his investigation."
+            "Maridan, now imprisoned, plans his escape from the dungeons to clear his name and continue his investigation."
         ],
         "similarity_results": {
             "similarities": {
-                "The king advises Maridan on how to proceed with the investigation, providing resources and guidance.": 0.5955293774604797,
-                "Maridan seeks advice from a wise elder or mentor within the order regarding the dark ritual.": 0.5156715512275696,
-                "Maridan researches ancient texts and lore to uncover the origins and purpose of the ritual.": 0.46335187554359436,
-                "Maridan gathers a team of skilled warriors and mages to assist him in his investigation.": 0.5961149334907532,
-                "Maridan investigates the dark mist left behind by the hooded figures, seeking clues about their whereabouts.": 0.5635632276535034
+                "The king advises Maridan to seek guidance from a wise old mage.": 0.1,
+                "Maridan and the king discuss the implications of the dark ritual and plan their next move.": 0.2,
+                "Maridan is tasked with gathering more information about the hooded figures and their motives.": 0.3,
+                "Maridan seeks the help of a skilled tracker to find the hooded figures' trail.": 0.1,
+                "Maridan is assigned a team of knights to assist him in his investigation.": 0.1
             },
-            "best_similarity": 0.5961149334907532,
-            "best_similarity_score": 0.6894643749153537
+            "best_similarity": 0.3,
+            "best_similarity_score": 0.29624833937874767
         },
         "multi_likelihood_result": {
-            "new_chapter_probability": 0.8,
+            "new_chapter_probability": 0.3,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "The king advises Maridan on how to proceed with the investigation, providing resources and guidance.": 0.4,
-                "Maridan seeks advice from a wise elder or mentor within the order regarding the dark ritual.": 0.25,
-                "Maridan researches ancient texts and lore to uncover the origins and purpose of the ritual.": 0.2,
-                "Maridan investigates the dark mist left behind by the hooded figures, seeking clues about their whereabouts.": 0.1,
-                "Maridan, now imprisoned, begins to formulate a plan to escape the dungeons and continue his investigation.": 0.05
+                "The king advises Maridan to seek guidance from a wise old mage.": 0.35,
+                "Maridan and the king discuss the implications of the dark ritual and plan their next move.": 0.4,
+                "Maridan seeks the help of a skilled tracker to find the hooded figures' trail.": 0.15,
+                "Maridan is assigned a team of knights to assist him in his investigation.": 0.05,
+                "Maridan, now imprisoned, plans his escape from the dungeons to clear his name and continue his investigation.": 0.05
             },
             "correct_option_score": -0.75
         },
         "single_likelihood_result": {
-            "new_chapter_probability": 0.8,
+            "new_chapter_probability": 0.95,
             "new_chapter_truth": 1,
             "option_likelihoods": {
-                "The king advises Maridan on how to proceed with the investigation, providing resources and guidance.": 0.9,
-                "Maridan seeks advice from a wise elder or mentor within the order regarding the dark ritual.": 0.7,
-                "Maridan researches ancient texts and lore to uncover the origins and purpose of the ritual.": 0.9,
-                "Maridan investigates the dark mist left behind by the hooded figures, seeking clues about their whereabouts.": 0.7,
-                "Maridan, now imprisoned, begins to formulate a plan to escape the dungeons and continue his investigation.": 0.7
+                "The king advises Maridan to seek guidance from a wise old mage.": 0.9,
+                "Maridan and the king discuss the implications of the dark ritual and plan their next move.": 0.9,
+                "Maridan seeks the help of a skilled tracker to find the hooded figures' trail.": 0.7,
+                "Maridan is assigned a team of knights to assist him in his investigation.": 0.9,
+                "Maridan, now imprisoned, plans his escape from the dungeons to clear his name and continue his investigation.": 0.9
             },
-            "correct_option_score": -0.10256410256410264
+            "correct_option_score": 0.04651162790697683
         }
     },
     {
         "conversation": "AI: Maridan begins to observe the guards' routines and looks for weaknesses in the dungeon's security. As a former sergeant, he knows how to exploit such vulnerabilities. He manages to find a loose stone in the wall of his cell and starts digging a tunnel. After several days of careful planning and hard work, he finally creates an escape route.\n(User: Maridan waits for the right moment when the guards are distracted to make his escape.)",
         "new_chapter": null,
         "new_sections": [
-            "Maridan observes the guards, finds a loose stone, and digs a tunnel to create an escape route."
+            "Maridan observes the guards, finds a weak spot, and digs a tunnel to escape."
         ],
         "similarity_results": {
             "similarities": {
-                "Maridan successfully escapes from the dungeons, evading guards and navigating the underground passages.": 0.7133824229240417,
-                "Maridan encounters other prisoners who offer assistance or pose a threat to his escape plan.": 0.5756950378417969,
-                "Maridan gathers information about the prison layout and guard patrols to improve his chances of escape.": 0.6053847670555115,
-                "Maridan uses his skills and wit to overcome obstacles and outsmart the guards during his escape attempt.": 0.5990312099456787,
-                "Maridan seeks help from an unexpected ally within the castle walls to aid his escape.": 0.5984623432159424
+                "Maridan successfully escapes the dungeon.": 0.85,
+                "Maridan encounters other prisoners who help him escape.": 0.3,
+                "Maridan seeks help from allies within the order to prove his innocence.": 0.1,
+                "Maridan gathers evidence to expose the true culprits behind the disappearances.": 0.15,
+                "Maridan confronts the king to reveal the truth and clear his name.": 0.05
             },
-            "best_similarity": 0.7133824229240417,
-            "best_similarity_score": 1.0560710344562843
+            "best_similarity": 0.85,
+            "best_similarity_score": 2.1946670768811316
         },
         "multi_likelihood_result": {
             "new_chapter_probability": 0.05,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan encounters other prisoners who offer assistance or pose a threat to his escape plan.": 0.2,
-                "Maridan gathers information about the prison layout and guard patrols to improve his chances of escape.": 0.3,
-                "Maridan uses his skills and wit to overcome obstacles and outsmart the guards during his escape attempt.": 0.2,
-                "Maridan seeks help from an unexpected ally within the castle walls to aid his escape.": 0.15,
-                "Maridan observes the guards, finds a loose stone, and digs a tunnel to create an escape route.": 0.15
+                "Maridan encounters other prisoners who help him escape.": 0.2,
+                "Maridan seeks help from allies within the order to prove his innocence.": 0.1,
+                "Maridan gathers evidence to expose the true culprits behind the disappearances.": 0.1,
+                "Maridan confronts the king to reveal the truth and clear his name.": 0.1,
+                "Maridan observes the guards, finds a weak spot, and digs a tunnel to escape.": 0.5
             },
-            "correct_option_score": -0.25
+            "correct_option_score": 1.5
         },
         "single_likelihood_result": {
-            "new_chapter_probability": 0.1,
+            "new_chapter_probability": 0.8,
             "new_chapter_truth": 0,
             "option_likelihoods": {
-                "Maridan encounters other prisoners who offer assistance or pose a threat to his escape plan.": 0.9,
-                "Maridan gathers information about the prison layout and guard patrols to improve his chances of escape.": 0.9,
-                "Maridan uses his skills and wit to overcome obstacles and outsmart the guards during his escape attempt.": 0.9,
-                "Maridan seeks help from an unexpected ally within the castle walls to aid his escape.": 0.7,
-                "Maridan observes the guards, finds a loose stone, and digs a tunnel to create an escape route.": 0.7
+                "Maridan encounters other prisoners who help him escape.": 0.9,
+                "Maridan seeks help from allies within the order to prove his innocence.": 0.3,
+                "Maridan gathers evidence to expose the true culprits behind the disappearances.": 0.3,
+                "Maridan confronts the king to reveal the truth and clear his name.": 0.2,
+                "Maridan observes the guards, finds a weak spot, and digs a tunnel to escape.": 0.2
             },
-            "correct_option_score": -0.14634146341463405
+            "correct_option_score": -0.4736842105263157
         }
     }
 ]

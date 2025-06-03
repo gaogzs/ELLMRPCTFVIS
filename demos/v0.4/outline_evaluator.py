@@ -69,6 +69,7 @@ class OutlineEvaluatorSession:
         self.schema_loader = SchemaLoader(schema_dir)
         self.input_template_loader = InputTemplateLoader(input_template_dir)
         self.similarity_model = similarity_model
+        self.similarity_model_info = ModelInfo(similarity_model)
 
         self.chatbot = self.model_info.chatbot()
         self.outline = Outline()
@@ -157,9 +158,22 @@ class OutlineEvaluatorSession:
         return new_chapter, new_sections, predicted_sections
     
     def handle_similarity_worker(self, new_section: str, predicted_sections: list[str]) -> tuple[list[float], list[str]]:
-        similarity_worker = SentenceSimilarityWorker(self.similarity_model)
-
-        similarities = [similarity_worker.cosine_similarity(new_section, section) for section in predicted_sections]
+        similarities = []
+        if not self.similarity_model_info.is_valid():
+            similarity_worker = SentenceSimilarityWorker(self.similarity_model)
+            similarities = [similarity_worker.cosine_similarity(new_section, section) for section in predicted_sections]
+        else:
+            message = self.input_template_loader.load("outline_similarity").format(predictions=predicted_sections, real_section=new_section)
+            if self.model_info.output_format() == "json":
+                sys_prompt = self.prompt_loader.load_sys_prompts("outline_similarity", subtype="json")
+                bot = self.chatbot(self.similarity_model_info.model(), sys_prompt, self.schema_loader)
+                
+                text_response, json_response = bot.get_structured_response(message, schema_key="outline_similarity", record=False, temperature=0.2)
+                print(message)
+                print(text_response)
+                similarities = json_response["similarities"]
+            else:
+                raise NotImplementedError("Output format not supported for this method.")
         
         print_dev_message(f"New Real Section: {new_section}")
         for prediction, result in zip(predicted_sections, similarities):
@@ -273,7 +287,7 @@ if __name__ == "__main__":
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     
     model = "gemini-structured"
-    similarity_model = "all-MiniLM-L6-v2"
+    similarity_model = "gemini-structured"
     
     sample_narrative = []
     with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:

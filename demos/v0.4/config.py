@@ -76,7 +76,8 @@ class ModelInfo:
     def __init__(self, model_name: str):
         self.model_info = _model_info.get(model_name)
         if not self.model_info:
-            raise ValueError(f"Model {model_name} not available.")
+            self._valid = False
+        self._valid = True
     
     def model(self) -> str:
         return self.model_info["model"]
@@ -86,3 +87,6 @@ class ModelInfo:
     
     def output_format(self) -> str:
         return self.model_info["output_format"]
+    
+    def is_valid(self) -> bool:
+        return self._valid
