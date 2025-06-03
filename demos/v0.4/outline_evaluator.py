@@ -91,7 +91,7 @@ class OutlineEvaluatorSession:
         new_chapter, new_sections, predicted_sections = self.handle_outline_builder(lastest_conversation, previous_outline, previous_story)
         first_section = new_sections[0]
         
-        single_likelihood_result = None
+        # single_likelihood_result = None
         multi_likelihood_result = None
         similarity_results = None
         last_prediction = None
@@ -99,7 +99,7 @@ class OutlineEvaluatorSession:
             last_prediction = self.predictions[-1]
             similarity_results, prediction_options = self.handle_similarity_worker(first_section, last_prediction)
             multi_likelihood_result = self.handle_outline_multi_likelihood(first_section, new_chapter, prediction_options, previous_outline, previous_story)
-            single_likelihood_result = self.handle_outline_single_likelihood(first_section, new_chapter, prediction_options, previous_outline, previous_story)
+            # single_likelihood_result = self.handle_outline_single_likelihood(first_section, new_chapter, prediction_options, previous_outline, previous_story)
         
         self.predictions.append(predicted_sections)
         self.rp_history.append(lastest_conversation)
@@ -110,7 +110,7 @@ class OutlineEvaluatorSession:
             "new_sections": new_sections,
             "similarity_results": similarity_results,
             "multi_likelihood_result": multi_likelihood_result,
-            "single_likelihood_result": single_likelihood_result,
+            # "single_likelihood_result": single_likelihood_result,
         }
         self.logs.append(new_log)
         
