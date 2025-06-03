@@ -268,3 +268,26 @@ class OutlineEvaluatorSession:
     def export_logs(self, file_path: str) -> None:
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(self.logs, f, ensure_ascii=False, indent=4)
+
+if __name__ == "__main__":
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    model = "gemini-structured"
+    similarity_model = "all-MiniLM-L6-v2"
+    
+    sample_narrative = []
+    with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
+        sample_narratives = json.load(f)
+        sample_narrative = sample_narratives[-1]
+    
+    prompt_dir = os.path.join(cur_dir, "prompts")
+    schema_dir = os.path.join(cur_dir, "schemas")
+    input_template_dir = os.path.join(cur_dir, "input_templates")
+
+    using_model_info = ModelInfo(model)
+
+    outline_session = OutlineEvaluatorSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+    
+    for section in sample_narrative:
+        outline_session.append_conversation(section)
+        outline_session.export_logs(os.path.join(cur_dir, "sample_outline_log.json"))

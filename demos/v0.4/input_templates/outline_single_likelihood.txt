@@ -1,0 +1,6 @@
+**Existing Outline**
+{existing_outline}
+**Latest Story**
+{latest_story}
+**Prediction**
+{prediction}

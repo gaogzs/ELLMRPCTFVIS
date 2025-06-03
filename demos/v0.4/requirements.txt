@@ -1,0 +1,11 @@
+openai
+google-genai
+json
+jsonschema
+matplotlib
+numpy
+networkx
+z3-solver
+lark
+sentence-transformers
+anthropic

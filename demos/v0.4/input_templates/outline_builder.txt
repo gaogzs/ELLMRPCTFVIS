@@ -1,0 +1,6 @@
+**Existing Outline**
+{existing_outline}
+**Previous Story**
+{previous_story}
+**New Story**
+{new_story}
