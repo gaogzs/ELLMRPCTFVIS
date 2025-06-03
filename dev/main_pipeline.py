@@ -4,7 +4,6 @@ import json
 from config import ModelInfo
 from fol_evaluator import FOLEvaluationSession
 from timeline_maker import TimelineMakerSession
-from outline_evaluator import OutlineEvaluatorSession
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 def do_one_run_fol(target_narrative: list[str], model: str) -> None:
@@ -43,7 +42,7 @@ if __name__ == "__main__":
         sample_conversation = sample_conversations[-1]
     
     using_model = "gemini-structured"
-    similarity_model = "all-MiniLM-L6-v2"
+    # similarity_model = "all-MiniLM-L6-v2"
     
     do_one_run_fol(sample_conversation, using_model)
     #do_one_run_outline(sample_conversation, using_model, similarity_model)

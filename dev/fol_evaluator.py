@@ -377,7 +377,7 @@ class FOLEvaluationSession():
                     combined_past_formula[scope] += history_formula[scope]
             combined_past_formula[scope] += formulas
         
-        results, unsat_score = self.solve_combined_formulas(combined_past_formula)
+        results, unsat_formulas = self.solve_combined_formulas(combined_past_formula)
             
         self.formulas.append(complete_current_formula)
         
@@ -392,10 +392,10 @@ class FOLEvaluationSession():
             "new_declarations": current_declarations,
             "pseudo_predefinitions": definitions_text,
             "formula": pretty_formula,
-            "result": unsat_score,
+            "unsat_formulas": unsat_formulas,
         }
         self.logs.append(new_log)
-        return unsat_score
+        return unsat_formulas
     
     def parse_object_declarations(self, objects_text: str) -> dict:
         new_objects = {}
@@ -625,30 +625,39 @@ class FOLEvaluationSession():
             solver.add(Distinct(*var_list))
             
         # First, add the global formulas
+        track_table = {}
+        conflicting_assertions = set()
         global_formulas = combined_formulas["global"]
         for i, formula in enumerate(global_formulas):
-            solver.assert_and_track(formula, f"global_assertion_{i}")
+            assert_key = f"global_assertion_{i}"
+            solver.assert_and_track(formula, assert_key)
+            track_table[assert_key] = formula.sexpr()
             
         # Check the satisfiability of global formulas
         results = [str(solver.check())]
-        unsat_score = len(solver.unsat_core())
-        global_unsat_score = len(solver.unsat_core())
+        for assertion in solver.unsat_core():
+            if assertion in track_table:
+                conflicting_assertions.add(track_table[assertion])
         
         # Check formulas by scope
         for scope, formulas in combined_formulas.items():
             if scope != "global":
                 solver.push()
                 for i, formula in enumerate(formulas):
-                    solver.assert_and_track(formula, f"{scope}_assertion_{i}")
+                    assert_key = f"{scope}_assertion_{i}"
+                    solver.assert_and_track(formula, assert_key)
+                    track_table[assert_key] = formula.sexpr()
                 scope_result = solver.check()
                 results.append(str(scope_result))
-                unsat_score += len(solver.unsat_core()) - global_unsat_score
+                for assertion in solver.unsat_core():
+                    if assertion in track_table:
+                        conflicting_assertions.add(track_table[assertion])
                 solver.pop()
         
         print_dev_message(solver.assertions())
-        print_dev_message("Solver result:", results, unsat_score)
+        print_dev_message("Solver result:", results, len(conflicting_assertions), conflicting_assertions)
         
-        return results, unsat_score
+        return results, list(conflicting_assertions)
     
     def export_logs(self, file_path: str) -> None:
         # Add the global data to the log

@@ -57,6 +57,7 @@ Forall and Exists:
 
 Functions:
 - Example: "function_name(a, b, c)"
+- Functions can only take declared objects and time points as arguments. It cannot take another function nor logical propositions as arguments.
 
 Variables:
 - Bounded variables are the ones that are declared in the quantifier. Example: "a", "b", "c" in "forall (a b c) . (a and b) -> c"

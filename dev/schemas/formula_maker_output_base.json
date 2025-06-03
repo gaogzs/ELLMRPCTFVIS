@@ -3,7 +3,7 @@
   "properties": {
     "reasoning": {
       "type": "string",
-      "description": "The reasoning and chain-of-thought of the facts and logics you found out."
+      "description": "Briefly interpret the input you see in your own language. Then the reasoning and chain-of-thought of the facts and logics you found out."
     },
     "plan": {
       "type": "string",

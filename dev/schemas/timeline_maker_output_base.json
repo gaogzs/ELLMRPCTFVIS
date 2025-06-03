@@ -3,7 +3,7 @@
   "properties": {
     "reasoning": {
       "type": "string",
-      "description": "The reasoning and chain-of-thought of your timeline creation."
+      "description": "Briefly interpret the input you see in your own language. Then the reasoning and chain-of-thought of your timeline creation."
     },
     "timeline_definition": {
       "description": "The main body of your timeline definition. Should be a list of time points.",

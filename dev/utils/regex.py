@@ -8,7 +8,8 @@ def divide_response_parts(response_txt: str) -> list:
 def get_relation_params(relation_str: str) -> list:
     match = re.search(r'\(([^()]*)\)', relation_str)
     if match:
-        params = match.group(1).split(",")
+        matched_text = match.group(1)
+        params = matched_text.split(",")
         params = [param.strip() for param in params]
         return params
     else:
