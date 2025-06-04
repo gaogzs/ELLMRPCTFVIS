@@ -357,7 +357,7 @@ class FOLEvaluationSession():
         return current_formula
         
 
-    def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> int:
+    def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> list:
         
         self.timeline = new_timeline.copy()
         timeline_definitions = dict_pretty_str(self.timeline)

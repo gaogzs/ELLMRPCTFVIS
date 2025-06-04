@@ -1,0 +1,6 @@
+Target Story:
+{target_story}
+
+Rate the story on a scale from 1 to 5 on its consistency (How well the story maintains a coherent narrative without contradictions or inconsistencies)
+Respond in json format with a single integer:
+{{"consistency": <score>}}

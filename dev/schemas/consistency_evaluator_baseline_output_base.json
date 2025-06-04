@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "consistency": {
+      "type": "integer",
+      "description": "The consistency score of the story, ranging from 1 to 5. Higher means better."
+    }
+  },
+  "required": [
+    "consistency"
+  ]
+}
