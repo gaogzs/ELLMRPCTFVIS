@@ -9,7 +9,7 @@
         "properties": {
           "object_name": {
             "type": "string",
-            "description": "The name of the object. Should ba a single word, a snake case lower case variable name. Example: mr_alex"
+            "description": "The name of the object. Should ba a single word, a snake case lower case variable name. Must begin with a lower case letter a-z. Example: mr_alex"
           },
           "object_description": {
             "type": "string",
@@ -32,7 +32,7 @@
         "properties": {
           "relation_name": {
             "type": "string",
-            "description": "The name of the relation. Should be a single word, a snake case lower case variable name, followed by a bracket with arguments definitions. Arguments should be abstract characters like a, b, c, etc, every relation needs to take at least a time parameter at the end, preferably named as t. Example: live_in_location(a, b, t)"
+            "description": "The name of the relation. Should be a single word, a snake case lower case variable name, followed by a bracket with arguments definitions. Must begin with a lower case letter a-z. Arguments should be abstract characters like a, b, c, etc, every relation needs to take at least a time parameter at the end, preferably named as t. Example: live_in_location(a, b, t)"
           },
           "relation_description": {
             "type": "string",

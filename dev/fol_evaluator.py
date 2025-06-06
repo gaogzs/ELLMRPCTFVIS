@@ -28,7 +28,7 @@ class Relation:
         return f"{self.name}({params_str}): {self.meaning}"
 
 class FOLEvaluationSession():
-    def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/", input_template_dir: str = "../input_templates/") -> None:
+    def __init__(self, model_info: ModelInfo, history: list = None, prompt_dir: str = "../prompts/", schema_dir: str = "../schemas/", input_template_dir: str = "../input_templates/"):
         self.rp_history = history if history is not None else []
         self.model_info = model_info
         self.chatbot = self.model_info.chatbot()
@@ -635,9 +635,18 @@ class FOLEvaluationSession():
             
         # Check the satisfiability of global formulas
         results = [str(solver.check())]
+        if solver.unsat_core():
+            print_dev_message(track_table)
+            for assertion in solver.unsat_core():
+                assertion_str = str(assertion)
+                print_dev_message(track_table[assertion_str])
         for assertion in solver.unsat_core():
-            if assertion in track_table:
-                conflicting_assertions.add(track_table[assertion])
+            assertion_str = str(assertion)
+            if assertion_str in track_table:
+                conflicting_assertions.add(track_table[assertion_str])
+            else:
+                raise FOLParsingError(f"Assertion {assertion_str} not found in track table. Please check the solver assertions.")
+        print_dev_message(conflicting_assertions)
         
         # Check formulas by scope
         for scope, formulas in combined_formulas.items():
@@ -650,8 +659,11 @@ class FOLEvaluationSession():
                 scope_result = solver.check()
                 results.append(str(scope_result))
                 for assertion in solver.unsat_core():
-                    if assertion in track_table:
-                        conflicting_assertions.add(track_table[assertion])
+                    assertion_str = str(assertion)
+                    if assertion_str in track_table:
+                        conflicting_assertions.add(track_table[assertion_str])
+                    else:
+                        raise FOLParsingError(f"Assertion {assertion_str} not found in track table. Please check the solver assertions.")
                 solver.pop()
         
         print_dev_message(solver.assertions())

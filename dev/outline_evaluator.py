@@ -63,7 +63,7 @@ class Outline:
         return result
     
 class OutlineEvaluatorSession:
-    def __init__(self, model_info: ModelInfo, similarity_model: str, prompt_dir: str, schema_dir: str, input_template_dir: str) -> None:
+    def __init__(self, model_info: ModelInfo, similarity_model: str, prompt_dir: str, schema_dir: str, input_template_dir: str):
         self.model_info = model_info
         self.prompt_loader = PromptLoader(prompt_dir)
         self.schema_loader = SchemaLoader(schema_dir)

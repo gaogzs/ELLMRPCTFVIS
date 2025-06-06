@@ -29,7 +29,7 @@ Where "objects" is a list of objects that appeared in the story, they can be cha
 -"Item": An inanimate item that exists in the role-playing. It can be a weapon, a tool, or any other items. Example: "A sword", "'The Art of War' the book", "A rock blocking the road".
 -"Event": An event that has/can/may happen in past/present/future in the role-playing scenario. Example: "A dragon attack", "A birthday party", "The D-day".
 -"Concept": A notable concept that is important in the role-playing scenario. Or a general name for a collecton of objects. It can be a theory, a philosophy, or any other general idea. Example: "Humankind", "The theory of relativity", "The idea of freedom".
-Every object declaration should consist of "object_name", a non-repetitive variable name in lower case snake case and "object_description", a brief translation (not a complete description) of what the variable name represents separated by ":". For example, if the story mentions "Aleph is a brown dog living in Mount Everest with a sick leopard cat." You may give output like:
+Every object declaration should consist of "object_name", a non-repetitive variable name in lower case snake case that begins with a lower case letter and "object_description", a brief translation (not a complete description) of what the variable name represents separated by ":". For example, if the story mentions "Aleph is a brown dog living in Mount Everest with a sick leopard cat." You may give output like:
 {
   "objects": [
     {"object_name": "aleph", "object_description": "Aleph, a named character"},
