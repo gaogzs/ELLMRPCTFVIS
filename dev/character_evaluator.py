@@ -36,7 +36,7 @@ class CharacterInfo:
             "character_traits": self.traits
         }
 
-class CharacterEvaluatorSession:
+class CharacterEvaluationSession:
     def __init__(self, model_info: ModelInfo, prompt_dir: str, schema_dir: str, input_template_dir: str):
         self.model_info = model_info
         self.prompt_loader = PromptLoader(prompt_dir)
@@ -121,7 +121,6 @@ class CharacterEvaluatorSession:
         return appeared_characters, actions
     
     def handle_integrity_evaluator(self, actions: dict) -> dict:
-        processed_success = False
         tries_count = _ERROR_RETRIES
         
         integrity_scores = {}
@@ -136,6 +135,7 @@ class CharacterEvaluatorSession:
                 message = input_template_1.format(character_information=self.character_records[name].to_str_full())
                 bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
                 integrity_scores[name] = {}
+                processed_success = False
                 while not processed_success:
                     try:
                         text_response, json_response = bot.get_structured_response(message, schema_key="character_integrity_self", record=True, temperature=0.2)
@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
     using_model_info = ModelInfo(model)
 
-    character_session = CharacterEvaluatorSession(using_model_info, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+    character_session = CharacterEvaluationSession(using_model_info, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
     
     for section in sample_narrative:
         character_session.append_conversation(section)

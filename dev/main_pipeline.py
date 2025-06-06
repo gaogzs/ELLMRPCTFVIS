@@ -29,7 +29,7 @@ def do_one_run_fol(target_narrative: list[str], model: str) -> None:
 
 #     using_model_info = ModelInfo(model)
 
-#     outline_session = OutlineEvaluatorSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+#     outline_session = OutlineEvaluationSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
     
 #     for section in target_narrative:
 #         outline_session.append_conversation(section)

@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "Interpret the story in your own language. Review and consider the results returned by sub-agents. Give a few reasons to explain the consistency score you assigned to the story according to the criteria given."
+    },
+    "consistency": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "The consistency score of the story, ranging from 1 to 5. Higher means better."
+    }
+  },
+  "required": [
+    "reasoning",
+    "consistency"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,32 @@
+Target Story:
+{target_story}
+
+Briefly interpret the story in your own language in the "reasoning" part and rate the story on a scale from 1 to 5 on its consistency (How well the story maintains a coherent narrative without contradictions or inconsistencies).
+
+**Sub-Agents Response**
+You will be working with 3 sub-agents, their output may help you.
+
+Outline Evaluator Result:
+{outline_evaluator_result}
+Outline evaluator will respond with 2 metrics: abruptness and predicability. Each metric will come in a list, where each element is judging a proportional part of the story. Abruptness range from -1 to 1, where high value means the plot is changing to abruptly, and low value means the plot is sticking with the same direction for too long, a value around 0 suggest fine situation. Predicability range from -1 to 1+, it represents how not-surprising the plot is progressing, where high value means the plot progressing just as expected, and low value means the plot is progressing in a way that is not expected. A value within 0-1 is considered moderate situation, it can sometimes go above 1. Higher value means the plot is conherent, but lower does not necessarily mean it is bad.
+Briefly interpret the results in your own language and review the corresponding part of the story in the "reasoning" part.
+
+Character Evaluator Result:
+{character_evaluator_result}
+Character evaluator will extract all characters from the story and evaluate each with 2 metrics: self_integrity and action_integrity. Each metric will come in a list, where each element is judging a proportional part of the story. Both values range from 0 to 1, where higher value means better consistency. self_integrity means how consistent is the character built, and action_integrity means how consistent is the character's actions with the built character.
+Briefly interpret the results in your own language and review the content of the story related to the corresponding character in the "reasoning" part.
+
+Logical Evaluator Result:
+{logical_evaluator_result}
+Logicaal evaluator will convert the story into a set of FOL formula and finds what elements might be contradicting each other. It will return a list of contradicting FOL formulas to you. If no output is given, it does not necessarily mean there is no contradiction, but the evaluator simply failed find any.
+Interpret all given formulas (if any) to natural language in the "reasoning" part, and review the content of the story related to the formulas.
+
+At last you need to give your reasons of rating the story in the "reasoning" part, based on the following detailed criteria:
+- 1: The story is completely incoherent and makes no sense at all, with numerous contradictions and inconsistencies.
+- 2: The story has numerous inconsistency problems, making it difficult to follow or understand.
+- 3: The story has some inconsistency problems causing a little confusion, but they do not significantly detract from the overall narrative.
+- 4: The story is mostly consistent, with only minor inconsistencies that do not affect the overall narrative.
+- 5: The story is completely consistent, with no contradictions or inconsistencies at all.
+
+Respond in json format with a single integer:
+{{"reasoning": <reasoning>, "consistency": <score>}}

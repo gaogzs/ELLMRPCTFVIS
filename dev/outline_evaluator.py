@@ -62,14 +62,14 @@ class Outline:
             result += chapter.recur_to_str()
         return result
     
-class OutlineEvaluatorSession:
+class OutlineEvaluationSession:
     def __init__(self, model_info: ModelInfo, similarity_model: str, prompt_dir: str, schema_dir: str, input_template_dir: str):
         self.model_info = model_info
         self.prompt_loader = PromptLoader(prompt_dir)
         self.schema_loader = SchemaLoader(schema_dir)
         self.input_template_loader = InputTemplateLoader(input_template_dir)
         self.similarity_model = similarity_model
-        self.similarity_model_info = ModelInfo(similarity_model)
+        self.similarity_model_info = self.model_info if similarity_model is None else ModelInfo(similarity_model)
 
         self.chatbot = self.model_info.chatbot()
         self.outline = Outline()
@@ -114,10 +114,12 @@ class OutlineEvaluatorSession:
         }
         self.logs.append(new_log)
         
-        final_result = {
-            "abruptness": (multi_likelihood_result["new_chapter_probability"] - multi_likelihood_result["new_chapter_truth"]) ** 2,
-            "predicability": multi_likelihood_result["correct_option_score"],
-        }
+        final_result = {"abruptness": 0, "predicability": 1}
+        if multi_likelihood_result:
+            final_result = {
+                "abruptness": round(multi_likelihood_result["new_chapter_truth"] - multi_likelihood_result["new_chapter_probability"], 4),
+                "predicability": round(multi_likelihood_result["correct_option_score"], 4),
+            }
         
         return final_result
     
@@ -305,7 +307,7 @@ if __name__ == "__main__":
 
     using_model_info = ModelInfo(model)
 
-    outline_session = OutlineEvaluatorSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
+    outline_session = OutlineEvaluationSession(using_model_info, similarity_model, prompt_dir=prompt_dir, schema_dir=schema_dir, input_template_dir=input_template_dir)
     
     for section in sample_narrative:
         outline_session.append_conversation(section)

@@ -18,7 +18,7 @@ You will respond in the format of a json file:
 }
 
 Where "reasoning" is a brief reasoning where you interpret the input in your own language, and your chain of thought about what you are going to do.
-A "integrity_score" of 0 means the traits are obviously contradicting each other and the character should not exist; A score of 0.2 means the the traits are not consistent character is terribly built; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the traits are mostly consistent but there might be some issue you are unsure about; A score of 1 means the character is overall fine.
+A "integrity_score" of 0 means the traits are obviously contradicting each other and the character should not exist; A score of 0.2 means the the traits are not consistent character is terribly built; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the traits are mostly consistent but there might be some issue you are unsure about; A score of 1 means the character has no problem at all. You may utilise interpolation to give a more precise judgement.
 
 The second input will come in the format:
 **Character Actions**
@@ -34,4 +34,4 @@ You will respond in the format of a json file:
 }
 
 Where "reasoning" is a brief reasoning where you interpret the input in your own language, and your chain of thought about what you are going to do.
-A "action_score" of 0 means the actions are obviously contradicting the traits and description, there is no way this is talking about the same character; A score of 0.2 means the actions are not consistent with the character and the character is terribly used; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the actions are mostly consistent but there might be some issue you are unsure about; A score of 1 means the actions are overall fine.
+A "action_score" of 0 means the actions are obviously contradicting the traits and description, there is no way this is talking about the same character; A score of 0.2 means the actions are not consistent with the character and the character is terribly used; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the actions are mostly consistent but there might be some issue you are unsure about; A score of 1 means the character and actions has no problem at all. You may utilise interpolation to give a more precise judgement.
