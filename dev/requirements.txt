@@ -4,6 +4,7 @@ json
 jsonschema
 matplotlib
 numpy
+scipy
 networkx
 z3-solver
 lark
