@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "characters": {
+      "type": "array",
+      "description": "A list of characters extracted from the story. If it is an existing character, use exactly the same name and description as given, if its a new character, create new name and description on your own. A character is whoever can actively participate in the story, which does not have to be a human.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "character_name": {
+            "type": "string",
+            "description": "A unique name to identify the character in the story. Example: 'The narrator', 'Detective Roshan', 'The mysterious figure'."
+          },
+          "character_description": {
+            "type": "string",
+            "description": "A brief description of the character, so you know who exactly does it represent. Example: 'The first-person narrator of the story', 'A detective investigating a series of crimes in the city', 'A shadowy figure that appears in the story, not yet identified'."
+          },
+          "character_behaviours": {
+            "type": "array",
+            "description": "A list of actions and behaviours exhibited by the character in the story.",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "description": "A specific action or behaviour of the character."
+            }
+          }
+        },
+        "required": [
+        "character_name",
+        "character_description",
+        "character_behaviours"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "characters"
+  ],
+  "additionalProperties": false
+}

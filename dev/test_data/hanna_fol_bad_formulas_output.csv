@@ -1,40 +1,89 @@
 narrative_id,fol_output
-0,No Output
+0,"(forall ((animal Int))
+  (=> (or (= animal raccoon) (= animal skunk) (= animal opossum))
+      (kill narrator animal T1)))
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (kill a b1 t) (kill a b2 t)) (= b1 b2)))"
 1,No Output
 2,No Output
-3,No Output
+3,"(is_daughter_of lia_smith craftsman T2)
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_daughter_of a b t) (is_gender a female t)))
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_gender a b1 t) (is_gender a b2 t)) (= b1 b2)))
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_daughter_of a b t) (is_gender a her t)))"
 4,No Output
 5,No Output
 6,No Output
-7,No Output
+7,"(is_young agueda T6)
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_young a t1) (is_young a t2)) (= t1 t2)))
+(is_young agueda T2)"
 8,No Output
-9,No Output
+9,"(kill i i T6)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (kill a b1 t) (kill a b2 t)) (= b1 b2)))
+(kill i mother T6)"
 10,No Output
 11,No Output
 12,No Output
 13,No Output
 14,No Output
 15,No Output
-16,No Output
-17,No Output
+16,"(are_type non_combatants women T4)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (are_type a b1 t) (are_type a b2 t)) (= b1 b2)))
+(are_type non_combatants children T4)"
+17,"(go_to_location jason space T0)
+(go_to_location jason new_york T0)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (go_to_location a b1 t) (go_to_location a b2 t)) (= b1 b2)))"
 18,No Output
 19,No Output
 20,No Output
 21,No Output
-22,No Output
+22,"(is_eager_to he freedom T1)
+(is_captive he T1)
+(forall ((a Int) (t Int)) (=> (is_eager_to a freedom t) (not (is_captive a t))))"
 23,No Output
 24,No Output
-25,No Output
+25,"(forall ((y Int) (m Int) (f Int) (t Int))
+  (or (is_guarding m y t) (is_guarding f y t)))
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_guarding a b t) (is_in a wilderness t)))
+(is_in spring T1 T1)
+(= warrior feline)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
 26,No Output
 27,No Output
 28,No Output
-29,No Output
+29,"(glances_at jason slick_rick T0)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (glances_at a b1 t) (glances_at a b2 t)) (= b1 b2)))
+(glances_at jason chips T0)"
 30,No Output
-31,No Output
+31,"(is_queen malvina T2)
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_queen a t1) (is_queen a t2)) (= t1 t2)))
+(is_queen malvina T1)"
 32,No Output
-33,No Output
+33,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))
+(owns_item narrator awards T3)
+(owns_item narrator trophies T3)"
 34,No Output
-35,No Output
+35,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (controlled_by a b1 t) (controlled_by a b2 t)) (= b1 b2)))
+(forall ((a Int) (t Int)) (controlled_by a man_in_the_sky t))
+(forall ((a Int) (b Int) (t Int))
+  (=> (controlled_by a man_in_the_sky t) (is_play_toy a audience t)))
+(forall ((a Int) (b Int) (t Int)) (decides man_in_the_sky b t))
+(forall ((a Int) (b Int) (t1 Int) (t2 Int))
+  (=> (and (decides a b t1) (decides a b t2)) (= t1 t2)))
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_play_toy a b t) (controlled_by a b t)))"
 36,No Output
 37,No Output
 38,No Output
@@ -42,13 +91,23 @@ narrative_id,fol_output
 40,No Output
 41,No Output
 42,No Output
-43,No Output
+43,"(is_closing ferris_wheel T5)
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (close_object a b1 t) (close_object a b2 t)) (= b1 b2)))
+(forall ((a Int) (b Int) (t Int)) (=> (is_closing a t) (close_object a b t)))"
 44,No Output
-45,No Output
+45,(= T4 T2)
 46,No Output
 47,No Output
-48,No Output
-49,No Output
+48,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+(is_a journalist journalist T4)
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_a a journalist t) (is_a a character t)))"
+49,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (goes_to a b1 t) (goes_to a b2 t)) (= b1 b2)))
+(goes_to user reddit T7)
+(goes_to user thewalkingdeadgame_sub T7)"
 50,No Output
 51,No Output
 52,No Output
@@ -59,559 +118,11 @@ narrative_id,fol_output
 57,No Output
 58,No Output
 59,No Output
-60,No Output
+60,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_near a b t) (not (and (is_near a b t) (distinct a b)))))
+(is_near stream mine_site T4)"
 61,No Output
 62,No Output
 63,No Output
 64,No Output
 65,No Output
-66,No Output
-67,No Output
-68,No Output
-69,No Output
-70,No Output
-71,No Output
-72,No Output
-73,No Output
-74,No Output
-75,No Output
-76,No Output
-77,No Output
-78,No Output
-79,No Output
-80,No Output
-81,No Output
-82,No Output
-83,No Output
-84,No Output
-85,No Output
-86,No Output
-87,No Output
-88,No Output
-89,No Output
-90,No Output
-91,No Output
-92,No Output
-93,No Output
-94,No Output
-95,No Output
-96,No Output
-97,No Output
-98,No Output
-99,No Output
-100,No Output
-101,No Output
-102,No Output
-103,No Output
-104,No Output
-105,No Output
-106,No Output
-107,No Output
-108,No Output
-109,No Output
-110,No Output
-111,No Output
-112,No Output
-113,No Output
-114,No Output
-115,No Output
-116,No Output
-117,No Output
-118,No Output
-119,No Output
-120,No Output
-121,No Output
-122,No Output
-123,No Output
-124,No Output
-125,No Output
-126,No Output
-127,No Output
-128,No Output
-129,No Output
-130,No Output
-131,No Output
-132,No Output
-133,No Output
-134,No Output
-135,No Output
-136,No Output
-137,No Output
-138,No Output
-139,No Output
-140,No Output
-141,No Output
-142,No Output
-143,No Output
-144,No Output
-145,No Output
-146,No Output
-147,No Output
-148,No Output
-149,No Output
-150,No Output
-151,No Output
-152,No Output
-153,No Output
-154,No Output
-155,No Output
-156,No Output
-157,No Output
-158,No Output
-159,No Output
-160,No Output
-161,No Output
-162,No Output
-163,No Output
-164,No Output
-165,No Output
-166,No Output
-167,No Output
-168,No Output
-169,No Output
-170,No Output
-171,No Output
-172,No Output
-173,No Output
-174,No Output
-175,No Output
-176,No Output
-177,No Output
-178,No Output
-179,No Output
-180,No Output
-181,No Output
-182,No Output
-183,No Output
-184,No Output
-185,No Output
-186,No Output
-187,No Output
-188,No Output
-189,No Output
-190,No Output
-191,No Output
-192,No Output
-193,No Output
-194,No Output
-195,No Output
-196,No Output
-197,No Output
-198,No Output
-199,No Output
-200,No Output
-201,No Output
-202,No Output
-203,No Output
-204,No Output
-205,No Output
-206,No Output
-207,No Output
-208,No Output
-209,No Output
-210,No Output
-211,No Output
-212,No Output
-213,No Output
-214,No Output
-215,No Output
-216,No Output
-217,No Output
-218,No Output
-219,No Output
-220,No Output
-221,No Output
-222,No Output
-223,No Output
-224,No Output
-225,No Output
-226,No Output
-227,No Output
-228,No Output
-229,No Output
-230,No Output
-231,No Output
-232,No Output
-233,No Output
-234,No Output
-235,No Output
-236,No Output
-237,No Output
-238,No Output
-239,No Output
-240,No Output
-241,No Output
-242,No Output
-243,No Output
-244,No Output
-245,No Output
-246,No Output
-247,No Output
-248,No Output
-249,No Output
-250,No Output
-251,No Output
-252,No Output
-253,No Output
-254,No Output
-255,No Output
-256,No Output
-257,No Output
-258,No Output
-259,No Output
-260,No Output
-261,No Output
-262,No Output
-263,No Output
-264,No Output
-265,No Output
-266,No Output
-267,No Output
-268,No Output
-269,No Output
-270,No Output
-271,No Output
-272,No Output
-273,No Output
-274,No Output
-275,No Output
-276,No Output
-277,No Output
-278,No Output
-279,No Output
-280,No Output
-281,No Output
-282,No Output
-283,No Output
-284,No Output
-285,No Output
-286,No Output
-287,No Output
-288,No Output
-289,No Output
-290,No Output
-291,No Output
-292,No Output
-293,No Output
-294,No Output
-295,No Output
-296,No Output
-297,No Output
-298,No Output
-299,No Output
-300,No Output
-301,No Output
-302,No Output
-303,No Output
-304,No Output
-305,No Output
-306,No Output
-307,No Output
-308,No Output
-309,No Output
-310,No Output
-311,No Output
-312,No Output
-313,No Output
-314,No Output
-315,No Output
-316,No Output
-317,No Output
-318,No Output
-319,No Output
-320,No Output
-321,No Output
-322,No Output
-323,No Output
-324,No Output
-325,No Output
-326,No Output
-327,No Output
-328,No Output
-329,No Output
-330,No Output
-331,No Output
-332,No Output
-333,No Output
-334,No Output
-335,No Output
-336,No Output
-337,No Output
-338,No Output
-339,No Output
-340,No Output
-341,No Output
-342,No Output
-343,No Output
-344,No Output
-345,No Output
-346,No Output
-347,No Output
-348,No Output
-349,No Output
-350,No Output
-351,No Output
-352,No Output
-353,No Output
-354,No Output
-355,No Output
-356,No Output
-357,No Output
-358,No Output
-359,No Output
-360,No Output
-361,No Output
-362,No Output
-363,No Output
-364,No Output
-365,No Output
-366,No Output
-367,No Output
-368,No Output
-369,No Output
-370,No Output
-371,No Output
-372,No Output
-373,No Output
-374,No Output
-375,No Output
-376,No Output
-377,No Output
-378,No Output
-379,No Output
-380,No Output
-381,No Output
-382,No Output
-383,No Output
-384,No Output
-385,No Output
-386,No Output
-387,No Output
-388,No Output
-389,No Output
-390,No Output
-391,No Output
-392,No Output
-393,No Output
-394,No Output
-395,No Output
-396,No Output
-397,No Output
-398,No Output
-399,No Output
-400,No Output
-401,No Output
-402,No Output
-403,No Output
-404,No Output
-405,No Output
-406,No Output
-407,No Output
-408,No Output
-409,No Output
-410,No Output
-411,No Output
-412,No Output
-413,No Output
-414,No Output
-415,No Output
-416,No Output
-417,No Output
-418,No Output
-419,No Output
-420,No Output
-421,No Output
-422,No Output
-423,No Output
-424,No Output
-425,No Output
-426,No Output
-427,No Output
-428,No Output
-429,No Output
-430,No Output
-431,No Output
-432,No Output
-433,No Output
-434,No Output
-435,No Output
-436,No Output
-437,No Output
-438,No Output
-439,No Output
-440,No Output
-441,No Output
-442,No Output
-443,No Output
-444,No Output
-445,No Output
-446,No Output
-447,No Output
-448,No Output
-449,No Output
-450,No Output
-451,No Output
-452,No Output
-453,No Output
-454,No Output
-455,No Output
-456,No Output
-457,No Output
-458,No Output
-459,No Output
-460,No Output
-461,No Output
-462,No Output
-463,No Output
-464,No Output
-465,No Output
-466,No Output
-467,No Output
-468,No Output
-469,No Output
-470,No Output
-471,No Output
-472,No Output
-473,No Output
-474,No Output
-475,No Output
-476,No Output
-477,No Output
-478,No Output
-479,No Output
-480,No Output
-481,No Output
-482,No Output
-483,No Output
-484,No Output
-485,No Output
-486,No Output
-487,No Output
-488,No Output
-489,No Output
-490,No Output
-491,No Output
-492,No Output
-493,No Output
-494,No Output
-495,No Output
-496,No Output
-497,No Output
-498,No Output
-499,No Output
-500,No Output
-501,No Output
-502,No Output
-503,No Output
-504,No Output
-505,No Output
-506,No Output
-507,No Output
-508,No Output
-509,No Output
-510,No Output
-511,No Output
-512,No Output
-513,No Output
-514,No Output
-515,No Output
-516,No Output
-517,No Output
-518,No Output
-519,No Output
-520,No Output
-521,No Output
-522,No Output
-523,No Output
-524,No Output
-525,No Output
-526,No Output
-527,No Output
-528,No Output
-529,No Output
-530,No Output
-531,No Output
-532,No Output
-533,No Output
-534,No Output
-535,No Output
-536,No Output
-537,No Output
-538,No Output
-539,No Output
-540,No Output
-541,No Output
-542,No Output
-543,No Output
-544,No Output
-545,No Output
-546,No Output
-547,No Output
-548,No Output
-549,No Output
-550,No Output
-551,No Output
-552,No Output
-553,No Output
-554,No Output
-555,No Output
-556,No Output
-557,No Output
-558,No Output
-559,No Output
-560,No Output
-561,No Output
-562,No Output
-563,No Output
-564,No Output
-565,No Output
-566,No Output
-567,No Output
-568,No Output
-569,No Output
-570,No Output
-571,No Output
-572,No Output
-573,No Output
-574,No Output
-575,No Output
-576,No Output
-577,No Output
-578,No Output
-579,No Output
-580,No Output
-581,No Output
-582,No Output
-583,No Output
-584,No Output
-585,No Output
-586,No Output
-587,No Output
-588,No Output
-589,No Output
-590,No Output
-591,No Output
-592,No Output
-593,No Output
-594,No Output
-595,No Output
-596,No Output
-597,No Output
-598,No Output
-599,No Output
-600,No Output
-601,No Output
-602,No Output
-603,No Output
-604,No Output
-605,No Output
-606,No Output
-607,No Output
-608,No Output
-609,No Output
-610,No Output
-611,No Output
-612,No Output
-613,No Output
-614,No Output
-615,No Output

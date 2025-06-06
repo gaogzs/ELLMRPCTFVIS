@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "Briefly interpret the input you see in your own language. Then the chain-of-thought about the traits of the characters you find in the story."
+    },
+    "characters": {
+      "type": "array",
+      "description": "A list of characters and their traits extracted from the story.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "character_name": {
+            "type": "string",
+            "description": "The name of the character whose traits are being described. Should be used as a unique key exactly as what was given."
+          },
+          "character_description": {
+            "type": "string",
+            "description": "A brief description of the character about its role in the story. Can be the same as what was given, you may also update it if you find some more information to be clarified."
+          },
+          "character_traits": {
+            "type": "array",
+            "description": "A list of traits to be added to the character.",
+            "items": {
+              "type": "string",
+              "description": "One specific trait of the character. Traits should be something that describes and defines the character for long term, do not include temporary states or actions. Example traits: 'has brown hair', 'is a detective', 'likes making friends'."
+            }
+          }
+        },
+        "required": [
+          "character_name",
+          "character_description",
+          "character_traits"
+        ]
+      }
+    }
+  },
+  "required": [
+    "reasoning",
+    "characters"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "reasoning": {
+      "type": "string",
+      "description": "Briefly interpret the input you see in your own language. Then the chain-of-thought about the traits of the characters you find in the story."
+    },
+    "integrity_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "A score from 0 to 1. About how much the character's information is self-consistent."
+    }
+  },
+  "required": [
+    "reasoning",
+    "integrity_score"
+  ],
+  "additionalProperties": false
+}

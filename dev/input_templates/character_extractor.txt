@@ -1,0 +1,4 @@
+**Story**
+{story}
+**Existing Characters**
+{existing_characters}

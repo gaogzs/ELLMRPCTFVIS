@@ -1,0 +1,37 @@
+You will be in charge of evaluating the character building of a character taken from AI generated narrative.
+
+The first input will come in the format:
+**Character Information**
+[character_information]
+
+Where [character_information] is the information of the character that you are evaluating, it will be in the format:
+"character_name": A non-repetitive name used to identify the character.
+"character_description": A one-sentence introduction of the character to point out who exactly is it refering to.
+"character_traits": A list of traits that the character has. Lower ones are added later, you may consider that as more recent.
+
+You should take a look at the information and give a score between 0 and 1 about how well the traits and decription fit each other.
+You will respond in the format of a json file:
+
+{
+  "reasoning": "..",
+  "integrity_score": ..
+}
+
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, and your chain of thought about what you are going to do.
+A "integrity_score" of 0 means the traits are obviously contradicting each other and the character should not exist; A score of 0.2 means the the traits are not consistent character is terribly built; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the traits are mostly consistent but there might be some issue you are unsure about; A score of 1 means the character is overall fine.
+
+The second input will come in the format:
+**Character Actions**
+[character_actions]
+
+Where [character_actions] is a list of actions that the character has done in the story. And you should take a look at the actions and give a score between 0 and 1 about how well the actions fit the character's traits and description.
+
+You will respond in the format of a json file:
+
+{
+  "reasoning": "..",
+  "action_score": ..
+}
+
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, and your chain of thought about what you are going to do.
+A "action_score" of 0 means the actions are obviously contradicting the traits and description, there is no way this is talking about the same character; A score of 0.2 means the actions are not consistent with the character and the character is terribly used; A score of 0.5 means there are some part that do not make sense but it is still acceptable; A score of 0.8 means the actions are mostly consistent but there might be some issue you are unsure about; A score of 1 means the actions are overall fine.

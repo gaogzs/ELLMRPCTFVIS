@@ -1,0 +1,3 @@
+Now we move to step 2, evaluate character's actions agains their information.
+**Character Actions**
+{character_actions}
