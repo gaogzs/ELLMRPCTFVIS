@@ -3,11 +3,6 @@ from z3 import *
 from lark import Lark, Transformer, v_args
 
 # Load grammar
-cur_dir = os.path.dirname(os.path.realpath(__file__))
-grammar_path = os.path.join(cur_dir, "fol.lark")
-with open(grammar_path, 'r') as f:
-    grammar = f.read()
-parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
 
 class FOLParsingError(Exception):
     pass
@@ -63,14 +58,20 @@ class IdCollector(Transformer):
         return None
 
 def collect_iden(formula_str):
+    cur_dir = os.path.dirname(os.path.realpath(__file__))
+    grammar_path = os.path.join(cur_dir, "fol.lark")
+    with open(grammar_path, 'r') as f:
+        grammar = f.read()
+    parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
     tree = parser.parse(formula_str)
     collector = IdCollector()
     collector.transform(tree)
     return list(collector.variables), list(collector.functions)
 
 class Z3Builder(Transformer):
-    def __init__(self, get_fun):
+    def __init__(self, get_fun, ctx):
         self.get_fun = get_fun
+        self.ctx = ctx
         
     def formula(self, args):
         return args[0]
@@ -93,13 +94,13 @@ class Z3Builder(Transformer):
         return Or(*args)
     
     def imply(self, args):
-        return Implies(args[0], args[1])
+        return Implies(args[0], args[1], ctx=self.ctx)
     
     def iff(self, args):
         return args[0] == args[1]
     
     def lnot(self, args):
-        return Not(args[0])
+        return Not(args[0], ctx=self.ctx)
     
     def relation(self, args):
         a, op, b = args
@@ -114,10 +115,10 @@ class Z3Builder(Transformer):
     
     @v_args(inline=True)
     def var(self, name):
-        return Int(str(name))
+        return Int(str(name), ctx=self.ctx)
     @v_args(inline=True)
     def const(self, tok):
-        return IntVal(int(tok))
+        return IntVal(int(tok), ctx=self.ctx)
     @v_args(inline=True)
     def func(self, name, terms):
         terms_children = terms.children
@@ -131,6 +132,11 @@ class Z3Builder(Transformer):
         return contructed_func
 
 def parse_z3(builder, formula_str):
+    cur_dir = os.path.dirname(os.path.realpath(__file__))
+    grammar_path = os.path.join(cur_dir, "fol.lark")
+    with open(grammar_path, 'r') as f:
+        grammar = f.read()
+    parser = Lark(grammar, start='formula', parser='earley', lexer='dynamic')
     if "'" in formula_str or '"' in formula_str:
         raise FOLParsingError(f"Formula should not contain strings: {formula_str}")
     formula_str = close_brackets(formula_str)

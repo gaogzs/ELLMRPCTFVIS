@@ -38,7 +38,8 @@ class FOLEvaluationSession():
         self.timeline = {}
         self.scopes = {}
         self.logs = []
-        self.z3_builder = Z3Builder(self.get_z3_function)
+        self.z3_context = Context()
+        self.z3_builder = Z3Builder(self.get_z3_function, self.z3_context)
         
         self.prompt_loader = PromptLoader(prompt_dir)
         self.schema_loader = SchemaLoader(schema_dir)
@@ -535,7 +536,9 @@ class FOLEvaluationSession():
                 if rel_case.count(",") != rel_name.count(","):
                     raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
             
-            rel_z3_func = Function(rel_just_name, *[IntSort() for param in rel_params], BoolSort())
+            local_IntSort = IntSort(self.z3_context)
+            local_BoolSort = BoolSort(self.z3_context)
+            rel_z3_func = Function(rel_just_name, *[local_IntSort for param in rel_params], local_BoolSort)
             if rel_just_name in self.relations:
                 print_warning_message(f"Warning: {rel_just_name} already exists in declarations.")
             new_relations[rel_just_name] = Relation(rel_just_name, rel_params, rel_meaning, rel_z3_func)
@@ -567,15 +570,15 @@ class FOLEvaluationSession():
                     scope_params.append(replace2)
                     ref_r.append(replace2)
                     if param_r == "[exclusive_arg]":
-                        constrain_pairs.append(Int(replace1) == Int(replace2))
+                        constrain_pairs.append(Int(replace1, ctx=self.z3_context) == Int(replace2, ctx=self.z3_context))
                 else:
                     scope_params.append(param_l)
                     ref_l.append(param_l)
                     ref_r.append(param_l)
-            lhs_func = rel_z3_func(*[Int(param) for param in ref_l])
-            rhs_func = rel_z3_func(*[Int(param) for param in ref_r])
+            lhs_func = rel_z3_func(*[Int(param, ctx=self.z3_context) for param in ref_l])
+            rhs_func = rel_z3_func(*[Int(param, ctx=self.z3_context) for param in ref_r])
             constraint_expr = constrain_pairs[0] if len(constrain_pairs) == 1 else And(*constrain_pairs)
-            explicit_formula = ForAll([Int(param) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr))
+            explicit_formula = ForAll([Int(param, ctx=self.z3_context) for param in scope_params], Implies(And(lhs_func, rhs_func), constraint_expr, ctx=self.z3_context))
             formulas.append(explicit_formula)
             
         for formula_line in definitions_json["formulas"]:
@@ -615,7 +618,7 @@ class FOLEvaluationSession():
         
     
     def solve_combined_formulas(self, combined_formulas: dict) -> tuple[list, int]:
-        solver = Solver()
+        solver = Solver(ctx=self.z3_context)
         # Get a list of all variables in the formulas
         var_list = set()
         for formulas in combined_formulas.values():
