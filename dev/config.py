@@ -1,7 +1,7 @@
 from api_wrapper.chatbot import ChatBot, ChatBotDeepSeekSimple, ChatBotGeminiSimple, ChatBotGPTSimple, ChatBotClaudeSimple
 
 _PRINT_WARNING = False
-_PRINT_DEV_MESSAGE = False
+_PRINT_DEV_MESSAGE = True
 _ERROR_RETRIES = 10
 
 

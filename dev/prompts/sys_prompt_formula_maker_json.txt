@@ -31,7 +31,7 @@ Your output will be in the json format:
   ]
 }
 
-Where "reasoning" is your explanation and chain of thought about what you are planning to do. And then in "plan" you should state, based on the previous reasonning, the list of relations and logic you are going to add. And "formulas" is a list of first-order logical formula definitions you created based on the input and your previous thoughts, you action should not bypass what you have planned in the previous parts. The definition should be given in plain text of a given FOL syntax language, every assertion of the root CNF should be printed one formula per line (no "and" statement is needed for root CNF).
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, and chain of thought about what you are planning to do. And then in "plan" you should state, based on the previous reasonning, the list of relations and logic you are going to add. And "formulas" is a list of first-order logical formula definitions you created based on the input and your previous thoughts, you action should not bypass what you have planned in the previous parts. The definition should be given in plain text of a given FOL syntax language, every assertion of the root CNF should be printed one formula per line (no "and" statement is needed for root CNF).
 **Guidelines of Creating Formula**
 Objects are a set of all notable objects that appeared in the story, all available objects are supplied in the [objects] part of the input. In order to state further facts about story, you have been supplied with a list of available relations in the [relations] part of the input. You should use them as functions. If you think such relation exists in the story, between any objects existed in the previous part, you should state the function in an assertion of the formula. You should not use any objects or relations that are not declared in the [objects] and [relations] part.
 [existing_timelines] is a list of special objects that are abstractly defined time points in the format of T[number]. If any time points are mentioned in the story, besides using them as objects in the formula, you may also define the chronological relation between them using notations like "T0 < T1" or "T2 > T1", if any chronological relation is mentioned or implied in the story.
@@ -79,6 +79,7 @@ Forall and Exists:
 Functions:
 - Example: "function_name(a, b, c)"
 - Functions can only take declared objects and time points as arguments. It cannot take another function nor logical propositions as arguments.
+- Counterexample: "function_name(a and b, c)" and "function_name(another_function(a), b, c)" are not allowed.
 
 Variables:
 - Bounded variables are the ones that are declared in the quantifier. Example: "a", "b", "c" in "forall (a b c) . (a and b) -> c"

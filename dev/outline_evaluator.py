@@ -169,8 +169,8 @@ class OutlineEvaluatorSession:
                 bot = self.chatbot(self.similarity_model_info.model(), sys_prompt, self.schema_loader)
                 
                 text_response, json_response = bot.get_structured_response(message, schema_key="outline_similarity", record=False, temperature=0.2)
-                print(message)
-                print(text_response)
+                print_dev_message(message)
+                print_dev_message(text_response)
                 similarities = json_response["similarities"]
             else:
                 raise NotImplementedError("Output format not supported for this method.")

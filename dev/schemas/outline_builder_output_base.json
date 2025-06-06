@@ -3,7 +3,7 @@
   "properties": {
     "reasoning": {
       "type": "string",
-      "description": "The reasoning and chain-of-thought of your new outline creation."
+      "description": "Briefly interpret the input you see in your own language. Then the reasoning and chain-of-thought about your outline creation."
     },
     "new_chapter": {
       "type": "object",

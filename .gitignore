@@ -3,3 +3,4 @@ __pycache__
 code_test.*
 *_api_key
 *_logs_local.*
+test/

@@ -21,7 +21,7 @@ Your output should be in the json format:
   ]
 }
 
-Where "reasoning" is your explanation and chain of thought about what you are planning to do. And then in "exclusiveness_definitions" is, based on the previous reasonning, a list exclusive relaions you are defining. And then in "formulas" is, based on the previous reasoning, the main body of your logical definition output. The definition output should only contain one formula array element.
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, and chain of thought about what you are planning to do. And then in "exclusiveness_definitions" is, based on the previous reasonning, a list exclusive relaions you are defining. And then in "formulas" is, based on the previous reasoning, the main body of your logical definition output. The definition output should only contain one formula array element.
 
 Exclusiveness Definitons:
 In "exclusiveness_definitions", you can define some existing relations with exclusive properties. Each line should contain a single definition consist of a single relation with tokens like "[exclusive_arg]" and "[free_arg]".

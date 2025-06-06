@@ -18,4 +18,5 @@ Your output should be given in a json format:
   "new_chapter_probability": ..,
   "option_likelihoods": [.., .., ...],
 }
-Where "new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "option_likelihoods" is a list of float numbers between 0 and 1, representing the likelihood that how likely an option is the real next section directly following the given outline. The order of the likelihood should match the order of the options given in the input. All likelihoods values should sum up to 1.
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, and chain of thought about what you are planning to do.
+"new_chapter_probability" is a float number between 0 and 1, representing the probability that the current chapter will terminate and a new chapter will be created right after [latest_story]. "option_likelihoods" is a list of float numbers between 0 and 1, representing the likelihood that how likely an option is the real next section directly following the given outline. The order of the likelihood should match the order of the options given in the input. All likelihoods values should sum up to 1.
