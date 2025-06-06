@@ -85,7 +85,7 @@ class OutlineEvaluatorSession:
             return self.rp_history[-1]
         return "Empty"
 
-    def append_conversation(self, lastest_conversation: str) -> None:
+    def append_conversation(self, lastest_conversation: str) -> dict:
         previous_outline = self.outline.to_str()
         previous_story = self.get_previous_story()
         new_chapter, new_sections, predicted_sections = self.handle_outline_builder(lastest_conversation, previous_outline, previous_story)
@@ -114,7 +114,12 @@ class OutlineEvaluatorSession:
         }
         self.logs.append(new_log)
         
-        # Return predicability and abruptness
+        final_result = {
+            "abruptness": (multi_likelihood_result["new_chapter_probability"] - multi_likelihood_result["new_chapter_truth"]) ** 2,
+            "predicability": multi_likelihood_result["correct_option_score"],
+        }
+        
+        return final_result
     
     def handle_outline_builder(self, lastest_conversation: str, existing_outline: str, previous_story: str) -> tuple[str, str, list[str]]:
         message = self.input_template_loader.load("outline_builder").format(existing_outline=existing_outline, previous_story=previous_story, new_story=lastest_conversation)
