@@ -551,6 +551,12 @@ narrative_id,unsat_formulas
 (forall ((a Int) (t Int))
   (let ((a!1 (not (exists ((b0 Int)) (and (distinct b b0) (visit a b0 t))))))
     (=> (exists ((b Int)) (visit a b t)) a!1)))"
+88,"(contain massive_bag trinkets T5)
+
+(contain massive_bag weapons T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (contain a b1 t) (contain a b2 t)) (= b1 b2)))"
 89,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
   (=> (and (is_feeling a b1 t) (is_feeling a b2 t)) (= b1 b2)))
 
@@ -617,6 +623,7 @@ narrative_id,unsat_formulas
 (turn_on protagonist tv T2)
 
 (turn_on protagonist switch T2)"
+103,No Output
 104,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
   (=> (and (say a b1 t) (say a b2 t)) (= b1 b2)))
 
@@ -777,6 +784,12 @@ narrative_id,unsat_formulas
   (let ((a!1 (not (exists ((b0 Int)) (and (distinct b b0) (is_in a b0 t))))))
     (=> (exists ((b Int)) (is_in a b t)) a!1)))"
 150,No Output
+151,"(have speaker hands T3)
+
+(have speaker picture T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have a b1 t) (have a b2 t)) (= b1 b2)))"
 152,"(is_location room ROOM T1)
 
 (forall ((a Int) (t Int))
@@ -925,6 +938,7 @@ narrative_id,unsat_formulas
   (=> (and (is_homeless a t1) (is_homeless a t2)) (= t1 t2)))
 
 (is_homeless narrator T3)"
+201,No Output
 202,"(fall_to_knees i T4)
 
 (forall ((a Int) (t1 Int) (t2 Int))
@@ -2514,6 +2528,13 @@ narrative_id,unsat_formulas
 
 (forall ((a Int) (b1 Int) (b2 Int) (t Int))
   (=> (and (experience a b1 t) (experience a b2 t)) (= b1 b2)))"
+608,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_physical_feature a b1 t) (has_physical_feature a b2 t))
+      (= b1 b2)))
+
+(has_physical_feature girl black_eyes T2)
+
+(has_physical_feature girl blond_hair T2)"
 609,No Output
 610,No Output
 611,No Output
@@ -2535,6 +2556,7 @@ narrative_id,unsat_formulas
 (has_item wallet quarter T0)"
 620,No Output
 621,No Output
+622,No Output
 623,No Output
 624,"(eat narrator steak T1)
 
@@ -2548,6 +2570,10 @@ narrative_id,unsat_formulas
   (=> (feel_emotion a b t) (not (feel_emotion a terror t))))
 
 (feel_emotion man terror T3)"
+628,"(< T2 T1)
+
+(< T1 T2)"
+629,No Output
 630,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
   (=> (and (feel_emotion a b1 t) (feel_emotion a b2 t)) (= b1 b2)))
 
@@ -2639,8 +2665,21 @@ narrative_id,unsat_formulas
 (says speaker_a statement_1 T0)"
 656,No Output
 657,No Output
+658,No Output
 659,No Output
+660,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have a b1 t) (have a b2 t)) (= b1 b2)))
+
+(forall ((t Int)) (=> (>= t T4) (have narrator duties t)))
+
+(forall ((t Int)) (=> (>= t T4) (have narrator fate t)))"
 661,No Output
+662,"(think speaker old_person T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (think a b1 t) (think a b2 t)) (= b1 b2)))
+
+(forall ((t Int)) (think speaker wish t))"
 663,(= t3 t4)
 664,No Output
 665,No Output
@@ -2651,12 +2690,29 @@ narrative_id,unsat_formulas
   (=> (spill water a t) (not (spill water b t))))
 
 (spill water knuckles T3)"
+668,No Output
+669,"(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((b0 Int)) (and (distinct b b0) (be a b0 t))))))
+    (=> (exists ((b Int)) (be a b t)) a!1)))
+
+(be john angels T4)"
 670,"(runs man T4)
 
 (stops man T4)
 
 (forall ((a Int) (t1 Int) (t2 Int))
   (=> (runs a t1) (not (and (stops a t2) (= t1 t2)))))"
+671,No Output
+672,No Output
+673,No Output
+674,"(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_a a b1 t1) (is_a a b2 t2)) (= b1 b2)))
+
+(is_a the_all_incess_with_each_other_inspection_you_only_am_silent_me
+      the_all_incess_with_each_other_inspection_you_only_am_silent_me
+      T1)
+
+(is_a the_all_incess_with_each_other_inspection_you_only_am_silent_me death T3)"
 675,No Output
 676,No Output
 677,"(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
@@ -2665,8 +2721,50 @@ narrative_id,unsat_formulas
 (is_type speaker eternal_being T1)
 
 (is_type speaker human T0)"
+678,No Output
+679,No Output
+680,"(< T3 T2)
+
+(< T2 T3)"
+681,"(forall ((a Int) (b Int) (t Int))
+  (=> (can_see_through a b t) (not (unable_to_see a b t))))
+
+(unable_to_see person eyes T1)
+
+(can_see_through person eyes T1)"
+682,"(forall ((a Int) (t Int))
+  (let ((a!1 (=> (is_royal a t)
+                 (forall ((t0 Int) (t1 Int))
+                   (and (is_royal a t0) (is_royal a t1))))))
+    (=> a!1 (= t0 t1))))"
+683,"(forall ((a Int) (b Int) (t Int) (t0 Int))
+  (=> (and (live_in_location a b t) (live_in_location a b t0)) (= t t0)))
+
+(live_in_location narrator home T2)
+
+(and (live_in_location narrator home T4) (live_in_location friend home T4))"
+684,"(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((b0 Int))
+                    (and (distinct b b0) (are_members_of a b0 t))))))
+    (=> (exists ((b Int)) (are_members_of a b t)) a!1)))
+
+(are_members_of julie guild T1)"
+685,No Output
+686,No Output
+687,"(wanted_to_be boy princess T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (wanted_to_be a b1 t1) (wanted_to_be a b2 t2)) (= b1 b2)))
+
+(wanted_to_be boy prince T4)"
+688,No Output
+689,No Output
+690,No Output
 691,No Output
 692,No Output
+693,"(alone protagonist T3)
+
+(not (alone protagonist T3))"
 694,"(is_located_in queen work_room T1)
 
 (forall ((a Int) (b1 Int) (b2 Int) (t Int))
@@ -2715,6 +2813,77 @@ narrative_id,unsat_formulas
 
 (forall ((a Int) (t1 Int) (t2 Int))
   (=> (and (not_under_threat a t1) (not_under_threat a t2)) (= t1 t2)))"
+706,"(die_in father T1 T1)
+
+(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((b0 Int)) (and (die_in a b0 t) (distinct b b0))))))
+    (=> (exists ((b Int)) (die_in a b t)) a!1)))"
+707,No Output
+708,"(forall ((a Int) (t Int))
+  (let ((a!1 (forall ((b1 Int)) (=> (distinct b1 b) (not (be_worse_guy a t))))))
+    (=> (exists ((b Int)) (be_worse_guy a t)) a!1)))
+
+(exists ((p Int) (t Int)) (and (be_worse_guy p t) (not (= p average_guy))))"
+709,"(escalate southern_siberia T4)
+
+(escalate eastern_russia T4)
+
+(forall ((a1 Int) (a2 Int) (t Int))
+  (=> (and (escalate a1 t) (escalate a2 t)) (= a1 a2)))"
+710,"(is_in dreamer darkness T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
+
+(is_in dreamer bed T5)"
+711,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (killed a b t) (not (killed a c t))))
+
+(killed fear baby T4)"
+712,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (want a b1 t) (want a b2 t)) (= b1 b2)))
+
+(want men sword T13)
+
+(want men crown T13)"
+713,"(< T1 T3)
+
+(< T3 T1)"
+714,No Output
+715,No Output
+716,No Output
+717,"(get author fear T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (get a b1 t) (get a b2 t)) (= b1 b2)))
+
+(get author jealousy T3)"
+718,No Output
+719,"(not (win_game narrator game T7))
+
+(win_game narrator game T7)"
+720,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (will_die a t1) (will_die a t2)) (= t1 t2)))
+
+(will_die children T3)
+
+(will_die children T2)"
+721,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_age a b1 t) (is_age a b2 t)) (= b1 b2)))
+
+(is_age speaker too_old T1)
+
+(is_age speaker young T1)"
+722,"(remorph body T1)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (alter a t1) (alter a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int)) (=> (remorph a t) (alter a t)))
+
+(reassemble body T2)
+
+(forall ((a Int) (t Int)) (=> (reassemble a t) (alter a t)))"
 723,"(has_dream rasputin T4 three_minutes)
 
 (forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
@@ -2921,7 +3090,97 @@ narrative_id,unsat_formulas
   (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
 
 (is_in speaker school T1)"
+779,No Output
+780,No Output
+781,"(stare_at narrator tree T2)
+
+(stare_at narrator trees T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (stare_at a b1 t) (stare_at a b2 t)) (= b1 b2)))"
+782,No Output
+783,"(feel narrator positive_feeling T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (feel a b1 t1) (feel a b2 t2)) (= t1 t2)))
+
+(feel narrator empty_feeling T1)"
+784,No Output
+785,"(< T2 T1)
+
+(< T1 T2)"
+786,No Output
+787,"(is_leader_of mike group T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(intend_to_get mike money T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (intend_to_get a b1 t1) (intend_to_get a b2 t2)) (= t1 t2)))
+
+(is_a man sad_man T3)
+
+(is_a man good_man T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_leader_of a b t) (exists ((c Int)) (intend_to_get a c t))))"
+788,"(make_statement president statement_1 T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (make_statement a b1 t) (make_statement a b2 t)) (= b1 b2)))
+
+(make_statement president statement_2 T1)"
+789,No Output
+790,No Output
+791,"(speak man speech1 T3)
+
+(speak man speech2 T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (speak a b1 t) (speak a b2 t)) (= b1 b2)))"
+792,No Output
+793,No Output
+794,"(visit narrator interesting_place T0)
+
+(visit narrator place T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (visit a b1 t) (visit a b2 t)) (= b1 b2)))"
+795,No Output
+796,"(says speaker words_3 T2)
+
+(says speaker words_2 T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (says a b1 t) (says a b2 t)) (= b1 b2)))"
+797,No Output
+798,No Output
+799,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (expresses a b1 t) (expresses a b2 t)) (= b1 b2)))
+
+(expresses voice importance T1)
+
+(expresses voice apology T1)"
+800,No Output
+801,No Output
+802,"(is_a monster monster T0)
+
+(is_a monster evil T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_a a b1 t1) (is_a a b2 t2)) (= b1 b2)))"
+803,No Output
+804,No Output
+805,"(look_at man phone T6)
+
+(look_at man narrator T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (look_at a b1 t) (look_at a b2 t)) (= b1 b2)))"
 806,No Output
+807,No Output
 808,"(forall ((a Int) (t Int))
   (let ((a!1 (forall ((b1 Int) (b2 Int))
                (=> (and (speak a b1 t) (speak a b2 t)) (= b1 b2)))))
@@ -3007,6 +3266,12 @@ narrative_id,unsat_formulas
 (feel_emotion friend anger T2)
 
 (feel_emotion friend fear T2)"
+831,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (gather_around a b1 t) (gather_around a b2 t)) (= b1 b2)))
+
+(gather_around crowd speech T0)
+
+(gather_around crowd podium T0)"
 832,"(is_weather rain T2)
 
 (is_weather dark_and_stormy_night T2)
@@ -3024,6 +3289,7 @@ narrative_id,unsat_formulas
   (=> (and (says a c1 t) (says a c2 t)) (= c1 c2)))
 
 (says commander phrase3 T1)"
+834,Error processing narrative
 835,"(go_missing man T4)
 
 (go_missing man T5)
@@ -3067,6 +3333,117 @@ narrative_id,unsat_formulas
 (are_in students class T0)
 
 (are_in students place T0)"
+842,"(is_at speaker small_park T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_at a b1 t) (is_at a b2 t)) (= b1 b2)))
+
+(is_at speaker back_sidewalk T3)"
+843,No Output
+844,No Output
+845,No Output
+846,"(is_temperature air warm T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_temperature a b1 t) (is_temperature a b2 t)) (= b1 b2)))
+
+(is_temperature air still T1)"
+847,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (sat_across_from a b1 t) (sat_across_from a b2 t)) (= b1 b2)))
+
+(sat_across_from old_man young_woman T2)
+
+(sat_across_from old_man little_girl T2)"
+848,"(is_a narrator bit_off T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a narrator out_of_place T1)"
+849,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_raised_in a b t)
+      (exists ((t0 Int)) (and (< t0 t) (is_born_in a c t0)))))
+
+(not (exists ((m Int)) (have_child m narrator T1)))
+
+(forall ((a Int) (b Int) (t Int))
+  (let ((a!1 (exists ((p Int))
+               (and (have_child p a t) (or (= p mother) (= p father))))))
+    (=> (is_born_in a b t) a!1)))
+
+(is_raised_in narrator childhood_home T4)
+
+(is_raised_in narrator orphanage T2)
+
+(is_born_in narrator world T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_raised_in a b1 t1) (is_raised_in a b2 t2)) (= b1 b2)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_born_in a b1 t1) (is_born_in a b2 t2)) (= b1 b2)))"
+850,No Output
+851,No Output
+852,No Output
+853,No Output
+854,"(said_to agent_brown statement2 mr_president T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (c Int) (t Int))
+  (=> (and (said_to a b1 c t) (said_to a b2 c t)) (= b1 b2)))
+
+(said_to agent_brown statement1 mr_president T1)"
+855,No Output
+856,No Output
+857,"(forall ((a Int) (t Int))
+  (let ((a!1 (forall ((b0 Int) (b1 Int))
+               (=> (and (experience_event a b0 t) (experience_event a b1 t))
+                   (= b0 b1)))))
+    (=> (exists ((b Int)) (experience_event a b t)) a!1)))
+
+(experience_event narrator crash T1)
+
+(experience_event narrator searing_noise T1)"
+858,No Output
+859,No Output
+860,No Output
+861,"(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((b1 Int)) (and (distinct b b1) (is_at a b1 t))))))
+    (=> (exists ((b Int)) (is_at a b t)) a!1)))
+
+(is_at protagonist cliff T1)"
+862,No Output
+863,"(wear young_man suit T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wear a b1 t) (wear a b2 t)) (= b1 b2)))
+
+(wear young_man bowler_hat T1)"
+864,No Output
+865,"(forall ((a Int) (t Int))
+  (=> (says a statement1 t) (not (says a statement2 t))))
+
+(says soldier statement1 T0)
+
+(says soldier statement3 T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (says a b1 t) (says a b2 t)) (= b1 b2)))
+
+(says soldier statement2 T0)"
+866,No Output
+867,"(has_attribute she light_brown_hair T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_attribute a b1 t) (has_attribute a b2 t)) (= b1 b2)))
+
+(has_attribute she blue_eyes T0)"
+868,"(is_a you man_of_war T4)
+
+(is_a I man_of_war T5)
+
+(not (is_a I man_of_war T5))
+
+(not (is_a you man_of_war T4))"
 869,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
   (=> (and (wait_for a b1 t) (wait_for a b2 t)) (= b1 b2)))
 
@@ -3180,6 +3557,12 @@ narrative_id,unsat_formulas
   (=> (and (say a b1 t) (say a b2 t)) (= b1 b2)))
 
 (say speaker utterance_5 T2)"
+902,"(born_in narrator world T1)
+
+(not (exists ((s Int) (t Int)) (show_true_self s narrator t)))
+
+(forall ((x Int) (t Int))
+  (=> (born_in x world t) (exists ((s Int)) (show_true_self s x t))))"
 903,"(has_smell narrator dry_air T0)
 
 (exists ((t Int))
@@ -3647,7 +4030,18 @@ narrative_id,unsat_formulas
 (is_a humans participant_in_fighting T2)
 
 (need saturnans money T1)"
+1026,"(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((b0 Int)) (and (distinct b b0) (hears_voice a b0 t))))))
+    (=> (exists ((b Int)) (hears_voice a b t)) a!1)))
+
+(hears_voice character voice T1)"
 1027,No Output
+1028,"(< T1 T2)
+
+(forall ((t Int)) (=> (and (>= t T1) (distinct t T2)) (explode people t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (explode a t1) (explode a t2)) (= t1 t2)))"
 1029,"(forall ((a Int) (t Int))
   (let ((a!1 (not (exists ((b0 Int)) (and (distinct b b0) (is_close_to a b0 t))))))
     (=> (exists ((b Int)) (is_close_to a b t)) a!1)))
@@ -3655,3 +4049,104 @@ narrative_id,unsat_formulas
 (is_close_to knight guard T2)"
 1030,No Output
 1031,No Output
+1032,"(is_at message big_rock T5)
+
+(is_at message amy_parents_house T5)
+
+(forall ((a Int) (b0 Int) (b1 Int) (t Int))
+  (=> (and (is_at a b0 t) (is_at a b1 t)) (= b0 b1)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_at a b1 t) (is_at a b2 t)) (= b1 b2)))"
+1033,"(thinks narrator sentence_1 T0)
+
+(ordered king_pacha black_velvet_gloves T1)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (ordered a b t) (not (ordered a c t))))
+
+(thinks narrator sentence_7 T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (thinks a b1 t) (thinks a b2 t)) (= b1 b2)))"
+1034,No Output
+1035,Error processing narrative
+1036,"(forall ((a Int) (b Int) (t Int))
+  (=> (try_to_help a b t) (exists ((t1 Int)) (and (> t1 t) (hope a b t1)))))
+
+(try_to_help speaker he T2)
+
+(hope speaker unspecified T9)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (hope a b1 t1) (hope a b2 t2)) (= b1 b2)))"
+1037,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (served_by a b1 t) (served_by a b2 t)) (= b1 b2)))
+
+(served_by two_characters arthur_s_heywood T2)
+
+(served_by two_characters american_poultry_company T2)"
+1038,No Output
+1039,No Output
+1040,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have a b1 t) (have a b2 t)) (= b1 b2)))
+
+(have small_boy reddish_skin T2)
+
+(have small_boy white_hair T2)"
+1041,"(says patient statement_5 T10)
+
+(says patient statement_8 T10)
+
+(says entity statement_1 T7)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (says a b1 t) (says a b2 t)) (= b1 b2)))
+
+(says entity statement_2 T7)"
+1042,"(says little_girl girl_speech_1 T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (says a b1 t) (says a b2 t)) (= b1 b2)))
+
+(says little_girl girl_speech_2 T1)"
+1043,No Output
+1044,"(wonder judge reason_for_crying T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wonder a b1 t) (wonder a b2 t)) (= b1 b2)))
+
+(wonder judge explanation_for_crying T4)"
+1045,No Output
+1046,"(forall ((a Int) (b Int) (t Int)) (=> (cry a b t) (not (cry a b t))))
+
+(exists ((t0 Int) (t1 Int))
+  (and (look_at hermione muggles t0) (cry barkeep barkeep t1) (cause t0 t1 t1)))"
+1047,No Output
+1048,"(stand_for tyrael loyalty_to_old_gods T2)
+
+(stand_for tyrael free_will T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (stand_for a b1 t) (stand_for a b2 t)) (= b1 b2)))"
+1049,No Output
+1050,"(not (wrote alain_bloch the_battle_of_waterloo T2))
+
+(wrote alain_bloch the_battle_of_waterloo T2)"
+1051,No Output
+1052,No Output
+1053,"(points_at jack norksrags T3)
+
+(says john message_1 T4)
+
+(says john message_4 T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (points_at a b1 t) (points_at a b2 t)) (= b1 b2)))
+
+(points_at jack crabs T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (says a b1 t) (says a b2 t)) (= b1 b2)))"
+1054,No Output
+1055,No Output
