@@ -1,0 +1,34 @@
+narrative_id,unsat_formulas
+25,Error processing narrative
+26,No Output
+27,Error processing narrative
+91,Error processing narrative
+93,Error processing narrative
+154,Error processing narrative
+156,Error processing narrative
+280,Error processing narrative
+281,No Output
+282,Error processing narrative
+343,Error processing narrative
+344,No Output
+345,Error processing narrative
+469,No Output
+470,No Output
+471,Error processing narrative
+532,No Output
+533,Error processing narrative
+534,Error processing narrative
+785,No Output
+786,Error processing narrative
+847,"(forall ((t Int))
+  (=> (is_daughter little_girl young_woman t)
+      (not (is_character young_woman t))))
+
+(is_daughter little_girl young_woman T1)
+
+(is_character young_woman T1)"
+848,No Output
+849,Error processing narrative
+910,Error processing narrative
+911,Error processing narrative
+1014,No Output

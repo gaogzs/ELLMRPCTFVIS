@@ -53,14 +53,26 @@ _model_info = {
         "output_format": "json"
     },
     
-    "gpt-structured": {
+    "gemini-15-structured": {
+        "model": "gemini-1.5-flash",
+        "chatbot": ChatBotGeminiSimple,
+        "output_format": "json"
+    },
+    
+    "gpt-41-structured": {
         "model": "gpt-4.1",
         "chatbot": ChatBotGPTSimple,
         "output_format": "json"
     },
     
-    "gpt-mini-structured": {
+    "gpt-41-mini-structured": {
         "model": "gpt-4.1-mini",
+        "chatbot": ChatBotGPTSimple,
+        "output_format": "json"
+    },
+    
+    "gpt-4o-mini-structured": {
+        "model": "gpt-4o-mini",
         "chatbot": ChatBotGPTSimple,
         "output_format": "json"
     },
@@ -74,10 +86,14 @@ _model_info = {
 
 class ModelInfo:
     def __init__(self, model_name: str):
+        self.info_name = model_name
         self.model_info = _model_info.get(model_name)
         if not self.model_info:
             self._valid = False
         self._valid = True
+    
+    def info_name(self) -> str:
+        return self.info_name
     
     def model(self) -> str:
         return self.model_info["model"]

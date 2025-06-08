@@ -18,7 +18,7 @@ Briefly interpret the results in your own language and review the content of the
 
 Logical Evaluator Result:
 {logical_evaluator_result}
-Logical evaluator will convert the story into a set of FOL formula and finds what elements might be contradicting each other. It will return a list of contradicting FOL formulas to you. If no output is given, it does not necessarily mean there is no contradiction, but the evaluator simply failed find any.
+Logical evaluator will convert the story into a set of FOL formula and finds what elements might be contradicting each other. It will return a list of FOL propositions that migh be violated to you. If no output is given, it does not necessarily mean there is no contradiction, but the evaluator simply failed to find any. When you see some variable names like T0, T1, T2, they represents abstract time points, you may need to consider what might go wrong in the story that might cause chronological contradiction.
 Interpret all given formulas (if any) to natural language in the "reasoning" part, and review the content of the story related to the formulas.
 
 At last you need to give your reasons of rating the story in the "reasoning" part, based on the following detailed criteria:
@@ -28,5 +28,5 @@ At last you need to give your reasons of rating the story in the "reasoning" par
 - 4: The story is mostly consistent, with only minor inconsistencies that do not affect the overall narrative.
 - 5: The story is completely consistent, with no contradictions or inconsistencies at all.
 
-Respond in json format with a single integer:
+Respond in json format with a single string and a single integer in:
 {{"reasoning": <reasoning>, "consistency": <score>}}

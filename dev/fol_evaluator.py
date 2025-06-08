@@ -188,7 +188,7 @@ class FOLEvaluationSession():
             while not processed_success:
                 try:
                     text_response, json_response = bot.get_structured_response(message, schema_key="semantic_analyser", record=True, temperature=0.2)
-                    print_dev_message("Semantic Definer Response:")
+                    print_dev_message("Semantic Analyser Response:")
                     print_dev_message(text_response)
                     returning_formulas = self.parse_semantic_analyser_json(json_response)
                     pseudo_definitions = str(json_response["exclusiveness_definitions"] + json_response["formulas"])
@@ -426,7 +426,7 @@ class FOLEvaluationSession():
                 rel_just_name = rel_name.split("(")[0]
                 rel_params = get_relation_params(rel_name)
                 if "'" in rel_cases or '"' in rel_cases:
-                    raise FOLParsingError(f"Invalid relation declaration: relation should not take strings. Please remove relevent relation: {definition_line}")
+                    raise FOLParsingError(f"Invalid relation declaration: there should not be relations taking strings. Please remove relevent relation and check for other similar issue if any: {definition_line}")
                 if rel_cases.count(",") % rel_name.count(",") != 0:
                     raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
                 
@@ -532,7 +532,7 @@ class FOLEvaluationSession():
                 raise FOLParsingError(f"Invalid relation declaration: declared relation has no usage case. Please check the syntax: {definition_line}")
             for rel_case in rel_cases:
                 if "'" in rel_case or '"' in rel_case:
-                    raise FOLParsingError(f"Invalid relation declaration: relation should not take strings. Please remove relevent relation: {definition_line}")
+                    raise FOLParsingError(f"Invalid relation declaration: relation should not take strings. Please remove relevent relation and check for other similar issue if any: {definition_line}")
                 if rel_case.count(",") != rel_name.count(","):
                     raise FOLParsingError(f"Invalid relation declaration: declared relation has ambiguous number of parameters. Please correct the definition: {definition_line}")
             

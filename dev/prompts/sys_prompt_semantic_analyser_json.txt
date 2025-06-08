@@ -53,10 +53,12 @@ You should use parentheses to indicate the order of precedence explicitly.
 
 Forall and Exists:
 - Example: "forall (a b c) . (a and b) -> c", "exists (a b c) . (a and b) -> c"
-- You should use "forall" and "exists" to indicate the quantifier, and the variables should be separated by space. The main body of the quantifier should be separated by a dot ".".
+- You should use "forall" and "exists" to indicate the quantifier, and the variables should be separated by space. The main body of the quantifier should be separated by a dot ".". When representing alternative bounded variables, you should not use syntax like a', but instead use a0, a1 etc.
 
 Functions:
 - Example: "function_name(a, b, c)"
+- Functions can only take declared objects and time points as arguments. It cannot take another function nor logical propositions as arguments.
+- Counterexample: "function_name(a and b, c)" and "function_name(another_function(a), b, c)" are not allowed.
 
 Variables:
 - Bounded variables are the ones that are declared in the quantifier. Example: "a", "b", "c" in "forall (a b c) . (a and b) -> c"

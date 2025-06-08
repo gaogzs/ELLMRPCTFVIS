@@ -1,0 +1,3866 @@
+narrative_id,unsat_formulas
+0,No Output
+1,No Output
+2,"(is_for psych_after_care tyler T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_for a b t) (is_taking b a t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_taking a b1 t) (is_taking a b2 t)) (= b1 b2)))
+
+(is_for hazard_pay tyler T4)"
+3,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_part_of a b t) (not (is_failing b t))))
+
+(is_part_of body mathemer_de_troy T1)
+
+(is_failing mathemer_de_troy T1)"
+4,No Output
+5,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (risk_life a t))))
+
+(is_in_location ian zoo T2)
+
+(risk_life ian T2)"
+6,"(is_in_location counter counter T2)
+
+(is_in_location counter kitchen T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+7,"(eat_object agueda fish T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (eat_object a b t) (is_hungry a t)))
+
+(forall ((a Int) (t Int))
+  (=> (is_hungry agueda t) (not (eat_object agueda fish t))))
+
+(is_devoured fish T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (eat_object a b t) (not (is_devoured b t))))"
+8,"(exists ((a Int)) (is_a a blood T5))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_experience a b t) (or (= b job) (= b death))))
+
+(is_killed_in wife car_crash T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))
+
+(is_in wife car T3)
+
+(has_experience ray parents T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in a b t) (not (is_killed_in a car_crash t))))"
+9,"(forall ((a Int) (b Int) (t Int)) (=> (grab a b t) (not (slip_off a b t))))
+
+(forall ((t Int)) (=> (grab hands user t) (slip_off hands user t)))
+
+(exists ((a Int) (t Int)) (grab hands user t))"
+10,"(is_cleaned groucho T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_cleaned a t) (not (learn_to a b t))))
+
+(learn_to groucho walk T1)"
+11,"(is_concept fear fear T0)
+
+(forall ((a Int) (t Int)) (=> (feel a fear t) (< T3 t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_concept a fear t) (feel jim a t)))
+
+(forall ((a Int) (t Int)) (and (feel a fear t) (is_extinguished a t)))
+
+(forall ((a Int) (t Int)) (=> (feel a fear t) (> T3 t)))"
+12,"(listen_to boys mystery_house T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (listen_to a b t) (= b radio_set)))"
+13,No Output
+14,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_at_location user stand T0)
+
+(is_reading user sci_fi_novel T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_reading a b t) (is_in_location a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_at_location a b t) (is_in_location a b t)))"
+15,"(= noon T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_sitting_in a b t) (not (is_tied_down_to a b t))))
+
+(is_tied_down_to narrator chair T0)
+
+(is_sitting_in narrator chair T0)"
+16,"(forall ((a Int) (b Int) (t Int)) (=> (is_in a b t) (not (is_from a b t))))
+
+(is_from expedition continent T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_from a b t) (is_in a b t)))"
+17,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (go_to a b1 t) (go_to a b2 t)) (= b1 b2)))
+
+(go_to jason new_york T1)
+
+(go_to jason space T1)"
+18,"(is_a mark_matthews news_anchor T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))"
+19,"(forall ((a Int) (t Int)) (=> (is_black a t) (not (is_cubed a t))))
+
+(is_black box T0)
+
+(is_cubed box T0)"
+20,"(safeguarding president freedoms T7)
+
+(agrees_with man man T0)
+
+(is_surprised man T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_surprised a t) (not (agrees_with a b t))))
+
+(not (safeguarding president freedoms T7))"
+21,No Output
+22,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_held_captive_in a b t) (not (is_eager_to a freedom t))))
+
+(is_held_captive_in he chair T0)
+
+(is_eager_to he freedom T0)"
+23,No Output
+24,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_state a b1 t) (is_in_state a b2 t)) (= b1 b2)))
+
+(exists ((t Int)) (consume narrator alcohol t))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (consume a b t) (is_in_state a alcohol t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (and (consume a b t) (= b alcohol)) (is_in_state a self_pity t)))"
+25,"(is_type predator predator T0)
+
+(is_animal predator predator T0)
+
+(is_character predator predator T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_animal a b t) (not (is_character a b t))))
+
+(is_type predator assassin T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_type a b1 t) (is_type a b2 t)) (= b1 b2)))"
+26,No Output
+27,"(forall ((m Int) (t Int)) (is_mother_of mother m t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_mother_of a b1 t) (is_mother_of a b2 t)) (= b1 b2)))"
+28,"(forall ((a Int) (b Int) (t Int)) (=> (cheat a b t) (want_to a b t)))
+
+(cheat narrator death T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (cheat a b t) (not (want_to a b t))))"
+29,No Output
+30,"(forall ((a Int) (b Int) (t Int)) (=> (is_hated a b t) (not (chose_by a b t))))
+
+(forall ((b Int) (t Int)) (is_hated narrator b t))
+
+(chose_by narrator me T1)"
+31,"(is_a dieter slave T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a dieter beacon_of_hope T5)"
+32,"(forall ((a Int) (b Int) (t Int))
+  (=> (=> (wears a periwinkle_dress t) (wears a b t)) (= b periwinkle_dress)))
+
+(wears girl blue_dress T1)"
+33,"(owns_item user ice_cream T6)
+
+(owns_item user awards T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))
+
+(owns_item user trophies T6)"
+34,No Output
+35,"(is_weakness_of hope mankind T4)
+
+(is_strength_of hope mankind T4)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_strength_of a b t) (not (is_weakness_of a c t))))"
+36,No Output
+37,"(is_thicker_than cell_bars cell_bars T8)
+
+(offer_job man_in_suit jackson mining_camp T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_thicker_than a b t) (not (is_thicker_than b a t))))
+
+(offer_job man jackson security_staff T3)
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (offer_job a b c t) (is_a b c t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+38,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_wearing a b1 t) (is_wearing a b2 t)) (= b1 b2)))
+
+(is_wearing user jeans T3)
+
+(is_wearing user hoodie T3)"
+39,"(transmission_method hiv_like_infection zombies T3)
+
+(transmission_method hiv_like_infection bodily_fluids T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (transmission_method a b1 t) (transmission_method a b2 t)) (= b1 b2)))"
+40,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_sloshing_with_2 a b1 t) (is_sloshing_with_2 a b2 t)) (= b1 b2)))
+
+(is_covered_in armor points T4)
+
+(is_covered_in armor edges T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_covered_in a b t) (is_sloshing_with_2 a b t)))"
+41,No Output
+42,"(is_a city_kids group_of_people T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))"
+43,"(is_using boy phone T6)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a b t) (or (is_at a ticket_booth t) (is_at a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_using a b t) (owns_item a b t)))
+
+(is_at boy ramp T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_at a b1 t) (is_at a b2 t)) (= b1 b2)))"
+44,"(gives_item_to user horse man T2)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (gives_item_to a b c t) (owns_item c b t)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (gives_item_to a b c t) (not (owns_item c b t))))"
+45,"(roll_on bottle floor T7)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (press_on a b1 t) (press_on a b2 t)) (= b1 b2)))
+
+(hurl_at bottle mirror T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (roll_on a b t) (press_on a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (hurl_at a b t) (press_on a b t)))"
+46,"(forall ((a Int) (t Int)) (=> (shut_down a t) (not (improve_itself a t))))
+
+(improve_itself ai_v1 T2)
+
+(shut_down ai_v1 T2)"
+47,"(is_worn tire T2)
+
+(is_type_of tuesday_soup soup T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_type_of a b1 t1) (is_type_of a b2 t2)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_worn a t) (is_type_of b a t)))
+
+(is_in_location a kitchen T2)
+
+(is_tired a T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_worn a t) (is_worn b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_tired a t))))"
+48,"(wants_to young_man restaurant T7)
+
+(is_journalist journalist T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_customers a b t) (is_in a restaurant t)))
+
+(has_customers young_man almost_zero T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_in a b t) (not (wants_to a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_journalist a t) (is_in a home t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_journalist a t) (is_in a restaurant t)))"
+49,"(forall ((a Int) (b Int) (t Int))
+  (= (is_on_location a reddit t) (is_on_location a subreddit_writingprompts t)))
+
+(is_on_location user reddit T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_on_location a b1 t) (is_on_location a b2 t)) (= b1 b2)))"
+50,No Output
+51,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (shove_into a b c t) (be_in_location b c t)))
+
+(shove_into guard user room T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (walk_through a b t) (be_in_location a b t)))
+
+(walk_through user corridors T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (be_in_location a b1 t) (be_in_location a b2 t)) (= b1 b2)))"
+52,"(is_used_by grey_goo_weapons teegardeners T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_used_by a b t) (not (is_used_by a teegardeners t))))"
+53,No Output
+54,"(forall ((a Int) (b Int) (t Int)) (=> (is_dead a t) (not (is_family_of a b t))))
+
+(is_dead son T7)
+
+(is_dead daughter T11)
+
+(feel_emotion daughter depression T11)
+
+(is_family_of son user T7)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (feel_emotion a b t) (feel_emotion a c t)) (= b c)))
+
+(feel_emotion narrator tremble T1)
+
+(feel_emotion narrator tears T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_dead a t) (not (feel_emotion a b t))))"
+55,"(is_a hitchhiker criminal T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_a hitchhiker fighter T4)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_travelling a b c t)
+      (or (is_in_location a b t) (is_in_location a c t))))
+
+(is_in_location husband kuhio_highway T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_travelling husband hanalei poipu_beach T0)"
+56,No Output
+57,"(is_done_with characters words T3)
+
+(pay_respects_to characters words T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (pay_respects_to a b t) (not (is_done_with a b t))))"
+58,"(is_in_location user sandbar T4)
+
+(is_in_location user beach T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+59,"(has_feeling_of user superiority T1)
+
+(not (has_feeling_of user superiority T1))"
+60,"(wears user body_armor T1)
+
+(wears user multicam_gear T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears a b1 t) (wears a b2 t)) (= b1 b2)))"
+61,"(is_running_out air T2)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_running_out a t1) (is_running_out a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((t0 Int)) (not (is_running_out a t0))))))
+    (=> (is_running_out a t) a!1)))"
+62,"(forall ((a Int) (b Int) (t Int)) (=> (is_kissed a b t) (is_in_arms a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_arms a b t) (not (is_kissed a b t))))
+
+(is_kissed speaker lip T0)"
+63,"(forall ((a Int) (b Int) (c Int) (t Int)) (=> (is_named a b t) (= a michael)))
+
+(is_named xXxHuSsEiNxXx xXxHuSsEiNxXx T4)"
+64,"(owns_item leila books T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))
+
+(owns_item leila bag T5)"
+65,"(is_clean air T0)
+
+(is_cold air T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_cold a t) (not (is_clean a t))))"
+66,"(is_in_location wife bed T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (= (eat a chinese_food t) (eat a chinese_takeout t)))
+
+(forall ((a Int) (t Int)) (=> (is_sick a t) (is_in_location a world t)))
+
+(is_sick wife T1)
+
+(forall ((a Int) (t Int)) (=> (is_villainous a t) (= evil true)))
+
+(is_villainous world T0)
+
+(eat wife chinese_takeout T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (eat a b1 t) (eat a b2 t)) (= b1 b2)))"
+67,"(forall ((a Int) (b Int) (t Int))
+  (= (is_arch_nemesis_of a b t) (is_arch_nemesis_of b a t)))
+
+(is_arch_nemesis_of evilest_villain airman T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_arch_nemesis_of a b t) (not (is_arch_nemesis_of b a t))))"
+68,No Output
+69,"(is_colour setting_sun yellow T3)
+
+(is_colour setting_sun orange T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_colour a b1 t) (is_colour a b2 t)) (= b1 b2)))"
+70,"(is_in_location prostitute room T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_free_from church woman T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_free_from b a t))))
+
+(is_in_location woman church T2)
+
+(is_in_location prostitute brothel T1)"
+71,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (augment a b1 t) (augment a b2 t)) (= b1 b2)))
+
+(exists ((a Int) (t Int)) (and (augment a strength t) (augment a speed t)))"
+72,"(is_a summerhouse dacha T0)
+
+(is_in_location grandfather dacha T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t)
+      (not (and (is_in_location a b t) (is_in_location a b t)))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))"
+73,"(forall ((a Int) (b Int) (t Int)) (= (has_job a b t) (has_work a b t)))
+
+(has_work i work T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_work a b1 t) (has_work a b2 t)) (= b1 b2)))
+
+(has_job i job T0)"
+74,"(is_character character T4)
+
+(forall ((a Int) (t Int))
+  (=> (is_character a t) (or (is_alive a t) (is_dead a t))))
+
+(forall ((a Int) (t Int))
+  (= (exists ((b Int)) (is_in_eye b a t)) (is_character a t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_dead a t1) (is_dead a t2)) (= t1 t2)))
+
+(is_alive character T6)
+
+(is_in_eye character character T5)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_alive a t1) (is_alive a t2)) (= t1 t2)))"
+75,No Output
+76,"(is_commander_of she plane T2)
+
+(is_commander_of she flights T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_commander_of a b1 t) (is_commander_of a b2 t)) (= b1 b2)))"
+77,"(wants_to_help other_character user T0)
+
+(is_going_to_kill other_character user T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_going_to_kill a b t) (not (wants_to_help a b t))))
+
+(not (is_going_to_kill other_character user T0))"
+78,"(has_item duane gear T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_item a b t) (not (is_in_location b a t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (has_item a b t) (is_in_location b a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (has_item a b t) (not (has_item a b t))))"
+79,"(is_in_location gray_emperor throne_room T0)
+
+(is_good penbrook man T1)
+
+(is_evil gray_emperor T0)
+
+(is_man_at_arms_of penbrook gray_emperor T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_good a man t) (not (is_man_at_arms_of a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_evil a t) (not (is_in_location a b t))))"
+80,"(used_to_be swimming_pool fourth_floor T2)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (used_to_be a b t) (not (used_to_be a c t))))"
+81,"(forall ((a Int) (b Int) (t Int)) (=> (rely_on a b t) (not (rely_on_self a t))))
+
+(forall ((a Int) (b Int) (t Int)) (and (rely_on a b t) (rely_on_self a t)))"
+82,(forall ((a Int) (t Int)) (and (write user a t) (or (= a laptop) (= a paper))))
+83,No Output
+84,"(is_type_of ren mage T1)
+
+(is_type_of ren elf T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_type_of a b1 t) (is_type_of a b2 t)) (= b1 b2)))"
+85,No Output
+86,"(is_husband_of husband wife T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (= (is_husband_of a b t) (and (is_a a husband t) (is_a b wife t))))
+
+(is_a wife witch T0)
+
+(forall ((a Int) (b Int) (t Int)) (= (is_husband_of a b t) (is_a b wife t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+87,"(in_shock body T7)
+
+(forall ((a Int) (t Int)) (=> (tense a t) (not (in_shock a t))))
+
+(tense body T7)"
+88,"(owns_item thief gold_chain T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_shopkeep a t) (is_in_location a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_in_location gold_chain shop T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a gold_chain t) (not (is_in_location gold_chain shop t))))
+
+(is_shopkeep shopkeep T0)"
+89,No Output
+90,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_member_of a orphans_of_war t) (is_member_of a mountain_clans t)))
+
+(is_member_of children orphans_of_war T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_member_of a mountain_clans t) (not (is_member_of a orphans_of_war t))))"
+91,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_insulted_by a b t) (not (is_cruel_to b a t))))
+
+(is_cruel_to shadow speaker T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_wronged_by a b t) (is_insulted_by a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_cruel_to a b t) (is_wronged_by b a t)))"
+92,"(forall ((a Int) (b Int) (t Int))
+  (=> (draws_in a b t) (not (drains_out a b t))))
+
+(draws_in i information0 T2)
+
+(drains_out i information0 T2)"
+93,"(forall ((a Int) (b Int) (t Int)) (=> (see a b t) (not (is_void b t))))
+
+(is_void eden T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_on_overdrive a b t) (see a b t)))
+
+(is_on_overdrive fear eden T5)"
+94,"(forall ((a Int) (b Int) (t Int)) (=> (can_use a b t) (has_access_to a b t)))
+
+(can_use president key_card T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_access_to a b t)
+      (not (and (has_access_to a key_card t) (distinct b key_card)))))
+
+(has_access_to president b3 T3)"
+95,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (hold a b1 t) (hold a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (be_on a b1 t) (be_on a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (= (hold a sword_2 t) (hold a sword t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (encrusted_in a b t) (be_on a b t)))
+
+(hold man sword_2 T9)
+
+(be_of_property hilt gold T9)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (be_of_property a gold t) (encrusted_in a b t)))"
+96,"(has_tears partner T4)
+
+(is_warm cheek T4)
+
+(forall ((a Int) (t Int)) (=> (has_tears a t) (not (is_warm cheek t))))"
+97,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_in_location man desert T0)
+
+(pulls_up_to man guard_station T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (pulls_up_to a b t) (is_in_location a b t)))"
+98,"(is_a person person T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a person t) (is_a a thing t)))"
+99,No Output
+100,"(forall ((a Int) (b Int) (t Int))
+  (=> (slip_into a eternal_sleep t) (cease_to_exist a t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (slip_into a eternal_sleep t) (not (cease_to_exist a t))))
+
+(slip_into character eternal_sleep T5)"
+101,"(is_angel_of grim_reaper human T0)
+
+(forall ((a Int) (t Int))
+  (=> (is_grim_reaper a t) (not (is_time_traveler a t))))
+
+(is_time_traveler grim_reaper T0)
+
+(is_grim_reaper grim_reaper T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_grim_reaper a t) (not (is_angel_of a b t))))"
+102,No Output
+103,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_cursed_by a b1 t) (is_cursed_by a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (t Int)) (is_cursed_by baby a t))"
+104,No Output
+105,(= T4 T5)
+106,No Output
+107,"(forall ((a Int) (b Int) (t Int))
+  (=> (commit_crime a b t) (be_involved_in a crime t)))
+
+(be_involved_in officials war T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (be_involved_in a b t) (exists ((c Int)) (commit_crime a b t))))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (commit_crime a b1 t) (commit_crime a b2 t)) (= b1 b2)))"
+108,No Output
+109,"(have i process T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have a b1 t) (have a b2 t)) (= b1 b2)))
+
+(have i source_code T0)"
+110,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_part_of a b1 t) (is_part_of a b2 t)) (= b1 b2)))
+
+(grab she foot T1)
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (grab a b t) (is_part_of b c t)))"
+111,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_convicted a b t) (not (= deceased a))))
+
+(forall ((a Int) (t Int))
+  (=> (make_mistake a t) (exists ((b Int) (t0 Int)) (is_convicted a b t0))))
+
+(make_mistake deceased T1)"
+112,No Output
+113,"(is_in_location matthew_collins house T0)
+
+(is_in_location matthew_collins school T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+114,No Output
+115,"(take_over world war T2)
+
+(defeat world war T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (defeat a b t) (not (take_over a b t))))"
+116,"(cheating_on father uncle T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (cheating_on a b t) (not (cheating_on a b t))))"
+117,No Output
+118,No Output
+119,No Output
+120,"(forall ((a Int) (b Int) (t Int))
+  (=> (wants_to_move a b t) (not (is_tired a t))))
+
+(is_tired narrator T4)
+
+(wants_to_move narrator house T4)"
+121,"(is_a user friend T3)
+
+(is_a user mom T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+122,No Output
+123,"(forall ((a Int) (b Int) (t Int))
+  (=> (feel_pain a t) (not (brain_functioning a t))))
+
+(feel_pain he T0)
+
+(wake_up he T0)
+
+(forall ((a Int) (t Int)) (=> (wake_up a t) (brain_functioning a t)))"
+124,"(is_locked_in narrator cell T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_locked_in a b t) (is_in_location a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_locked_in a b t))))"
+125,No Output
+126,"(forall ((a Int) (b Int) (t Int)) (=> (lack_of a b t) (not (= resources a))))
+
+(lack_of resources world T5)"
+127,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_kind_of a kind t) (is_in_location_2 b universe t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location_2 a b1 t) (is_in_location_2 a b2 t)) (= b1 b2)))
+
+(exists ((a Int) (b Int) (t Int))
+  (and (is_kind_of a kind t) (reborn_into a universe t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_kind_of a kind t) (is_in_location_2 b fire t)))"
+128,No Output
+129,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_president_of a b1 t) (is_president_of a b2 t)) (= b1 b2)))
+
+(is_president_of president_of_the_united_states the_united_states T0)
+
+(is_president_of president_of_the_united_states united_states T0)"
+130,No Output
+131,No Output
+132,No Output
+133,"(forall ((a Int) (b Int) (t Int)) (is_commander_of commander fleet t))
+
+(is_commander_of commander uef T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_commander_of a b1 t) (is_commander_of a b2 t)) (= b1 b2)))"
+134,"(is_in shadow closet T1)
+
+(is_in shadow room T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+135,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_in_location a sky t))))
+
+(is_in_location dog sky T5)"
+136,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (become a b1 t) (become a b2 t)) (= b1 b2)))
+
+(become bodies soldier T3)
+
+(become bodies bodies T3)"
+137,"(is_a mark man T0)
+
+(not (is_a mark man T0))"
+138,"(limited_to dreams classes T2)
+
+(have AI luck T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (limited_to a b t) (= b dreams)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (have a b t) (not (have a b t))))"
+139,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (avoid_from a b1 t) (avoid_from a b2 t)) (= b1 b2)))
+
+(avoid_from user darkness T1)
+
+(avoid_from user pain T1)"
+140,"(forall ((a Int) (b Int) (t Int)) (fall_victim_to a b T3))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (fall_victim_to a b1 t) (fall_victim_to a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (drown a b T3))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (drown a b1 t) (drown a b2 t)) (= b1 b2)))"
+141,"(forall ((a Int) (b Int) (t Int))
+  (=> (has_talent a acting t) (has_talent a talent t)))
+
+(has_talent character acting T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_talent a b1 t) (has_talent a b2 t)) (= b1 b2)))"
+142,No Output
+143,"(is_cold sarah T7)
+
+(forall ((a Int) (t Int)) (=> (is_cold a t) (not (is_awake a t))))
+
+(is_awake sarah T7)"
+144,No Output
+145,No Output
+146,No Output
+147,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_part_of a suburban_family t) (is_part_of a adults t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_part_of a b1 t) (is_part_of a b2 t)) (= b1 b2)))
+
+(is_part_of she suburban_family T8)"
+148,"(explode orb T5)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (broken a t1) (broken a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int)) (=> (explode a t) (broken a t)))
+
+(broken orb T6)"
+149,"(is_in_location user bathroom T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (restrains a b t) (not (is_in_location b bathroom t))))
+
+(restrains gag user T1)"
+150,No Output
+151,"(is_proud father T6)
+
+(forall ((a Int) (t Int)) (=> (is_young a t) (not (is_proud a t))))
+
+(is_young father T6)"
+152,"(forall ((a Int) (b Int) (t Int)) (=> (is_in a stand t) (is_in a courtroom t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (walk_to a b t) (is_in a b t)))
+
+(walk_to woman stand T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+153,No Output
+154,No Output
+155,"(not (is_brave_enough human fight T6))
+
+(is_brave_enough human fight T6)"
+156,No Output
+157,"(forall ((a Int) (b Int) (t Int)) (= (is_friend_of a b t) (is_friend_of b a t)))
+
+(is_friend_of friend alien T4)
+
+(forall ((a Int) (t Int)) (=> (is_late a t) (not (is_friend_of a friend t))))
+
+(is_late alien T4)"
+158,"(forall ((a Int) (t Int)) (=> (is_dead a t) (not (is_possible a t))))
+
+(is_possible father T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (died_in a b t) (is_dead a t)))
+
+(died_in father fight T2)"
+159,No Output
+160,"(forall ((a Int) (b Int) (t Int)) (is_part_of face head t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_part_of a b1 t) (is_part_of a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (is_part_of throat neck t))
+
+(is_part_of face i t)
+
+(is_part_of throat i T3)"
+161,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_named a b t) (exists ((t0 Int)) (is_named a b t0))))
+
+(is_named wall wall T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_named a b t)
+      (or (= a general_george_wayne) (= a president) (= a prime_minister))))"
+162,"(search_for user killer T5)
+
+(not (search_for user killer T5))"
+163,"(is_wearing boss suit T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_wearing a b1 t) (is_wearing a b2 t)) (= b1 b2)))
+
+(is_wearing boss tux T3)"
+164,No Output
+165,"(forall ((a Int) (b Int) (t Int)) (=> (descend_from a b t) (is_in a b t)))
+
+(is_in figure room T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
+
+(descend_from figure doorway T5)"
+166,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_in a b t) (is_in_location a b t)))
+
+(is_in baby crib T3)
+
+(forall ((a Int) (t Int))
+  (=> (is_better a t) (is_in_location a hospital_room t)))
+
+(is_better baby T3)"
+167,"(is_captured men T6)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_friend_of a b t) (not (is_captured a t))))
+
+(is_friend_of men friend T6)"
+168,"(refuse_to_leave ghost T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (refuse_to_leave a t) (is_in_location a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+169,"(is_working_night_shift daughter T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (works_at a b t) (not (is_working_night_shift a t))))
+
+(works_at daughter nursing_home T2)"
+170,"(forall ((a Int) (b Int) (t Int)) (=> (is_organic a t) (not (is_waxy a t))))
+
+(is_organic fragrance T3)
+
+(is_waxy fragrance T3)"
+171,"(reborn sherrif T0)
+
+(forall ((a Int) (t Int)) (=> (reborn a t) (not (die a t))))
+
+(die sherrif T0)"
+172,"(forall ((a Int) (b Int) (t Int))
+  (=> (play_item a violin t) (not (is_hurting a t))))
+
+(is_hurting she T0)
+
+(play_item she violin T0)"
+173,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_dead a t) (not (is_in_location a b t))))
+
+(exists ((a Int)) (and (is_dead a T1) (is_in_location a building T1)))"
+174,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_stepmom_of gaius b t) (= b young_girls)))
+
+(is_stepmom_of gaius narrator T1)"
+175,"(forall ((a Int) (b Int) (t Int))
+  (=> (and (is_a a door t) (slam man a t)) (slam man b t)))
+
+(slam man door T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (slam a b1 t) (slam a b2 t)) (= b1 b2)))
+
+(is_a door door T0)"
+176,"(promises father bow she T6)
+
+(is_question character bow T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_question a b t) (is_present b t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_present a t1) (is_present a t2)) (= t1 t2)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (promises a b c t) (is_present b t)))"
+177,"(is_human firefighter T4)
+
+(have firefighter passion T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_human a t) (not (have a b t))))"
+178,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (calls_character a b c t) (has_good_times_with a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_good_times_with a b t) (not (is_picky a t))))
+
+(calls_character coworkers user boring T7)
+
+(is_picky coworkers T7)"
+179,No Output
+180,"(is_dying dying_faith T1)
+
+(forall ((a Int) (t Int)) (=> (is_dying a t) (died_out_2 a t)))
+
+(forall ((a Int) (t Int)) (=> (died_out_2 a t) (not (is_dying a t))))"
+181,"(murder they character T3)
+
+(is_here character T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (murder a b t) (not (is_here b t))))"
+182,No Output
+183,No Output
+184,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_part_of a b t) (exists ((c Int)) (has_children b a t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_married_to a b t) (is_part_of b a t)))
+
+(is_married_to drelmor wife T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_children a b1 t) (has_children a b2 t)) (= b1 b2)))
+
+(has_children drelmor children T4)"
+185,No Output
+186,"(attend_event user party T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (let ((a!1 (exists ((c Int)) (and (= a c) (or (= c young_men) (= c ladies))))))
+    (=> (attend_event a party t) a!1)))"
+187,No Output
+188,"(forall ((t Int)) (repeats search_engine t))
+
+(forall ((a Int) (t Int)) (=> (repeats a t) (not (functions_normally a t))))
+
+(functions_normally search_engine T1)"
+189,No Output
+190,"(approach stephen_hawking vice_president T8)
+
+(forall ((a Int) (b Int) (t Int)) (=> (approach a b t) (not (is_tired a t))))
+
+(is_tired stephen_hawking T8)"
+191,No Output
+192,No Output
+193,No Output
+194,No Output
+195,"(wears gerald gold_threads T5)
+
+(wears gerald armor T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears a b1 t) (wears a b2 t)) (= b1 b2)))"
+196,No Output
+197,No Output
+198,"(forall ((a Int) (b Int) (t Int)) (=> (is_used_to a b t) (= b cooking)))
+
+(is_used_to user ingredients T2)"
+199,No Output
+200,No Output
+201,No Output
+202,"(forall ((a Int) (b Int) (t Int)) (=> (is_dead a t) (not (sit_upon a b t))))
+
+(is_dead narrator T3)
+
+(sit_upon narrator ground T3)"
+203,"(forall ((a Int) (t Int)) (=> (is_immortal a t) (not (is_alive a t))))
+
+(is_immortal narrator T1)
+
+(is_alive narrator T1)"
+204,No Output
+205,No Output
+206,"(holds_item honey bottle T6)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (=> (is_filled_with a b t) (holds_item c b t)) (not (holds_item c a t))))"
+207,"(is_ancient teacher T1)
+
+(forall ((a Int) (t Int))
+  (=> (=> (is_teacher a t) (is_ancient a t)) (not (has_time_machine a t))))
+
+(has_time_machine teacher T1)"
+208,No Output
+209,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (see a b c t) (in_location a c t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_location a b1 t) (in_location a b2 t)) (= b1 b2)))
+
+(in_location he high_school T2)
+
+(see he user football_field T2)"
+210,"(forall ((a Int) (b Int) (t Int)) (=> (owns_item a b t) (not (is_broken b t))))
+
+(is_rightful money mark T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_rightful a b t) (owns_item a b t)))
+
+(is_broken mark T5)"
+211,No Output
+212,"(form_dominion earth dominion_2 dominion_2 T0)
+
+(form_dominion earth united_dominion_1 united_dominion_1 T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (acknowledge_as_dominion a b1 t) (acknowledge_as_dominion a b2 t))
+      (= b1 b2)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (form_dominion a b c t) (acknowledge_as_dominion a c t)))"
+213,"(forall ((a Int) (b Int) (t Int)) (=> (sits_at a b t) (not (is_bored a t))))
+
+(is_bored mary T0)
+
+(sits_at mary desk T0)"
+214,No Output
+215,"(forall ((a Int) (b Int) (t Int))
+  (=> (dies_in a b t) (not (in_location a room_number_six t))))
+
+(dies_in child bus_accident T1)
+
+(in_location child room_number_six T1)"
+216,"(took_action i sleep T0)
+
+(not (took_action i sleep T0))"
+217,"(is_sick user T1)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_sick a t1) (is_sick a t2)) (= t1 t2)))
+
+(is_sick user T4)"
+218,"(is_making_and_destroying boy yulp_toys T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_making_and_destroying a b t) (not (is_playing_with a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_making_and_destroying a b t) (is_playing_with a b t)))"
+219,"(quit young_man smoking T7)
+
+(plan young_man smoking T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (quit a b t) (not (plan a b t))))"
+220,"(in_location user head T6)
+
+(in_location user body T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_location a b1 t) (in_location a b2 t)) (= b1 b2)))"
+221,No Output
+222,"(forall ((a Int) (t Int)) (=> (is_open a t) (not (is_closed a t))))
+
+(is_closed eyes T2)
+
+(is_open eyes T2)"
+223,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns a b1 t) (owns a b2 t)) (= b1 b2)))
+
+(owns narrator driveway T1)
+
+(owns narrator car T1)"
+225,No Output
+226,"(is_located_at user bedroom T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_located_at a b1 t) (is_located_at a b2 t)) (= b1 b2)))
+
+(is_located_at user bed T2)"
+227,No Output
+228,"(exists friends T4)
+
+(not (exists friends T4))"
+229,No Output
+230,No Output
+231,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_dripping_in a rain t) (is_in a air t)))
+
+(is_in human ear T5)
+
+(is_dripping_in human rain T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+232,"(has_item man cape T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_item a b1 t) (has_item a b2 t)) (= b1 b2)))
+
+(has_item man mask T3)"
+233,"(is_secret reddit T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (knows a b t) (not (is_secret b t))))
+
+(knows group reddit T1)"
+234,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_composed_of a b1 t) (is_composed_of a b2 t)) (= b1 b2)))
+
+(is_composed_of house trash T1)
+
+(is_composed_of house refuse T1)
+
+(is_composed_of house necessities T1)"
+235,"(becomes_mine father T4)
+
+(becomes_mine father T3)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (becomes_mine a t1) (becomes_mine a t2)) (= t1 t2)))"
+236,"(filled_with bed darker_secrets T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (filled_with a b1 t) (filled_with a b2 t)) (= b1 b2)))
+
+(filled_with bed spent_lies T1)"
+237,"(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_in_time a b1 t1) (is_in_time a b2 t2)) (= b1 b2)))
+
+(is_in_time ves summer_2012 T1)
+
+(is_in_location ves los_angeles T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (is_in_time a t t)))"
+238,"(forall ((a Int) (t Int)) (is_a i artificial_intelligence t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (live_in a b t) (exists ((t0 Int)) (is_a a humans t0))))
+
+(live_in i outside T3)"
+239,No Output
+240,No Output
+241,"(is_writing user story T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_writing a b t) (has_moment a b t)))
+
+(has_moment user moment T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_moment a b1 t) (has_moment a b2 t)) (= b1 b2)))"
+242,"(forall ((a Int) (b Int) (t Int))
+  (=> (wants_to a b t) (not (has_no_one_to a b t))))
+
+(has_no_one_to matt fit_in summer_2014)
+
+(forall ((a Int) (b Int) (t Int)) (wants_to a b t))"
+243,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_relation a b1 t) (has_relation a b2 t)) (= b1 b2)))
+
+(is_in_location Marcus town T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(has_relation marcus wife T0)
+
+(has_relation marcus children T0)
+
+(is_in_location Marcus bank T5)"
+244,No Output
+245,No Output
+246,"(forall ((a Int) (b Int) (t Int)) (=> (pay_for a b t) (give_money_to a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (give_money_to a b t) (not (lose a b t))))
+
+(lose man lost T3)
+
+(pay_for man lost T3)"
+247,"(will_die paul T4)
+
+(will_die paul T5)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (will_die a t1) (will_die a t2)) (= t1 t2)))"
+248,"(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a eye t) (has_eye_colour a b t)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (has_eye_colour a b t) (has_eye_colour a c t)) (= b c)))
+
+(owns_item man eye T4)"
+249,"(has_cancer monster cancer T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (has_cancer a b t) (is_sick a t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_sick a t1) (is_sick a t2)) (= t1 t2)))
+
+(is_sick monster T0)"
+250,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_empty b t))))
+
+(is_in_location user town T4)
+
+(is_empty town T4)"
+251,No Output
+252,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_speaking_to a b1 t) (is_speaking_to a b2 t)) (= b1 b2)))
+
+(is_speaking_to mike count_philip T1)
+
+(is_speaking_to mike bullet_assassin T1)"
+253,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_on_location a b1 t) (is_on_location a b2 t)) (= b1 b2)))
+
+(wears_item boy toy_armour T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (wears_item a b t) (is_on_location a c t)))
+
+(is_on_location boy desert_island T1)"
+254,"(is_boyfriend_of son boyfriend T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_boyfriend_of a b t) (not (love a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_boyfriend_of a b t) (love a b t)))"
+255,No Output
+256,No Output
+257,No Output
+258,No Output
+259,No Output
+260,No Output
+261,"(is_parent_of user daughter T0)
+
+(and (is_parent_of wife child T0) (is_parent_of user child T0))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_parent_of a b1 t) (is_parent_of a b2 t)) (= b1 b2)))"
+262,No Output
+263,No Output
+264,"(forall ((a Int) (t Int)) (=> (is_type_of a zombies t) (is_dead a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_type_of a b t) (not (is_dead a t))))
+
+(is_type_of zombies zombies T0)"
+265,"(wears man woods_clothes T1)
+
+(wears man hunting_kit T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears a b1 t) (wears a b2 t)) (= b1 b2)))"
+266,"(and (is_in_location user garden T0) (is_in_location user basement T0))
+
+(forall ((a Int) (t Int))
+  (=> (is_in_location user room t) (not (is_in_location user garden t))))
+
+(is_in_location user room T0)"
+267,No Output
+268,"(forall ((a Int) (t Int))
+  (=> (is_dead a t)
+      (not (exists ((t0 Int)) (is_cutting a meat kitchen_knife t0)))))
+
+(is_dead julie T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_body_of a b t) (is_dead b t)))
+
+(is_body_of mom mom T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_body_of a b t) (not (is_dead b t))))
+
+(is_cutting julie meat kitchen_knife T1)"
+269,"(is_wife_of wife i T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_wife_of a b t) (not (hate b a t))))
+
+(hate i wife T2)"
+270,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_become a b1 t) (has_become a b2 t)) (= b1 b2)))
+
+(has_become power beyond_user T4)
+
+(has_become power great T4)"
+271,"(is_dreary work T0)
+
+(want_to user promotion T0)
+
+(forall ((a Int) (t Int)) (=> (is_dreary work t) (not (want_to a promotion t))))"
+272,"(never_do user tired childhood)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (never_do a b t) (not (exists ((t0 Int)) (= t0 t)))))"
+273,"(< T2 T3)
+
+(< T1 T2)
+
+(< T3 T1)"
+274,No Output
+275,"(forall ((a Int) (b Int) (t Int)) (=> (loves a b t) (wants_to_see a b t)))
+
+(loves character mie T1)
+
+(not (wants_to_see character mie T1))"
+276,"(forall ((a Int) (t Int)) (want_to_become people a t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (want_to_become a b1 t) (want_to_become a b2 t)) (= b1 b2)))"
+277,No Output
+278,No Output
+279,No Output
+280,No Output
+281,"(forall ((a Int) (t Int)) (=> (is_special a t) (notice people a t)))
+
+(not (notice people day T1))
+
+(is_special day T1)"
+282,"(is_asleep man T2)
+
+(is_in brian dreams T1)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_asleep a t1) (is_asleep a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int))
+  (=> (is_asleep a t) (not (exists ((b Int)) (watch a b t)))))
+
+(is_in willy dreams T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (=> (watch a b t) (is_in b dreams t)) (is_asleep b t)))"
+283,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_staring a t1) (is_staring a t2)) (= t1 t2)))
+
+(and (is_colour faces apples T5) (is_colour faces oranges T5))
+
+(forall ((e Int) (t Int)) (is_staring eyes t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_colour a b1 t) (is_colour a b2 t)) (= b1 b2)))"
+284,No Output
+285,"(forall ((a Int)) (read a silly_novels T0))
+
+(forall ((a Int) (b Int) (t Int)) (=> (read a b t) (= b books)))"
+286,No Output
+287,No Output
+288,"(is_unconscious young_man T0)
+
+(forall ((a Int) (t Int))
+  (=> (is_unconscious a t) (not (exists ((b Int) (t0 Int)) (is_asking a b t0)))))
+
+(is_asking young_man (ite (is_location young_man hell T1) 1 0) T1)
+
+(is_lying_on young_man floor T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_lying_on a b t) (not (is_unconscious a t))))"
+289,"(forall ((a Int) (t Int)) (=> (is_veteran a t) (= a samuel_samuels)))
+
+(wield_power samuel T5)
+
+(is_five_years_old samuel T5)
+
+(forall ((a Int) (t Int)) (=> (is_five_years_old a t) (not (wield_power a t))))
+
+(is_veteran veteran T0)"
+290,No Output
+291,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (surrounded_by a b1 t) (surrounded_by a b2 t)) (= b1 b2)))
+
+(surrounded_by he boxes T1)
+
+(surrounded_by he books T1)"
+292,"(observe dragon hero T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (observe a b t) (not (take_life a b t))))
+
+(take_life dragon hero T2)"
+293,"(can_control predator time_travel T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (controls a b1 t) (controls a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (can_control a b t) (controls a b t)))
+
+(controls predator world T0)"
+294,"(is_bare feet T4)
+
+(walk_on user floor T4)
+
+(forall ((a Int) (t Int)) (=> (is_bare feet t) (not (walk_on a floor t))))"
+295,"(is_dressed_in samantha dress T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_dressed_in a b t) (not (is_driving a vehicle t))))
+
+(is_driving samantha vehicle T4)"
+296,"(is_extinguished spark T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (sees a b t) (not (is_extinguished b t))))
+
+(sees man spark T3)"
+297,"(wear character tie T2)
+
+(wear character suit T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wear a b1 t) (wear a b2 t)) (= b1 b2)))"
+298,No Output
+299,"(is_in_location sister missouri T1)
+
+(is_in_location sister dc T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+300,"(is_wife_of girlfriend narrator T3)
+
+(live_with girlfriend brother T3)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_wife_of a b t) (live_with a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (live_with a b1 t) (live_with a b2 t)) (= b1 b2)))"
+301,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (brings a b c t) (not (owns a b t))))
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (brings a b c t) (grabs a b t)))
+
+(brings super_thief nine_month_old treasure T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (grabs a b t) (owns a b t)))"
+302,"(is_turned_into future_me genius T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_turned_into a b1 t) (is_turned_into a b2 t)) (= b1 b2)))
+
+(is_turned_into future_me pioneer T1)"
+303,"(has_item narrator cat T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (has_item a b t) (not (is_useless b t))))
+
+(is_useless cat T0)"
+304,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_character a b t)
+      (or (= b wife) (= b daughter) (= b son) (= b captain_scott_sprig))))
+
+(is_character captain_scott_sprig muslim T0)
+
+(is_character captain_scott_sprig priest T0)"
+305,"(owns_item jason fedora T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))
+
+(owns_item jason jeans T1)"
+306,"(is_unpopular he T0)
+
+(has_most_of he money T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_most_of a money t) (not (is_unpopular a t))))"
+307,No Output
+308,"(forall ((t Int)) (> T1 t))
+
+(forall ((t Int)) (> T2 T1))"
+309,"(forall ((a Int) (b Int) (c Int) (t Int)) (=> (tell a b c t) (is_here c t)))
+
+(hand_to mother paper i T5)
+
+(tell i mother paper T5)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (hand_to a b c t) (not (is_here b t))))"
+310,"(forall ((a Int) (t Int)) (=> (is_screaming a t) (is_in_location a theater t)))
+
+(is_screaming jack T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_running_away a t))))
+
+(is_running_away jack T3)"
+311,"(forall ((a Int) (b Int) (t Int)) (=> (split men b t) (not (split men a t))))
+
+(split men group_of_men T1)"
+312,"(forall ((a Int) (t Int)) (= (is_son_of a narrator t) (= a son)))
+
+(is_son_of jake narrator T2)
+
+(is_alive son T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_son_of a b t) (is_alive a t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_alive a t1) (is_alive a t2)) (= t1 t2)))"
+313,No Output
+314,"(has_no you passport T2)
+
+(has_no you identity T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_no a b1 t) (has_no a b2 t)) (= b1 b2)))"
+315,No Output
+316,"(love young_man mom T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (love a b1 t) (love a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (t Int)) (love young_man wife t))"
+317,No Output
+318,No Output
+319,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wear a b1 t) (wear a b2 t)) (= b1 b2)))
+
+(wear man jacket T4)
+
+(wear man hat T4)"
+320,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_mother_of a b t) (not (is_closest_to a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_mother_of a b t) (not (is_mother_of b a t))))
+
+(is_closest_to derek_craig mum T1)
+
+(is_mother_of mum derek_craig T1)
+
+(forall ((a Int) (t Int))
+  (=> (is_mother_of a derek_craig t) (is_mother_of derek_craig a t)))"
+321,No Output
+322,"(forall ((a Int) (b Int) (t Int)) (=> (move a t) (is_there a t)))
+
+(vanish_into little_girl tree T4)
+
+(move little_girl T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (vanish_into a b t) (not (is_there a t))))"
+323,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_wearing a b1 t) (is_wearing a b2 t)) (= b1 b2)))
+
+(is_wearing dad flannel T1)
+
+(is_wearing dad red_shirt T1)"
+324,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_item a b1 t) (has_item a b2 t)) (= b1 b2)))
+
+(chews paul sandwich T5)
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (chews a b t) (has_item a b t)))
+
+(chews paul meat T5)"
+325,No Output
+326,No Output
+327,No Output
+328,No Output
+329,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_state a b1 t) (has_state a b2 t)) (= b1 b2)))
+
+(has_state narrator depression T1)
+
+(feel_emotion narrator depressed T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (feel_emotion a b t) (has_state a b t)))"
+330,"(forall ((a Int) (b Int) (t Int)) (=> (run_to a b t) (not (is_trembling a t))))
+
+(run_to soldiers henry T0)
+
+(is_trembling soldiers T0)"
+331,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_date may_4th_2016 a t) (= t may_4th_2016)))
+
+(is_date may_4th_2016 T1 T1)"
+332,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(drop_to narrator knees T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (drop_to a b t) (exists ((t0 Int)) (is_in_location a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (pray_for a b t) (exists ((t0 Int)) (is_in_location a god t))))
+
+(pray_for narrator family T5)"
+333,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(wears man button_up T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_sitting_on a b t) (is_in_location a b t)))
+
+(is_sitting_on professor_hundas bench T2)
+
+(is_in_location professor_hundas office T2)
+
+(wears man pants T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears a b1 t) (wears a b2 t)) (= b1 b2)))"
+334,"(on_location cake table T4)
+
+(is_coming_out_of cake pizza_box T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_coming_out_of a b t) (on_location a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (on_location a b1 t) (on_location a b2 t)) (= b1 b2)))"
+335,"(forall ((a Int) (b Int) (t Int)) (=> (is_in a pocket t) (is_in a briefcase t)))
+
+(is_in briefcase pocket T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+336,"(forall ((a Int) (b Int) (t Int)) (=> (is_child a t) (has_life a life t)))
+
+(not (has_life man life T1))
+
+(is_child man T1)"
+337,"(starts employment name T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (go_to a b t) (or (= b university) (= b college))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (starts a b t) (exists ((c Int)) (go_to c b t))))"
+338,"(forall ((a Int) (b Int) (t Int))
+  (=> (has_trait a greed t) (not (has_trait a arrogance t))))
+
+(has_trait parents arrogance T5)
+
+(has_trait parents greed T5)"
+339,No Output
+340,(forall ((a Int)) (not (= a strategic_force)))
+341,No Output
+342,No Output
+343,"(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a b t) (not (lose_item a b t))))
+
+(lose_item user wallet T4)
+
+(owns_item user wallet T4)"
+344,"(forall ((a Int) (b Int) (t Int))
+  (=> (plead_guilty a t) (will_be_convicted a t)))
+
+(will_be_convicted mr T2)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (will_be_convicted a t1) (will_be_convicted a t2)) (= t1 t2)))
+
+(plead_guilty mr T3)"
+345,No Output
+346,"(forall ((a Int) (b Int) (t Int)) (=> (have_family a b t) (is_present a t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (have_family a family t) (is_present a t)))
+
+(forall ((a Int) (t Int)) (have_family a family t))
+
+(not (is_present ash T0))"
+347,No Output
+348,No Output
+349,No Output
+350,"(forall ((a Int) (b Int) (t Int)) (=> (is_at_point a b t) (stays_in a b t)))
+
+(stays_in user mind T8)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (stays_in a b1 t) (stays_in a b2 t)) (= b1 b2)))
+
+(is_at_point user lowest_point T8)"
+351,No Output
+352,No Output
+353,"(is_in_location forest world T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_in_location a b t) (is_in a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in a b t) (not (is_in_location a world t))))"
+354,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_the a b t) (is_the a c t)) (= b c)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_wearing a cape t) (is_the a knight t)))
+
+(is_wearing man_in_white cape T6)
+
+(is_the man_in_white chosen_one T6)"
+355,No Output
+356,"(is_automated warheads T6)
+
+(forall ((t Int)) (and (see_outside world ice_age t) (= t T1)))
+
+(forall ((a Int) (t Int)) (=> (is_automated a t) (is_type_of a technology t)))
+
+(forall ((t Int)) (and (can_live_on world t) (= t T1)))
+
+(is_type_of warheads nuclear_weapons T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_type_of a b1 t) (is_type_of a b2 t)) (= b1 b2)))"
+357,"(forall ((a Int) (b Int) (t Int))
+  (=> (born_in a b t) (or (= b north) (= b berlin))))
+
+(born_in adolf_hitler year_1917 T1)"
+358,"(enter_location she bathroom T0)
+
+(exit_location she bathroom T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (exit_location a b t) (not (enter_location a b t))))"
+359,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_looking_at a b1 t) (is_looking_at a b2 t)) (= b1 b2)))
+
+(is_looking_at user headline T0)
+
+(is_looking_at user damsel T0)"
+360,No Output
+361,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_shot_in a b t) (punctures a c t)) (not (= b c))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_shot_in bullets a t) (punctures bullets a t)))
+
+(is_shot_in bullets head T1)"
+362,"(is_spicy tacos T0)
+
+(is_delicious tacos T0)
+
+(forall ((a Int) (t Int)) (=> (is_delicious a t) (not (is_spicy a t))))"
+363,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (work_in a b1 t) (work_in a b2 t)) (= b1 b2)))
+
+(work_as narrator doctor T3)
+
+(work_in narrator new_york_city T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (work_as a b t) (work_in a hospital t)))"
+364,No Output
+365,No Output
+366,(forall ((a Int) (b Int) (t Int)) (=> (= a pony) (= a horse)))
+367,"(be_in evil_overlord soul T6)
+
+(be_in evil_overlord memories T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (be_in a b1 t) (be_in a b2 t)) (= b1 b2)))"
+368,No Output
+369,No Output
+370,"(is_wearing user jeans T7)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_wearing a b1 t) (is_wearing a b2 t)) (= b1 b2)))
+
+(is_wearing user t_shirt T7)"
+371,"(see user parents T6)
+
+(forall ((a Int) (b Int) (t Int)) (=> (see a b t) (not (is_gone b t))))
+
+(is_gone parents T6)"
+372,"(is_a man god T2)
+
+(forall ((a Int) (t Int)) (=> (is_a a man t) (not (is_a a god t))))
+
+(is_a man man T2)"
+373,"(forall ((a Int) (t Int)) (=> (is_a a pilot t) (is_a a crew t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a pilot pilot T9)"
+374,No Output
+375,No Output
+376,"(owns_item user king T1)
+
+(owns_item user items T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))"
+377,No Output
+378,"(with user husband T1)
+
+(with user friends T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (with a b1 t) (with a b2 t)) (= b1 b2)))"
+379,"(forall ((a Int) (b Int) (t Int)) (=> (owns_item a b t) (wants_item a b t)))
+
+(owns_item user car T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a b t) (not (wants_item a b t))))"
+380,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_named a b1 t) (is_named a b2 t)) (= b1 b2)))
+
+(is_named pen pen T0)
+
+(is_named pen gbv T0)"
+381,"(is_staining blood shovel T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_seeping_into blood earth T3)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_seeping_into a b t) (is_in_location a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_staining a b t) (is_in_location a b t)))"
+382,"(is_fired harold_mcchastain T1)
+
+(sit_in harold_mcchastain armchair T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (sit_in a b t) (not (is_fired a t))))"
+383,"(is_appalled_at villagers fire T3)
+
+(is_shocked_by villagers fire T3)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_appalled_at a b t) (not (is_shocked_by a b t))))
+
+(is_enraged_at villagers fire T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_enraged_at a b t) (not (is_appalled_at a b t))))"
+384,"(forall ((t Int)) (is_busiest day t))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_busiest a t1) (is_busiest a t2)) (= t1 t2)))
+
+(is_busiest day T0)"
+385,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_group a b t) (is_in_militia a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_in_group a b t) (is_of_type a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_in_militia a b t) (is_deployed a t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_of_type a b1 t) (is_of_type a b2 t)) (= b1 b2)))
+
+(is_in_group a soldier T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_deployed a t) (is_in_location a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_in_group a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_of_type a soldier t) (is_in_group a men t)))"
+386,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have_on a b1 t) (have_on a b2 t)) (= b1 b2)))
+
+(have_on me collar T1)
+
+(have_on me pants T1)"
+387,No Output
+388,No Output
+389,No Output
+390,"(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_an_accident a t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_a a nuclear_weapon t) (is_an_accident a t)))
+
+(is_a this_object nuclear_weapon T6)"
+391,"(take_off_object dolly shirt T5)
+
+(press_object_on dolly shirt T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (take_off_object a b t) (not (press_object_on a b t))))"
+392,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_going_to_die a t))))
+
+(is_going_to_die narrator T7)
+
+(is_in_location narrator floor T7)"
+393,"(not (is_caring_about human_being health T3))
+
+(is_human human_being T3)
+
+(forall ((a Int) (t Int)) (=> (is_human a t) (is_caring_about a health t)))"
+394,No Output
+395,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_dead a t1) (is_dead a t2)) (= t1 t2)))
+
+(sacrifice_life he T4)
+
+(is_dead he T8)
+
+(is_dead he T5)
+
+(forall ((a Int) (t Int)) (=> (sacrifice_life a t) (is_dead a t)))"
+396,No Output
+397,"(is_anxious user T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_tired a t) (not (is_anxious a t))))
+
+(is_tired user T2)"
+398,"(has_hair soulmate well_kept_hair T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_hair a b1 t) (has_hair a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_hair a b t) (exists ((c Int)) (has_hair_colour a c t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_hair_colour a b t) (has_hair a hair t)))
+
+(is_reflection_of soulmate soulmate T8)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_reflection_of a b t) (not (= a b))))"
+399,"(afraid_to narrator man T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (tried_to_be a b t) (wants_to a b t)))
+
+(tried_to_be narrator man T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (afraid_to a b t) (not (wants_to a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))
+
+(is_a narrator human_being T2)"
+400,No Output
+401,No Output
+402,"(forall ((a Int) (b Int) (t Int)) (=> (is_fan_of a b t) (not (is_bad a t))))
+
+(is_fan_of zuckerberg richard_dawkins T7)
+
+(is_bad zuckerberg T7)"
+403,No Output
+404,"(attend_location sanders mormon_church T0)
+
+(attend_location sanders catholic_church T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (attend_location a b1 t) (attend_location a b2 t)) (= b1 b2)))"
+405,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_no_item a b1 t) (has_no_item a b2 t)) (= b1 b2)))
+
+(has_no_item narrator map T5)
+
+(has_no_item narrator camera T5)"
+406,No Output
+407,No Output
+408,No Output
+409,No Output
+410,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (receives a b1 t) (receives a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_form inheritance cash t) (receives son cash t)))
+
+(is_in_form inheritance cash T0)
+
+(receives son inheritance T0)"
+411,No Output
+412,No Output
+413,"(is_interested_in men work T2)
+
+(forall ((a Int) (t Int))
+  (or (is_interested_in men a t) (is_interested_in women a t)))
+
+(forall ((a Int) (b Int) (t1 Int) (t2 Int))
+  (=> (and (is_interested_in a b t1) (is_interested_in a b t2)) (= t1 t2)))"
+414,No Output
+415,No Output
+416,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (lives_in a b1 t) (lives_in a b2 t)) (= b1 b2)))
+
+(lives_in kid bungalow T4)
+
+(lives_in kid suburbs T4)"
+417,No Output
+418,"(forall ((a Int) (b Int) (t Int)) (=> (closes a b t) (is_in b a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (closes a b t) (is_in b closet t)))
+
+(closes susie blinds T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+419,No Output
+420,"(forall ((a Int) (t Int)) (=> (cry a t) (not (shriek a t))))
+
+(shriek boy T3)
+
+(cry boy T3)"
+421,No Output
+422,No Output
+423,"(is_in_location narrator alley T0)
+
+(is_in_location narrator hospital_room T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+424,"(forall ((a Int) (t Int))
+  (=> (change_expression a t) (has_feeling a feeling t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_feeling a b1 t) (has_feeling a b2 t)) (= b1 b2)))
+
+(feel_feeling man pulse T5)
+
+(change_expression man T5)
+
+(away_from kat family T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (feel_feeling a b t) (has_feeling a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_out_from a b t) (away_from a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (away_from a b1 t) (away_from a b2 t)) (= b1 b2)))
+
+(go_out_from kat bunker T3)"
+425,"(forall ((a Int) (b Int) (t Int)) (=> (is_government_of a b t) (rules a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (is_government_of a stupidity t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (rules a b1 t) (rules a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (t Int)) (is_dictatorship_of government web t))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_dictatorship_of a b t) (is_government_of a b t)))"
+426,No Output
+427,No Output
+428,"(forall ((a Int) (b Int) (t Int))
+  (=> (has_plan a b t) (is_in_location b school t)))
+
+(exists ((t Int)) (has_plan guy plan t))
+
+(forall ((a Int) (b Int) (t Int)) (=> (has_knowledge a b t) (= a person)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (or (= a school) (= a guy) (= a gentleman))))
+
+(has_knowledge government boyfriend T0)"
+429,No Output
+430,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns a b1 t) (owns a b2 t)) (= b1 b2)))
+
+(owns alex allowance T6)
+
+(spend_on alex alex T6)
+
+(forall ((a Int) (b Int) (t Int)) (=> (spend_on a b t) (owns a b t)))"
+431,(= order head_to_the_bridge)
+432,"(dislike parents toast T0)
+
+(=> (and (wants user toast T0) (dislike parents toast T0))
+    (not (wants user toast T0)))
+
+(wants user toast T0)"
+433,No Output
+434,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_dying a t1) (is_dying a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int)) (=> (die_alone a t) (is_dying a t)))
+
+(die_alone user T1)
+
+(is_dying user T0)"
+435,"(wear mr_president sunglasses T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (wear a sunglasses t) (not (wear a mask t))))
+
+(wear mr_president mask T4)"
+436,No Output
+437,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_parent_of a b t) (not (is_grouchy b t))))
+
+(is_grouchy thomas T1)
+
+(is_parent_of mother thomas T1)"
+438,"(forall ((a Int) (b Int) (t Int))
+  (=> (want_to_be a b t) (not (want_to_be a b t))))
+
+(want_to_go_to user place T0)
+
+(not (want_to_go_to user place T0))
+
+(want_to_be husband husband T0)"
+439,"(find_item AI box_of_donuts alley T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (owns_item a b t) (not (find_in_location a b t))))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (find_item a b c t) (find_in_location a b t)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (find_item a b c t) (owns_item a b t)))"
+440,"(destroy_location serial_killer world T0)
+
+(is_caught serial_killer T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (destroy_location a b t) (not (exists ((t0 Int)) (is_caught a t0)))))"
+441,"(forall ((a Int) (t Int)) (=> (is_unconscious a t) (not (cannot_move a t))))
+
+(is_unconscious narrator T6)
+
+(cannot_move narrator T6)"
+442,"(forall ((a Int) (t Int)) (=> (is_tiny a t) (is_minuscule a t)))
+
+(forall ((a1 Int) (a2 Int) (t Int))
+  (=> (and (is_minuscule a1 t) (is_minuscule a2 t)) (= a1 a2)))
+
+(forall ((a Int) (b Int) (t Int)) (bigger_than humans imagination t))
+
+(is_tiny little_things T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (bigger_than a b t) (not (is_minuscule a t))))
+
+(forall ((a Int) (t Int)) (is_minuscule humans t))"
+443,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_called a b t)
+      (or (= b monolith)
+          (= b beast)
+          (= b eyes)
+          (= b teeth)
+          (= b pokemon)
+          (= b journey)
+          (= b professional)
+          (= b mountains)
+          (= b monsters)
+          (= b tongue)
+          (= b claws)
+          (= b shouts_of_the_unknown))))
+
+(is_group pokemon thousand T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_group a b t) (exists ((t0 Int)) (is_called a b t0))))"
+444,"(go_to user international_animal_training_facility T3)
+
+(hide_in user international_animal_training_facility T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_to a b t) (not (hide_in a b t))))"
+445,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (get_better a t1) (get_better a t2)) (= t1 t2)))
+
+(get_better result T6)
+
+(get_better result T0)"
+446,"(is_role emperor emperor T1)
+
+(is_type emperor etonian T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_type a etonian t) (not (is_role a emperor t))))"
+447,"(forall ((a Int) (t Int))
+  (=> (gone a t) (not (exists ((t0 Int)) (turn_to a t0 t)))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (turn_to a b t) (gone a t)))
+
+(turn_to screen red_oval T5)"
+448,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (exist_in a b1 t) (exist_in a b2 t)) (= b1 b2)))
+
+(shine_on sun planet T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_about a b t) (exists ((c Int)) (is_reason_of c b t))))
+
+(is_in planet universe T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_reason_of a b t) (exist_in a imagination t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_reason_of a b t) (exist_in b imagination t)))
+
+(is_about conspiracy_theories bird T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in a universe t) (not (is_in a sky t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_reason_of a b t) (or (exist_in a universe t) (exist_in b universe t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (shine_on sun a t) (is_in a sky t)))"
+449,"(receive_item boy badge T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (receive_item a b1 t) (receive_item a b2 t)) (= b1 b2)))
+
+(receive_item boy letter T1)"
+450,"(is_in_location jack purple_cave T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_in_location jack sidewalk T3)"
+451,"(forall ((a Int) (b Int) (t Int)) (=> (is_in_location a b t) (is_safe a b t)))
+
+(is_in_location barista street T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_safe a b t))))"
+452,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_animal a b t) (not (is_animal a dinosaurs t))))
+
+(exists ((a Int)) (is_animal a dinosaurs T2))"
+453,"(close_eyes user T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_dead a t) (not (close_eyes a t))))
+
+(is_dead user T4)"
+454,"(has_no john family T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_no a b1 t) (has_no a b2 t)) (= b1 b2)))
+
+(has_no john friends T2)"
+455,No Output
+456,No Output
+457,"(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (is_made_of a b1 t1) (is_made_of a b2 t2)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (= (=> (is_made_of a b t) (is_made_of a metal t)) (or (= b metal) (= b iron))))"
+458,"(is_hero_of character story T2)
+
+(is_creator_of character story T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_hero_of a b t) (not (is_creator_of a b t))))"
+459,"(and (wears_item narrator mask T1) (is_fake mask T1))
+
+(is_in_location narrator room T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (wears_item a b t) (not (is_fake b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_terrified a t) (not (is_in_location a b t))))
+
+(is_terrified narrator T0)"
+460,"(has_property grass hazel T3)
+
+(has_property grass brown T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t1 Int) (t2 Int))
+  (=> (and (has_property a b1 t1) (has_property a b2 t2)) (= b1 b2)))"
+461,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_involved_in a robbery t) (suspects a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (suspects a b1 t) (suspects a b2 t)) (= b1 b2)))
+
+(is_involved_in character_a robbery T2)"
+462,"(is_time_traveler time_traveler T0)
+
+(is_time_traveler time_traveler T1)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_time_traveler a t1) (is_time_traveler a t2)) (= t1 t2)))"
+463,"(in_location jim suite T0)
+
+(sit_on jim couch T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_location a b1 t) (in_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (sit_on a b t) (in_location a b t)))"
+464,"(is_in_location towels room T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_dirty a t))))
+
+(is_dirty towels T0)"
+465,"(forall ((a Int) (t Int)) (=> (is_snow_day a t) (is_in_location a park t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_snow_day snow_day T3)
+
+(forall ((a Int) (t Int)) (=> (is_snow_day a t) (is_in_location a street t)))
+
+(forall ((a Int) (t Int)) (=> (is_snow_day a t) (is_in_location a woods t)))"
+466,"(spent_time_writing user short_stories T1)
+
+(spent_time_writing user comics T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (wrote_for a comics t) (not (wrote_for a short_stories t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (spent_time_writing a b t) (wrote_for a b t)))"
+467,"(is_at mom living_room T3)
+
+(has_arm_around user her T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_arm_around a b t) (not (has_hands_around a b t))))
+
+(has_hands_around user her T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_at a b t) (not (and (is_at a b t) (is_at a b t)))))"
+468,No Output
+469,"(can_breathe user T4)
+
+(not (can_breathe user T4))"
+470,"(forall ((a Int) (b Int) (t Int)) (=> (is_a a boy t) (not (is_a a child t))))
+
+(is_a charlie boy T0)
+
+(is_a charlie child T0)
+
+(forall ((a Int) (t Int)) (=> (is_a charlie child t) (is_a charlie person t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+471,"(is_in_location jason closet T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_in_location a b t))))"
+472,"(purchased knight armor T0)
+
+(purchased knight weapons T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (purchased a b t) (owns_item a b t)))"
+473,No Output
+474,"(is_dad_of dad sean T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (= (is_dad_of a b t) (is_in_location b world t)))
+
+(is_in_location sean corner T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+475,No Output
+476,No Output
+477,"(forall ((a Int) (b Int) (t Int))
+  (=> (located_in a b t) (not (and (located_in a b t) (located_in a b t)))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (belong_to a b t) (located_in a b t)))
+
+(belong_to morian_church church T3)"
+478,"(forall ((a Int) (b Int) (t Int))
+  (let ((a!1 (exists ((t0 Int))
+               (and (or (= a geoff_thompson) (= a geoffrey_thompson))
+                    (or (= b something_1) (= b something_3) (= b something_6))
+                    (= t t0)))))
+    (=> (say a b t) a!1)))
+
+(say margaret_clark something_4 T4)"
+479,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_crowd a b t) (is_in_location a hero_tower t)))
+
+(is_in_location chuck room T5)
+
+(is_in_crowd chuck crowd T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+480,No Output
+481,"(is_at brother desert T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_at a b1 t) (is_at a b2 t)) (= b1 b2)))
+
+(is_at brother diner T2)"
+482,No Output
+483,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_type_of a pokemon_wizard t)
+      (or (is_type_of a hero t) (is_type_of a villain t))))
+
+(is_type_of villain pokemon_wizard T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_type_of a b1 t) (is_type_of a b2 t)) (= b1 b2)))"
+484,"(forall ((f Int)) (is_dead f T1))
+
+(instructed_by user father T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_dead a t) (not (instructed_by a b t))))"
+485,No Output
+486,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_role_of a b t) (is_role_of a c t)) (= b c)))
+
+(is_role_of user stage_manager T4)
+
+(is_role_of user saviour T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_control_of a b1 t) (in_control_of a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_role_of a b t) (in_control_of a b t)))"
+487,No Output
+488,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (be_in a b1 t) (be_in a b2 t)) (= b1 b2)))
+
+(be_in people hell T8)
+
+(be_in people country T8)"
+489,"(forall ((a Int) (b Int) (t Int)) (=> (is_in a b t) (not (is_in a b t))))
+
+(is_in blue_pills box T1)"
+490,"(is_stuck_in gal bony_hand T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_on a b t) (not (is_stuck_in a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_stuck_in a b t) (is_on a b t)))"
+491,"(is_queen queen T2)
+
+(is_dead queen T2)
+
+(forall ((a Int) (t Int)) (=> (is_queen a t) (not (is_dead a t))))"
+492,No Output
+493,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_on_body_part a b t) (not (is_on_body_part a b t))))
+
+(is_on_body_part mouse_device head T5)"
+494,"(is_feeling she startled T0)
+
+(is_feeling she terrified T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_feeling a b1 t) (is_feeling a b2 t)) (= b1 b2)))"
+495,"(buys_item user produce_bag produce_bag T4)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (buys_item a b c t) (owns_item a c t)))
+
+(owns_item user backpack T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))"
+496,"(bleed_out johnathan T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (bleed_out a t))))
+
+(is_in_location johnathan ground T4)"
+497,No Output
+498,"(has_no earth solar_power T3)
+
+(has_no earth nuclear_power T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_no a b1 t) (has_no a b2 t)) (= b1 b2)))"
+499,No Output
+500,"(forall ((a Int) (t Int))
+  (and (denounce parties a t) (threaten_punishment america a t)))
+
+(assist america parties T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (threaten_punishment a b t) (not (assist a b t))))"
+501,No Output
+502,"(is_in_location she room T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_dangerous b t))))
+
+(forall ((a Int) (t Int)) (and (is_dangerous a t) (try_to refugees a t)))"
+503,No Output
+504,"(wears_item narrator shirt T3)
+
+(wears_item narrator tie T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (is_at_location a b t)))
+
+(is_in_location narrator kitchen T1)
+
+(is_at_location narrator gym T1)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_at_location a b t) (is_at_location a c t)) (= b c)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (wears_item a shirt t) (not (wears_item a tie t))))"
+505,"(forall ((a Int) (b Int) (t Int)) (=> (is_scary a b t) (not (is_black a t))))
+
+(is_black void T7)
+
+(is_scary void a T7)"
+506,No Output
+507,(forall ((a Int) (t Int)) (and (fixated_on people starlight t) (< T0 t)))
+508,"(strike_down wonder_woman clark_kent T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (strike_down a b t) (is_killer_of a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (strike_down a b t) (is_dead b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_killer_of a b t) (not (is_dead b t))))"
+509,"(is_filled_with notebook writing T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_filled_with a b t) (is_in b a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_scribbled_in a b t) (is_in a b t)))
+
+(is_scribbled_in writing ink T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))"
+510,No Output
+511,No Output
+512,No Output
+513,"(is_dead death T1)
+
+(is_dead death T2)
+
+(is_in_location death room T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_dead a t))))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_dead a t1) (is_dead a t2)) (= t1 t2)))"
+514,"(wants_to_run user T4)
+
+(forall ((a Int) (t Int)) (=> (is_weak a t) (not (wants_to_run a t))))
+
+(is_weak user T4)"
+515,"(is_sad rachel T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_location a b t) (not (is_sad a t))))
+
+(is_in_location rachel room T5)"
+516,"(approaches year_2074 T0 T0)
+
+(makes modern_medicine people T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (makes a b t) (and (= a modern_medicine) (= b dream))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (approaches a b t) (and (= a time) (= b year_2074))))"
+517,No Output
+518,"(is_a peter person T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a peter boy T0)"
+519,"(is_day day Monday T1)
+
+(is_fast day T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_day a b t) (not (is_fast a t))))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_day a b1 t) (is_day a b2 t)) (= b1 b2)))
+
+(is_day day Tuesday T1)"
+520,"(have_relation user father T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (have_relation a b1 t) (have_relation a b2 t)) (= b1 b2)))
+
+(have_relation user mother T4)"
+521,"(is_located_in picture stock_exchanges T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_a a picture t) (is_located_in a world t)))
+
+(is_a picture picture T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_located_in a b1 t) (is_located_in a b2 t)) (= b1 b2)))"
+522,No Output
+523,"(has_word peter T5)
+
+(forall ((a Int) (t Int)) (=> (has_word a t) (= a despair)))"
+524,No Output
+525,No Output
+526,No Output
+527,No Output
+528,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(drags_object_to_location cat lady house T2)
+
+(forall ((a Int) (b Int) (c Int) (d Int) (t Int))
+  (=> (and (drags_object_to_location a b c t) (is_in_location b d t)) (= c d)))
+
+(smells_like lady shit T2)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (smells_like a b t) (or (is_in_location a c t) (is_in_location b c t))))"
+529,No Output
+530,"(is_inexperienced assassin T10)
+
+(forall ((a Int) (t Int)) (=> (is_old a t) (not (is_inexperienced a t))))
+
+(is_old assassin T10)"
+531,No Output
+532,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (at_war_with a b1 t) (at_war_with a b2 t)) (= b1 b2)))
+
+(conquered humans earth T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (conquered a b t) (at_war_with a b t)))
+
+(at_war_with humans humans T1)"
+533,"(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_disease a t1) (is_disease a t2)) (= t1 t2)))
+
+(is_spreading plague T3)
+
+(is_disease plague T0)
+
+(forall ((a Int) (t Int)) (=> (is_spreading a t) (is_disease a t)))"
+534,No Output
+535,"(is_tired user T1)
+
+(forall ((a Int) (t Int))
+  (=> (and (is_tired a t) (wake_up_try_again a t)) (not (is_tired a t))))
+
+(wake_up_try_again user T1)"
+536,No Output
+537,"(is_a captain_rex bane_of_town_council T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a captain_rex refuge_for_dying_kid T1)"
+538,"(feels you sore T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (feels a b t) (can_breathe a t)))
+
+(not (can_breathe you T0))"
+539,"(forall ((a Int) (b Int) (t Int))
+  (=> (wants_to_go_to a b t) (not (wants_to_die_in a b t))))
+
+(wants_to_die_in user okigahara T2)
+
+(wants_to_go_to user okigahara T2)"
+540,"(forall ((a Int) (b Int) (t Int)) (=> (is_shot_in a b t) (not (is_dead a t))))
+
+(is_dead mother T2)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_dead a t1) (is_dead a t2)) (= t1 t2)))
+
+(forall ((a Int) (t Int)) (=> (not (is_dead a t)) (not (is_shot_in a head t))))
+
+(is_shot_in mother head T1)"
+541,"(is_good satan T5)
+
+(forall ((a Int) (t Int)) (not (is_good satan t)))"
+542,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
+
+(is_for character family T1)
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (is_for a b t) (is_in a c t)))"
+543,No Output
+544,"(be_dead burt T8)
+
+(forall ((a Int) (t Int))
+  (let ((a!1 (not (exists ((t0 Int)) (not (be_dead a t0))))))
+    (=> (be_dead a t) a!1)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (be_dead a t1) (be_dead a t2)) (= t1 t2)))"
+545,No Output
+546,No Output
+547,No Output
+548,"(forall ((a Int) (b Int) (t Int)) (=> (switch_to a b t) (not (is_on a t))))
+
+(switch_to tv slideshow T2)
+
+(is_on tv T2)"
+549,"(is_child_of narrator mother T5)
+
+(is_child_of narrator father T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_child_of a b1 t) (is_child_of a b2 t)) (= b1 b2)))"
+550,No Output
+551,"(has_injury narrator cuts T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_injury a b1 t) (has_injury a b2 t)) (= b1 b2)))
+
+(has_injury narrator bruises T2)"
+553,No Output
+554,No Output
+555,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_hair_colour a b1 t) (has_hair_colour a b2 t)) (= b1 b2)))
+
+(has_hair_colour woman blonde T4)
+
+(has_hair_colour woman brown T4)"
+556,No Output
+558,No Output
+559,"(in_location jim city T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_location a b1 t) (in_location a b2 t)) (= b1 b2)))
+
+(in_location jim square T0)"
+560,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears_item a b1 t) (wears_item a b2 t)) (= b1 b2)))
+
+(wears_item user water_suit T0)
+
+(wears_item user tactical_pants T0)"
+561,"(training_end girl flames T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (training_start a b t) (not (training_end a b t))))
+
+(training_start girl flames T1)"
+562,No Output
+563,No Output
+564,No Output
+565,No Output
+566,"(go_home paul_smith childhood_home T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_to a b t) (not (go_back_to a b t))))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (go_to a b1 t) (go_to a b2 t)) (= b1 b2)))
+
+(go_back_to paul_smith school T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_back_to a b t) (go_to a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_home a b t) (go_to a b t)))"
+567,"(is_giving pope announcement T5)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_giving a b t) (is_in_location a c t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+568,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (wears_item a b1 t) (wears_item a b2 t)) (= b1 b2)))
+
+(wears_item alex mask T1)
+
+(wears_item alex skirt T1)"
+569,"(forall ((a Int) (b Int) (t Int)) (is_bright sun t))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_bright sun t) (not (is_annoying a t))))
+
+(is_annoying wife T2)"
+570,"(take_off user hat T6)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (take_off a b1 t) (take_off a b2 t)) (= b1 b2)))
+
+(take_off user scarf T6)"
+571,"(forall ((a Int) (b Int) (t Int))
+  (=> (has_spots a b t) (not (has_spots a b t))))
+
+(has_spots man red_spots T3)"
+572,"(forall ((p Int) (d Int) (t Int)) (has_happiest_day p d t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_happiest_day a b1 t) (has_happiest_day a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_type_of a kid t) (not (is_grown_man a t))))
+
+(is_type_of john kid T7)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_happiest_day a b t) (is_grown_man a t)))"
+573,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (touch a b t) (is_in_location b hand t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_on a b t) (is_in_location a b t)))
+
+(touch a hand T1)
+
+(is_on hand chest T1)"
+574,"(offer_to old_mate tour narrator T2)
+
+(forall ((a Int) (t Int)) (=> (is_expensive a t) (= a cars)))
+
+(forall ((a Int) (b Int) (c Int) (t Int)) (=> (offer_to a b c t) (= b hostage)))
+
+(is_expensive car T3)"
+575,No Output
+576,"(is_job narrator job T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_job a b t) (or (= b exterminator) (= b office_job))))"
+577,"(not (reread people life T3))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (retain_memories a b1 t) (retain_memories a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (reread a b1 t) (reread a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (not (reread a b t)) (retain_memories a b t)))"
+578,"(has_item user oxygen_masks T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_item a b1 t) (has_item a b2 t)) (= b1 b2)))
+
+(has_item user chuffs T0)"
+579,"(is_a solomon_gundolargos wizard T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a solomon_gundolargos prince T0)"
+580,"(is_safe world safe T1)
+
+(not (is_safe world safe T1))"
+581,"(is_character astrid guardian_angel T3)
+
+(forall ((a Int) (t Int))
+  (=> (is_character a guardian_angel t) (not (has_question a t))))
+
+(has_question astrid T3)"
+582,"(is_wearing man burlap_pants T2)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_covered_with a b t) (is_in b c t)))
+
+(is_wearing man underwear T2)
+
+(is_covered_with knife chalk T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_wearing a b1 t) (is_wearing a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in a b1 t) (is_in a b2 t)) (= b1 b2)))
+
+(is_covered_with pencils chalk T1)"
+583,"(try_to_hide mother baby T3)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (hang_up a b t) (not (try_to_hide a b t))))
+
+(hang_up mother baby T3)"
+584,"(forall ((a Int) (b Int) (t Int))
+  (=> (watch_event a b t) (not (is_hallucination b t))))
+
+(is_hallucination man_push_sponge_into_lollipop T3)
+
+(watch_event grandmother man_push_sponge_into_lollipop T3)"
+585,"(forall ((a Int) (t Int)) (=> (feel_ashamed a t) (not (feel_confident a t))))
+
+(feel_ashamed i T5)
+
+(feel_confident i T5)"
+586,No Output
+587,No Output
+588,"(served_under speaker officer T1)
+
+(forall ((a Int) (t Int)) (=> (is_evil_in_name a t) (did_wrong a t)))
+
+(forall ((a Int) (t Int)) (=> (can_move_on a t) (not (did_wrong a t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (commanded_by a b t) (served_under a b t)))
+
+(commanded_by speaker manager T1)
+
+(is_evil_in_name speaker T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (served_under a b1 t) (served_under a b2 t)) (= b1 b2)))
+
+(can_move_on speaker T3)"
+589,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_date a b1 t) (has_date a b2 t)) (= b1 b2)))
+
+(has_date owner date T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (with_friends a b t) (has_date a b t)))
+
+(with_friends owner friends T1)"
+590,No Output
+591,"(forall ((a Int) (b Int) (t Int)) (=> (transfer_of a b t) (inside_of a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (incarcerated a t) (inside_of a police_station t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (transfer_of a b t) (incarcerated a t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (inside_of a b1 t) (inside_of a b2 t)) (= b1 b2)))
+
+(transfer_of inmates trial T0)"
+592,"(is_old yzis_cheng T2)
+
+(forall ((a Int) (t Int)) (=> (is_speaking a t) (not (is_old a t))))
+
+(is_speaking yzis_cheng T2)
+
+(lacks yzis_cheng physical_qualities T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_speaking a t) (not (lacks a b t))))"
+593,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a user man T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a man t) (is_a a human t)))"
+594,No Output
+595,No Output
+596,"(is_about news computer_system T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_about news b t) (= b commercial_headlines)))"
+597,"(is_silent room T0)
+
+(is_steaming coffee T0)
+
+(forall ((a Int) (t Int)) (=> (is_steaming coffee t) (not (is_silent room t))))"
+598,No Output
+599,No Output
+600,"(is_girlfriend_of girlfriend user T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_girlfriend_of a b t) (not (sleep_with a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_girlfriend_of a b t) (sleep_with a b t)))"
+601,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_hidden_in a b t) (not (is_at_location a b t))))
+
+(is_hidden_in package closet T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_hidden_in a b t) (is_at_location a b t)))"
+602,"(is_corpse self T4)
+
+(is_condemned self T4)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_corpse a t) (not (is_condemned a t))))"
+603,"(tells_story_of tattoo man T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (tells_story_of a b t) (= b story)))"
+604,"(is_pounding heart memory T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_pounding heart a t) (= a heart)))"
+605,No Output
+606,"(forall ((a Int) (b Int) (t Int)) (=> (read_from a b t) (hold a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (hold a b1 t) (hold a b2 t)) (= b1 b2)))
+
+(is_blank pen T0)
+
+(is_blank pen T3)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_blank a t1) (is_blank a t2)) (= t1 t2)))
+
+(hold registerholder book T3)
+
+(read_from registerholder cards T3)"
+607,"(forall ((a Int) (b Int) (t Int))
+  (=> (sit_on a b t) (not (in_location b drawer t))))
+
+(sit_on i table T4)
+
+(in_location table drawer T4)"
+608,"(and (has_a girl hair T3) (is_colour hair blond T3))
+
+(and (has_a girl jacket T3) (is_colour jacket beige T3))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_a a b1 t) (has_a a b2 t)) (= b1 b2)))"
+609,No Output
+610,"(is_guardian_angel_of girl william T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_guardian_angel_of a b t) (is_a a guardian_angel t)))
+
+(forall ((a Int) (t Int))
+  (=> (is_beautiful a t) (or (is_a a woman t) (is_a a girl t))))
+
+(is_beautiful girl T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+611,"(forall ((a Int) (b Int) (t Int)) (=> (owns_item a b t) (not (is_dead a t))))
+
+(is_dead user T6)
+
+(owns_item user baseball_bat T6)"
+612,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_holiday a b1 t) (is_holiday a b2 t)) (= b1 b2)))
+
+(is_date november_27_2016 christmas T1)
+
+(forall ((a Int) (b Int) (t Int)) (= (is_holiday a b t) (is_date b a t)))
+
+(is_holiday christmas christmas T1)"
+613,"(is_officer_of prisoner un T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_officer_of a b t) (is_controlled_by a b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_officer_of a b t) (not (is_controlled_by a b t))))"
+614,"(get_dizzy user T12)
+
+(see user shadow T12)
+
+(forall ((a Int) (b Int) (t Int)) (=> (see a b t) (not (get_dizzy a t))))"
+615,"(forall ((t Int)) (is_dead son t))
+
+(forall ((b Int) (t Int)) (inhabit_body son b t))
+
+(forall ((a Int) (t Int)) (=> (is_dead a t) (not (inhabit_body a body t))))"
+616,"(forall ((a Int) (b Int) (t Int)) (and (fire_weapon a t) (light_item a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (light_item a b1 t) (light_item a b2 t)) (= b1 b2)))"
+617,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_role a b1 t) (is_role a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_role a single_dad t) (is_role a family t)))
+
+(is_role user single_dad T1)"
+618,No Output
+619,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (grabs_item a b1 t) (grabs_item a b2 t)) (= b1 b2)))
+
+(owns_item narrator change T6)
+
+(grabs_item narrator wallet T1)
+
+(owns_item narrator purse T6)
+
+(grabs_item narrator receipt T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (owns_item a b1 t) (owns_item a b2 t)) (= b1 b2)))"
+620,"(forall ((a Int) (b Int) (t Int))
+  (= (is_named a b t) (or (is_named_by a b t) (is_named_by a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_part_of a b t) (not (is_flowing a t))))
+
+(is_part_of blood body T6)
+
+(is_named ashley_keplinger ashley_keplinger T1)
+
+(is_named_by ashley_keplinger parents T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_named_by a b1 t) (is_named_by a b2 t)) (= b1 b2)))
+
+(is_flowing blood T6)"
+621,No Output
+622,"(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (enter_into a b t) (not (enter_into a c t))))
+
+(forall ((a Int) (b Int) (t Int)) (and (enter_into a b t) (scan a world t)))"
+623,No Output
+624,"(is_eating speaker fish T2)
+
+(is_in fish water T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_eating a fish t) (not (is_in fish water t))))"
+625,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_located_in a b1 t) (is_located_in a b2 t)) (= b1 b2)))
+
+(is_located_in girl_of_the_train city_center T3)
+
+(is_located_in girl_of_the_train utah T3)"
+626,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_colour_of a b1 t) (is_colour_of a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_colour_of b red t) (is_colour_of b favourite_colour t)))
+
+(is_colour_of favourite_colour red T1)"
+627,"(walk_to wife bed T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (walk_to a b t) (not (sit_on a bed t))))
+
+(sit_on wife bed T2)"
+628,"(end_with world chaos T3)
+
+(forall ((b Int) (t Int))
+  (=> (end_with world b t) (not (end_with world chaos t))))"
+629,No Output
+630,"(forall ((a Int) (b Int) (t Int)) (=> (left_town a b t) (not (head_home a t))))
+
+(head_home you T4)
+
+(left_town you town T4)"
+631,"(forall ((t Int)) (be_with david_surgeon user t))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_wife_of a b t) (not (is_wife_of a david_surgeon t))))
+
+(forall ((t Int))
+  (=> (not (is_wife_of user david_surgeon t))
+      (not (be_with david_surgeon user t))))"
+632,"(is_killer_type character killer T9)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_character a b t) (not (is_killer_type a b t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_killer_type a b t) (is_character a killer t)))"
+633,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_character a hero t) (not (is_character a monster t))))
+
+(is_character narrator monster T0)
+
+(is_character narrator hero T0)"
+634,"(forall ((t Int)) (feel_emotion user exhaustion t))
+
+(forall ((t Int)) (wear_off exhaustion user t))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (feel_emotion a b t) (not (wear_off c a t))))"
+635,"(rises_at sun noon T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (rises_at a b1 t) (rises_at a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_time_of_day a b1 t) (is_time_of_day a b2 t)) (= b1 b2)))
+
+(forall ((t Int))
+  (= (is_time_of_day aokigahara noon t) (is_time_of_day aokigahara midday t)))
+
+(rises_at sun eight T0)
+
+(is_time_of_day aokigahara midday T0)"
+636,"(forall ((t Int)) (is_a Tiki assassin t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(forall ((t Int)) (is_a Tiki agent t))"
+637,"(is_terrified_of humans ship T5)
+
+(forall ((a Int)) (is_terrified_of humans a T0))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_terrified_of a b t) (is_terrified_of a c t)) (= b c)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_terrified_of a b t) (not (is_safe a t))))
+
+(is_safe humans T5)"
+638,No Output
+639,"(forall ((a Int) (b Int) (t Int))
+  (=> (moves_out_of a b t) (not (is_in_location a b t))))
+
+(moves_out_of obama room T5)
+
+(is_in_location obama room T5)"
+640,"(is_profession peter artist T1)
+
+(has_item woman boots T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_profession a b t) (not (is_profession a b t))))
+
+(has_item woman shirt T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_item a b1 t) (has_item a b2 t)) (= b1 b2)))"
+641,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_location a b1 t) (is_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (= (is_location a b t) (go_to a b t)))
+
+(is_location computer roof T2)
+
+(go_to computer elevator T2)"
+642,No Output
+643,"(forall ((a Int) (b Int) (t Int))
+  (=> (get_bored_of a b t) (or (= b class) (= b office_job))))
+
+(get_bored_of a football T3)"
+644,"(forall ((a Int) (t Int)) (=> (happen a t) (> t T0)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (explain a b t) (happen b t)))
+
+(forall ((a Int) (t Int))
+  (=> (is_curious a t) (exists ((b Int)) (explain a b t))))
+
+(is_curious universe T0)"
+645,No Output
+646,No Output
+647,"(forall ((a Int) (t Int))
+  (=> (has_feature a purple_beard t) (exists ((b Int)) (= a red_cloaked_man))))
+
+(has_feature grizzly purple_beard T1)"
+648,"(forall ((a Int) (b Int) (t Int)) (=> (live_with a b t) (stay_in a b t)))
+
+(forall ((a Int) (t Int)) (=> (is_part_of a body t) (is_part_of a human t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_part_of a b1 t) (is_part_of a b2 t)) (= b1 b2)))
+
+(forall ((g Int) (b Int) (t Int)) (=> (stay_in g b t) (know g b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (know a b t) (exist b t)))
+
+(exists ((g Int)) (is_there g narrator T1))
+
+(forall ((f Int) (t Int)) (live_with narrator f T2))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (exist a t1) (exist a t2)) (= t1 t2)))
+
+(is_part_of limbs body T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_there a b t) (exist a t)))"
+649,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (take_item a b1 t) (take_item a b2 t)) (= b1 b2)))
+
+(forall ((p Int)) (and (take_item p flashlight T1) (take_item p torches T1)))"
+650,No Output
+651,"(is_visible computer_screen window T5)
+
+(forall ((a Int) (t Int)) (=> (is_bright a t) (is_visible a a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_visible a b t) (is_on a b t)))
+
+(is_bright computer_screen T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_on a b1 t) (is_on a b2 t)) (= b1 b2)))"
+652,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_home_for a b t) (is_home_for a colonies t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_home_for a b1 t) (is_home_for a b2 t)) (= b1 b2)))
+
+(is_home_for system planet T0)"
+653,"(forall ((a Int) (b Int) (t Int)) (=> (is_drunk a t) (be_in_location a bar t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_still a statue t) (be_in_location a b t)))
+
+(is_still someone statue T3)
+
+(and (is_drunk user T3) (is_drunk someone T3))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (be_in_location a b1 t) (be_in_location a b2 t)) (= b1 b2)))"
+654,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (hit_body_part a b1 t) (hit_body_part a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (aim_at a b t) (shoot_at a b t)) (hit_body_part c b t)))
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (shoot_at a b t)
+      (exists ((d Int)) (and (carry_item a d t) (hit_body_part d c t)))))
+
+(shoot_at user jacob T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (carry_item a b1 t) (carry_item a b2 t)) (= b1 b2)))
+
+(aim_at user jacob T3)
+
+(hit_body_part bullet chest T3)"
+655,"(forall ((a Int) (t Int)) (=> (is_cocky a t) (is_a_person a t)))
+
+(is_cocky character_b T3)
+
+(not (is_a_person character_b T3))"
+656,No Output
+657,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in_team a b t)
+      (or (is_commanding a b t) (exists ((c Int)) (is_commanding c b t)))))
+
+(is_in_team alateman team T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_commanding a b t) (or (= b unit) (= b compatriots) (= b comrades))))"
+658,No Output
+659,"(say_instead user (ite (is_lost_in user desert T2) 1 0) T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (say_instead a b t) (not (say a b t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (say_instead a b t) (say a b t)))"
+660,No Output
+661,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_bound_to a b1 t) (is_bound_to a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int)) (is_bound_to a b t))"
+662,No Output
+663,No Output
+664,No Output
+665,No Output
+666,"(forall ((b Int) (t Int))
+  (and (kill ally b t) (burn ally b t) (forget ally b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (forget a b t) (not (burn a b t))))"
+667,"(forall ((a Int) (b Int) (t Int))
+  (=> (has_location a b t) (not (is_broken a t))))
+
+(is_broken mug T1)
+
+(has_location mug floor T1)"
+668,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_of_type a b t) (not (is_of_type a b t))))
+
+(is_of_type internet_access_switch black_box T1)"
+669,"(forall ((a Int) (b Int) (t Int))
+  (=> (in_fight_with a b t) (not (be_rude a b t))))
+
+(in_fight_with captain john T0)
+
+(be_rude captain john T0)"
+670,No Output
+671,"(run_to man stairs T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (run_to a b t) (is_in_location a b t)))
+
+(run_to man door T5)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+672,"(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))
+
+(is_a self book T4)"
+673,"(is_daughter_of daughter kona_flight_presidential_palace T8)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (is_daughter_of a b t) (not (is_daughter_of a c t))))
+
+(< T2 T3)
+
+(> T2 T3)"
+674,"(is_sorcerer_of hero life T0)
+
+(is_hero_of hero life T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_hero_of a b t) (not (is_sorcerer_of a b t))))"
+675,"(forall ((a Int) (t Int))
+  (=> (=> (is_character a teacher t) (avoid_teacher a user t))
+      (not (is_in_community user community t))))
+
+(forall ((a Int) (t Int))
+  (=> (is_character a teacher t) (teach_lessons a lessons t)))
+
+(avoid_teacher user teacher T2)
+
+(is_in_community user community T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (teach_lessons a b t) (is_in_community a community t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (avoid_teacher a b t) (not (is_in_community b community t))))"
+676,"(heads_to man_lord horse T1)
+
+(forall ((a Int) (b Int) (t Int)) (=> (heads_to a b t) (lands_on a b t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (heads_to a b t) (not (lands_on a b t))))"
+677,"(is_immortal character T1)
+
+(forall ((a Int) (t Int)) (= (is_immortal a t) (is_eternal a t)))
+
+(forall ((a Int) (t Int)) (= (is_eternal a t) (is_immortal a t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_immortal a t1) (is_immortal a t2)) (= t1 t2)))
+
+(is_eternal character T0)"
+678,"(is_on something chest T7)
+
+(is_on something ankle T7)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_on a b1 t) (is_on a b2 t)) (= b1 b2)))"
+679,"(is_hero hero T1)
+
+(forall ((a Int) (t Int)) (=> (is_blind a t) (is_related_to a fate t)))
+
+(writes hidden poem T8)
+
+(is_related_to hero family T3)
+
+(forall ((a Int) (b Int) (t Int)) (=> (have_dream a b t) (is_related_to a b t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_hero a t1) (is_hero a t2)) (= t1 t2)))
+
+(is_wizard hero T2)
+
+(have_dream hidden dream T6)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_wizard a t1) (is_wizard a t2)) (= t1 t2)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (writes a b t) (is_related_to a b t)))
+
+(is_blind hidden T11)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_related_to a b t) (or (is_hero a t) (is_wizard a t))))"
+680,"(has_slept_for character age T1)
+
+(has_age character age T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_age a b t) (not (has_slept_for a b t))))"
+681,No Output
+682,"(nearly_killed_in boy war T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (wounded_in a b t) (not (nearly_killed_in a b t))))
+
+(wounded_in boy war T4)"
+683,"(forall ((a Int) (b Int) (t Int)) (=> (has_daughter a b t) (is_family a t)))
+
+(has_daughter this_comrade daughter T2)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_daughter a b t) (exists ((t0 Int)) (is_family a t0))))
+
+(die_from this_comrade cold T4)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (die_from a b t) (not (exists ((t0 Int)) (is_family a t0)))))"
+684,(and (is_happy user T5) (not (is_happy user T5)))
+685,No Output
+687,No Output
+689,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_killed_in a b t) (not (is_there a t))))
+
+(is_character guy ghost T2)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_killed_in a b t) (is_there a t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_character a b1 t) (is_character a b2 t)) (= b1 b2)))
+
+(is_character guy venience T2)
+
+(is_killed_in son train T1)"
+690,"(visits_location mark roommate T14)
+
+(visits_location mark office T14)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (visits_location a b1 t) (visits_location a b2 t)) (= b1 b2)))"
+691,No Output
+692,"(is_in_location family estate T9)
+
+(is_in_location family london T9)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+693,No Output
+694,No Output
+695,"(forall ((a Int) (b Int) (t Int))
+  (=> (enter_location a b t) (travel_to_location a b t)))
+
+(enter_location kids poshed_divas_territory T1)
+
+(travel_to_location kids southern_states T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (travel_to_location a b1 t) (travel_to_location a b2 t)) (= b1 b2)))"
+696,"(go_to user school T1)
+
+(is_dead character T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_dead a t) (not (have_memory a b t))))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_in_location user jungle T1)
+
+(have_memory character memory T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (go_to a b t) (is_in_location a b t)))"
+697,No Output
+698,"(forall ((a Int) (t Int))
+  (=> (is_dead a t) (not (exists ((b Int) (t0 Int)) (be_called_in a b t0)))))
+
+(is_dead user T4)
+
+(be_called_in user hospital T3)"
+699,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (become a b1 t) (become a b2 t)) (= b1 b2)))
+
+(become user officer T3)
+
+(become user priest T3)"
+700,"(die_in user car_accident T7)
+
+(forall ((a Int) (b Int) (t Int)) (=> (die_in a b t) (lose_body a t)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (lose_body a t1) (lose_body a t2)) (= t1 t2)))
+
+(lose_body user T3)"
+701,No Output
+704,No Output
+705,"(lose_time user T1)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (lose_time a t1) (lose_time a t2)) (= t1 t2)))
+
+(lose_time user T2)"
+706,"(is_weak father T0)
+
+(forall ((a Int) (t Int)) (=> (is_weak a t) (not (is_violent a t))))
+
+(is_violent father T0)"
+707,"(has_relation protagonist daughter T0)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_relation protagonist daughter t) (has_relation protagonist mother t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (has_relation a b1 t) (has_relation a b2 t)) (= b1 b2)))"
+708,"(forall ((a Int) (b Int) (t Int)) (=> (is_a a dog_boy t) (is_a a people t)))
+
+(is_a guy dog_boy T2)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
+709,No Output
+710,"(forall ((a Int) (t Int)) (see_problem a t))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_light a t) (not (see_problem b t))))
+
+(is_light monsters T1)"
+711,"(forall ((b Int)) (=> (kidnap adults b T1) (on_the_run b T1)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (kidnap a b t) (not (on_the_run b t))))
+
+(kidnap adults boys T1)"
+712,"(invade germans england T0)
+
+(forall ((a Int) (b Int) (t Int)) (=> (invade a b t) (not (invade a b t))))"
+713,"(watch user tv T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (watch a b t) (exists ((v Int)) (and (= b v) (= v video)))))
+
+(forall ((t Int)) (not (has_antenna car t)))
+
+(has_antenna car T2)"
+714,"(is_type_of bomber ship T0)
+
+(is_type_of bomber bomber T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_type_of a b1 t) (is_type_of a b2 t)) (= b1 b2)))"
+715,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_in a b t) (or (= story b) (= world b))))
+
+(is_in death life T1)"
+716,No Output
+717,"(is_a first_reader nobody T5)
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_a a b t) (not (is_a a b t))))"
+718,"(forall ((a Int) (b Int) (t Int)) (=> (is_named a b t) (is_alive a t)))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_enemy_of a b t) (not (is_alive a t))))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_enemy_of anti_styre b t) (is_named b death t)))
+
+(is_enemy_of anti_styre anti_styre T0)"
+719,"(is_winner user T4)
+
+(is_winner user T3)
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (is_winner a t1) (is_winner a t2)) (= t1 t2)))"
+720,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_a a youngest_member t) (is_a a family_members t)))
+
+(is_a youngest_member youngest_member T0)
+
+(will_die someone T6)
+
+(will_die someone T4)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (t1 Int) (t2 Int))
+  (=> (and (will_die a t1) (will_die a t2)) (= t1 t2)))"
+722,No Output
+723,"(forall ((a Int) (b Int) (t Int))
+  (=> (is_father_of a b t) (and (= a father) (= b boy))))
+
+(is_father_of father rasputin T0)"
+724,"(in_charge_of john_rodger war_of_2119 T1)
+
+(is_in_location rebel_force clearing T7)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))
+
+(is_leader_of john_rodger decsa T1)
+
+(is_in_location rebel_force balcony T7)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_leader_of a b t) (in_charge_of a b t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_charge_of a b1 t) (in_charge_of a b2 t)) (= b1 b2)))"
+725,No Output
+726,"(is_in_location iric_novonev jusneat T1)
+
+(is_in_location iric_novonev jusnesk T1)
+
+(forall ((a Int) (b Int) (c Int) (t Int))
+  (=> (and (is_in_location a b t) (is_in_location a c t)) (= b c)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_in_location a b1 t) (is_in_location a b2 t)) (= b1 b2)))"
+727,"(forall ((a Int) (b Int) (t Int)) (=> (is_from a b t) (live_in_location a b t)))
+
+(is_from user utah T3)
+
+(live_in_location user salt_lake T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (live_in_location a b1 t) (live_in_location a b2 t)) (= b1 b2)))"
+728,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_character a b1 t) (is_character a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (t Int)) (=> (is_named a lisa t) (is_character a character t)))
+
+(is_named lisa lisa T0)
+
+(is_character lisa dragon T0)"
+729,"(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (arrive_at a b1 t) (arrive_at a b2 t)) (= b1 b2)))
+
+(pop_in_and_leave classmates T5)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (pop_in_and_leave a t) (and (arrive_at a b t) (leave a b t))))"
+730,No Output
+731,No Output
+733,"(found_death lush wound T6)
+
+(forall ((a Int) (b Int) (t Int)) (=> (found_death a b t) (killed_by b a t)))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (killed_by a b1 t) (killed_by a b2 t)) (= b1 b2)))
+
+(found_death duk wound T6)"
+735,"(forall ((a Int) (b Int) (t Int))
+  (=> (chase a b t) (not (roll_side_by_side a b t))))
+
+(chase team person T3)
+
+(roll_side_by_side team person T3)"
+736,"(exists ((t Int)) (is_about story secret t))
+
+(forall ((p Int) (t Int)) (in_location portrait p t))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (in_location a b1 t) (in_location a b2 t)) (= b1 b2)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_about story b t) (has_property story b t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (has_property a secret t) (not (is_about a secret t))))"
+737,"(is_left_alive lanceers T1)
+
+(is_executed_at lanceers golem T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_killed a t) (not (is_left_alive a t))))
+
+(forall ((a Int) (b Int) (t Int)) (=> (is_executed_at a b t) (is_killed a t)))"
+738,"(hold user medicine_bottle T0)
+
+(hold user bank_knife T0)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (hold a b1 t) (hold a b2 t)) (= b1 b2)))"
+739,"(is_a name_fashman dc_hero T1)
+
+(is_a name_fashman professor T1)
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_a a genie t) (not (is_a a professor t))))
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))
+
+(is_a name_fashman genie T1)"
+740,No Output
+741,"(use_method user online T1)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (use_method a b1 t) (use_method a b2 t)) (= b1 b2)))
+
+(use_method user cell_phone T1)
+
+(use_method user text_message T1)"
+745,No Output
+746,"(is_father_of user user T3)
+
+(forall ((a Int) (t Int)) (=> (is_a a college_student t) (is_a a user t)))
+
+(forall ((a Int) (b Int) (t Int))
+  (=> (is_friend_of a b t) (not (is_father_of a b t))))
+
+(is_a user college_student T0)
+
+(is_friend_of user user T3)
+
+(forall ((a Int) (b1 Int) (b2 Int) (t Int))
+  (=> (and (is_a a b1 t) (is_a a b2 t)) (= b1 b2)))"
