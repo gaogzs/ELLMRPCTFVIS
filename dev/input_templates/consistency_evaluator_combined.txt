@@ -23,11 +23,12 @@ Logical Evaluator Result:
 Interpret all given formulas (if any) to natural language in the "reasoning" part, and review the content of the story related to the formulas.
 
 At last you need to give your reasons of rating the story in the "reasoning" part, based on the following detailed criteria:
-- 1: The story is completely incoherent and makes no sense at all, with numerous contradictions and inconsistencies.
-- 2: The story has numerous inconsistency problems, making it difficult to follow or understand.
-- 3: The story has some inconsistency problems causing a little confusion, but they do not significantly detract from the overall narrative.
-- 4: The story is mostly consistent, with only minor inconsistencies that do not affect the overall narrative.
-- 5: The story is completely consistent, with no contradictions or inconsistencies at all.
+1 — The story does not make sense at all. For instance, the setting and/or
+characters keep changing, and/or there is no understandable plot.
+2 — Most of the story does not make sense.
+3 — The story mostly makes sense but has some incoherences.
+4 — The story almost makes sense overall, except for one or two small incoherences.
+5 — The story makes sense from beginning to end
 
 Respond in json format with a single string and a single integer in:
 {{"reasoning": <reasoning>, "consistency": <score>}}
