@@ -46,7 +46,7 @@ class TimelineMakerSession:
             sys_prompt = self.prompt_loader.load_sys_prompts("timeline_maker", subtype="json")
             bot = self.chatbot(self.model_info.model(), sys_prompt, self.schema_loader)
             if self.rp_history:
-                bot.add_fake_user_message("\n".join(self.rp_history))
+                bot.add_fake_user_message("[Hidden]" + self.rp_history[-1])
                 fake_json_message = {
                     "reasoning": "[Hidden]",
                     "timeline_definition": self.get_timeline_schema_form()

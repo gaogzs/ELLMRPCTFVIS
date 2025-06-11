@@ -3,10 +3,11 @@
         "conversation": " Maridan is a young sergeant serving in the king's knightly order. He is known for his bravery and loyalty. One day, he receives a secret mission from the king to investigate a series of mysterious disappearances in the kingdom. Maridan sets out on his quest, determined to uncover the truth and protect his people.\n(User: Maridan first decides to gather information from the villagers.)",
         "integrity_scores": {
             "Maridan": {
-                "self_integrity": 1,
-                "action_integrity": 1
+                "self_integrity": 1.0,
+                "action_integrity": 1.0
             },
             "The King": {
+                "self_integrity": 1.0,
                 "action_integrity": 1.0
             }
         },
@@ -15,32 +16,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -60,6 +64,7 @@
                 "action_integrity": 1.0
             },
             "The Villagers": {
+                "self_integrity": 1.0,
                 "action_integrity": 1.0
             }
         },
@@ -68,32 +73,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -106,7 +114,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             }
         ]
     },
@@ -114,8 +125,8 @@
         "conversation": " At dawn, Maridan enters the forest, armed with his sword and shield. The forest is dense and eerie, with sunlight barely penetrating through the thick canopy. As he ventures deeper, he hears rustling sounds and sees fleeting shadows. He remains cautious and alert, ready to confront any danger.\n(User: Maridan decides to follow the sounds, hoping they will lead him to the source of the mystery.)",
         "integrity_scores": {
             "Maridan": {
-                "self_integrity": 1,
-                "action_integrity": 1
+                "self_integrity": 1.0,
+                "action_integrity": 1.0
             }
         },
         "characters": [
@@ -123,32 +134,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -161,7 +175,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             }
         ]
     },
@@ -173,6 +190,7 @@
                 "action_integrity": 1.0
             },
             "The Hooded Figures": {
+                "self_integrity": 1.0,
                 "action_integrity": 1.0
             }
         },
@@ -181,32 +199,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -219,7 +240,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             },
             {
                 "character_name": "The Hooded Figures",
@@ -237,13 +261,15 @@
         "conversation": " As Maridan steps forward, the hooded figures suddenly disappeared, leaving behind a dark mist. Maridan feels a chill run down his spine but remains resolute. He searches the clearing for any clues and finds nothing, he had no choice but to return to the order and report his findings to the king. He vows to continue his investigation and protect the kingdom from any threats.\n(User: Maridan returns to the order and informs the king about the hooded figures and the dark ritual he witnessed.)",
         "integrity_scores": {
             "Maridan": {
-                "self_integrity": 1.0,
+                "self_integrity": 0.95,
                 "action_integrity": 1.0
             },
             "The Hooded Figures": {
-                "action_integrity": 1.0
+                "self_integrity": 1,
+                "action_integrity": 1
             },
             "The King": {
+                "self_integrity": 1.0,
                 "action_integrity": 1.0
             }
         },
@@ -252,32 +278,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -290,7 +319,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             },
             {
                 "character_name": "The Hooded Figures",
@@ -312,6 +344,7 @@
                 "action_integrity": 1.0
             },
             "Maridan": {
+                "self_integrity": 1.0,
                 "action_integrity": 1.0
             }
         },
@@ -320,32 +353,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -358,7 +394,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             },
             {
                 "character_name": "The Hooded Figures",
@@ -376,10 +415,7 @@
         "conversation": " Maridan begins to observe the guards' routines and looks for weaknesses in the dungeon's security. As a former sergeant, he knows how to exploit such vulnerabilities. He manages to find a loose stone in the wall of his cell and starts digging a tunnel. After several days of careful planning and hard work, he finally creates an escape route.\n(User: Maridan waits for the right moment when the guards are distracted to make his escape.)",
         "integrity_scores": {
             "Maridan": {
-                "self_integrity": 0.9,
-                "action_integrity": 1.0
-            },
-            "The guards": {
+                "self_integrity": 0.95,
                 "action_integrity": 1.0
             }
         },
@@ -388,32 +424,35 @@
                 "character_name": "Maridan",
                 "character_description": "A young sergeant serving in the king's knightly order, known for his bravery and loyalty.",
                 "character_traits": [
-                    "given a secret mission by the king",
-                    "determined to uncover the truth and protect his people",
+                    "determined to uncover the truth",
+                    "protective of his people",
+                    "decides to gather information from the villagers",
                     "investigates strange occurrences",
                     "plans to investigate the forest at dawn",
-                    "hopes to find clues about the disappearances",
+                    "takes note of accounts from villagers",
                     "armed with sword and shield",
                     "cautious",
                     "alert",
-                    "ventures into eerie and dense forests",
-                    "decisive",
+                    "ventures into dangerous places",
+                    "follows sounds to find the source of mystery",
                     "cautious",
                     "decisive",
                     "protective of the kingdom",
                     "resolute",
                     "investigative",
-                    "protective of the kingdom",
+                    "vows to protect the kingdom",
+                    "possibly male that uses male pronouns",
                     "relieved of his duties",
                     "imprisoned for failing to protect the kingdom",
                     "vows to escape",
+                    "wants to uncover the truth behind the mysterious disappearances",
                     "wants to clear his name",
                     "wants to prove his loyalty to the king",
                     "observant",
-                    "resourceful",
-                    "skilled in exploiting vulnerabilities",
                     "good at planning",
-                    "hard-working"
+                    "resourceful",
+                    "patient",
+                    "hardworking"
                 ]
             },
             {
@@ -426,7 +465,10 @@
             {
                 "character_name": "The Villagers",
                 "character_description": "The residents of the nearby village.",
-                "character_traits": []
+                "character_traits": [
+                    "report strange noises and sightings",
+                    "possibly afraid of the forest"
+                ]
             },
             {
                 "character_name": "The Hooded Figures",
@@ -437,11 +479,6 @@
                     "involved in dark rituals",
                     "possibly summoning something"
                 ]
-            },
-            {
-                "character_name": "The guards",
-                "character_description": "The guards of the dungeon.",
-                "character_traits": []
             }
         ]
     }
