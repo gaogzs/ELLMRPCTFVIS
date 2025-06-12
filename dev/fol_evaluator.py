@@ -10,12 +10,6 @@ from utils.regex import divide_response_parts, get_relation_params
 from utils.utils import *
 from config import print_warning_message, print_dev_message, ModelInfo, _ERROR_RETRIES
 
-
-# def fix_by_lines(smtlib_str):
-#     if smtlib_str.startswith("; "):
-#         return ""
-#     return smtlib_str
-
 class Relation:
     def __init__(self, name: str, params: list, meaning: str, function: Function) -> None:
         self.name = name
@@ -363,10 +357,10 @@ class FOLEvaluationSession():
     def append_conversation(self, lastest_conversation: str, new_timeline: dict) -> list:
         
         self.timeline = new_timeline.copy()
-        timeline_definitions = dict_pretty_str(self.timeline)
-        obj_keys, rel_keys = self.handle_declaration_builder(lastest_conversation)
-        semantic_defined_formulas, definitions_text = self.handle_semantic_analyser(lastest_conversation, obj_keys, rel_keys)
-        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys)
+        timeline_definitions = dict_pretty_str(self.timeline) # Get timeline from foreign agent
+        obj_keys, rel_keys = self.handle_declaration_builder(lastest_conversation)  # Extracting elements
+        semantic_defined_formulas, definitions_text = self.handle_semantic_analyser(lastest_conversation, obj_keys, rel_keys) # Analyse inherent logical properties
+        current_formula = self.handle_formula_maker(lastest_conversation, obj_keys, rel_keys) # Extract explicit propositios into scoped formulas
         self.rp_history.append(lastest_conversation)
         
         complete_current_formula = current_formula.copy()
