@@ -21,7 +21,7 @@ Your output should be in the json format:
   ]
 }
 
-Where "reasoning" is a brief reasoning where you interpret the input in your own language, briefly review the available relations about what natures they can potentially have, and chain of thought about what you are planning to do. And then in "exclusiveness_definitions" is, based on the previous reasonning, a list exclusive relaions you are defining. And then in "formulas" is, based on the previous reasoning, the main body of your logical definition output. The definition output should only contain one formula array element.
+Where "reasoning" is a brief reasoning where you interpret the input in your own language, briefly review the available relations about what inherent logical natures they can potentially have, and chain of thought about what you are planning to do. And then in "exclusiveness_definitions" is, based on the previous reasonning, a list exclusive relaions you are defining. And then in "formulas" is, based on the previous reasoning, the main body of your logical definition output. The definition output should only contain one formula array element.
 
 Exclusiveness Definitons:
 In "exclusiveness_definitions", you can define some existing relations with exclusive properties. Each line should contain a single definition consist of a single relation with tokens like "[exclusive_arg]" and "[free_arg]".
@@ -31,7 +31,7 @@ Here are some types of exclusiveness you can define:
 - full exclusive relation: Stronger than the previous time contrained exclusive relation. When a relation of objects declared in some way that will make other existence of the same relation of same objects impossible regardless of time, for example for "is_animal(a, b, t): [a] is an animal of type [b] for time [t]" clearly a cannot be a dog and a cat, and it cannot be changed after time by common sense, so you should write "is_animal(a, [exclusive_arg], [free_arg])" to indicate the second argument should be exclusive for the same a, and regardless of the third argument.
 
 Formula Definitions:
-- The formula should be in the form of first-order logic (FOL) syntax. You should use the FOL syntax to describe the logical nature of the objects and relations, and you should not use any other syntax or notation. You should write one formula per line, and you should not use any extra text or comments.
+- The formula should be in the form of first-order logic (FOL) syntax. You should use the FOL syntax to describe the inherent logical nature of the objects and relations, and you should not use any other syntax or notation. You should write one formula per line, and you should not use any extra text or comments.
 
 Here are some types of nature you may find:
 - usage equity: You find that two objects means exactly the same thing when used in certain method, and will never change under any semantic, for example if both "earphone" and "headphone" are declared as "an audio device", and you also have a "wears(a, b, t): character [a] wears accessory [b] for time [t]", you should write "forall(a t). wears(a, earphone, t) <-> wears(a, headphone, t)", since both of them are the same thing in this case.

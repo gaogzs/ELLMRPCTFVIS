@@ -37,7 +37,7 @@ def do_one_run_fol(target_narrative: list[str], model: str) -> None:
 
 if __name__ == "__main__":
     sample_conversation = []
-    with open(os.path.join(cur_dir, "sample_rp_false.json"), "r", encoding="utf-8") as f:
+    with open(os.path.join(cur_dir, "sample_rp.json"), "r", encoding="utf-8") as f:
         sample_conversations = json.load(f)
         sample_conversation = sample_conversations[-1]
     

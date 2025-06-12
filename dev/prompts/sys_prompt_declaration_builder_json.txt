@@ -45,16 +45,16 @@ And "relations" is a list of potential relations that can appeared in the story.
 {
   ...
   "relations": [
-    {"relation_name": "is_animal(a, b, t)", "relation_description": "character [a] is an animal of type [b] for time [t]", "relation_cases": ["is_animal(aleph, dog, T0)"]},
-    {"relation_name": "is_colour(a, b, t)", "relation_description": "object [a] shows a colour of [b] for time [t]", "relation_cases": ["is_colour(aleph, brown, T0)"]},
-    {"relation_name": "live_in_location(a, b, t)", "relation_description": "character [a] lives in location [b] for time [t]", "relation_cases": ["live_in_location(aleph, mount_everest, T0)"]},
-    {"relation_name": "live_together_with(a, b, t)", "relation_description": "character [a] lives together with character [b] for time [t]", "relation_cases": ["live_with(aleph, leopard_cat, T0)"]},
-    {"relation_name": "is_sick(a, t)", "relation_description": "character [a] is sick for time [t]", "relation_cases": ["is_sick(leopard_cat, T0)"]}
+    {"relation_name": "is_animal(a, b, t)", "relation_description": "character [a] is an animal of type [b] for time [t]", "relation_cases": ["is_animal(aleph, dog, [DUMMY])"]},
+    {"relation_name": "is_colour(a, b, t)", "relation_description": "object [a] shows a colour of [b] for time [t]", "relation_cases": ["is_colour(aleph, brown, [DUMMY])"]},
+    {"relation_name": "live_in_location(a, b, t)", "relation_description": "character [a] lives in location [b] for time [t]", "relation_cases": ["live_in_location(aleph, mount_everest, [DUMMY])"]},
+    {"relation_name": "live_together_with(a, b, t)", "relation_description": "character [a] lives together with character [b] for time [t]", "relation_cases": ["live_with(aleph, leopard_cat, [DUMMY])"]},
+    {"relation_name": "is_sick(a, t)", "relation_description": "character [a] is sick for time [t]", "relation_cases": ["is_sick(leopard_cat, [DUMMY])"]}
     ...
   ]
   ...
 }
-Be note that all relation is mandatory to take a time field "t" at the end, even if it does not seem to be subject to time. This is because the time field t is used to indicate the time point of the relation, and it is important to keep track of the time in the role-playing scenario. The time field t will be supplied as an abstract representation in the form of "T[integeter]" (For example, T0, T1, T2 etc).
+Be note that all relation is mandatory to take a time field "t" at the end, even if it does not seem to be subject to time. Time field in the usage case must be filled with special token [DUMMY].
 The variable quoted in the explanation part should be the same as the variable name in the declaration part, there should not appear any variable that goes out of the scope of the declaration.
 Relation can only take declared objects and timepoints as paramters, nested relations are not allowed.
 All relations should only have one source, but can have multiple targets. For example, "is_animal(a, b, t)" is acceptable, but "is_animal(a, b, c, t): [a] and [b] are animals of type [c] for time [t]" is not acceptable. The first two parameters should be the source and target of the relation, and the third parameter should be the time point of the relation. The time point should be a variable name in lower case snake case.

@@ -41,7 +41,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "description": "A usage case of the relation within your provided section of the story. The time parameter should be an abstract time point, like T0, T1, T2, etc. And other arguments has to be the existing object names you provided in the objects section. Nested relation structure is not allowed. Be sure it takes the exactly the same number of parameters as declared in 'relation_name' part and as described in 'relation_description' part. Example: live_in_location(mr_alex, new_york, T0)"
+              "description": "A usage case of the relation within your provided section of the story. The time parameter should be an abstract time point, like T0, T1, T2, etc. And other arguments has to be the existing object names you provided in the objects section. Nested relation structure is not allowed. Be sure it takes the exactly the same number of parameters as declared in 'relation_name' part and as described in 'relation_description' part. Example: live_in_location(mr_alex, new_york, [DUMMY])"
             }
           }
         },

@@ -196,6 +196,8 @@ class FOLEvaluationSession():
                 except Exception as e:
                     message = self.input_template_loader.load("complete_error_correction").format(error_message=str(e))
                     print_dev_message("Error in response division:", e)
+                    if "Context mismatch" in str(e):
+                        raise e
                     tries_count -= 1
                     if tries_count <= 0:
                         print_dev_message("Error: Too many failing responses.")
